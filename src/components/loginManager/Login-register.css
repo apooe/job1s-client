@@ -1,0 +1,16 @@
+#paper{
+    padding:30px;
+    min-height:50vh;
+    max-height: 80vh;
+    width: 350px;
+    margin: 20px auto;
+}
+
+#avatar{
+    background-color:#1bbd7e;
+}
+
+#btn{
+    margin: 8px 0;
+}
+
