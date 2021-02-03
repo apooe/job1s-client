@@ -1,0 +1,21 @@
+#paper{
+    padding:30px;
+    min-height:50vh;
+    max-height: 80vh;
+    width: 400px;
+    margin: 20px auto;
+}
+
+#avatar{
+    background-color: #f55448;
+}
+
+#btn{
+    margin: 15px 0;
+
+}
+
+.input-control {
+    margin-bottom: 10px!important;
+}
+

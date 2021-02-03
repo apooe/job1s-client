@@ -1,11 +1,34 @@
 import React, {useState} from 'react';
-import {Grid, Paper, Avatar, TextField, FormControlLabel, Checkbox , Button, Typography, Link} from '@material-ui/core';
+import {Grid, Paper, Avatar, TextField , Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import "./Login-register.css";
+import "./LoginManager.css";
+import {withRouter} from "react-router";
+import {Link} from "react-router-dom";
+import {getInstance} from "../../helpers/httpInstance";
+import Alert from "@material-ui/lab/Alert";
 
 const LoginForm = (props) =>{
 
+    const {history} = props;
+    const [error, setError] = useState(null);
+    const [user, setUser] = useState({});
 
+    const onUserChange = (newValue) => {
+        setUser({...user, ...newValue})
+    }
+
+    const onSubmit = () => {
+        const http = getInstance();
+        const url = '/users/login';
+
+
+        http.post(url, user).then(response => {
+            history.push('/home');
+        }).catch(error => {
+            console.log(error.response.data);
+            setError(error.response.data);
+        });
+    }
 
     return  (
         <Grid>
@@ -14,32 +37,57 @@ const LoginForm = (props) =>{
                     <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
                     <h2>Sign in</h2>
                 </Grid>
-                <TextField label="Email" placeholder="enter your email" fullWidth required/>
-                <TextField label="Password" placeholder="enter your password" type="password" fullWidth required/>
-                <FormControlLabel
-                    control={
-                        <Checkbox name="checkedB" color="primary" />
-                    }
-                    label="Remember me"
+
+
+                {error && <Alert
+                    severity="error"
+                    style={{ margin:'15px'}}
+                    onClose={() => setError(null)}>
+                    <strong>{error}</strong>
+                </Alert>}
+
+                <TextField
+                    label="Email"
+                    onChange={e => onUserChange({email: e.target.value})}
+                    className="input-control"
+                    placeholder="enter your email"
+                    fullWidth
+                    required
                 />
+
+                <TextField
+                    label="Password"
+                    onChange={e => onUserChange({password: e.target.value})}
+                    className="input-control"
+                    placeholder="enter your password"
+                    type="password"
+                    fullWidth
+                    required
+                />
+
 
                 <Button
                     type="submit"
                     color="primary"
                     fullWidth
                     variant="contained"
-                    id="btn">
+                    id="btn"
+                    onClick={() => onSubmit()}>
                     Sign in
                 </Button>
 
-                <Typography >Still Don't have an account ?
-                <Link href="#">
-                    Sign Up
-                </Link>
-                </Typography>
+
+                <Grid container justify="flex-end">
+                    <Grid item>Already have an account? {" "}
+                        <Link to={"/register"} variant="body2">
+                            Sign Up
+                        </Link>
+                    </Grid>
+                </Grid>
             </Paper>
         </Grid>
     )
 }
 
-export default LoginForm;
+
+export default withRouter(LoginForm);

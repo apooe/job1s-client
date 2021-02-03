@@ -1,8 +1,9 @@
 
 import React from 'react';
 import {Switch, Route, BrowserRouter} from 'react-router-dom';
-import RegisterManager from './components/loginManager/RegisterManager'
-
+import RegisterForm from './components/loginManager/RegisterForm'
+import LoginForm from './components/loginManager/LoginForm'
+import HomeManager from './components/HomeManager/HomeManager'
 
 
 function App() {
@@ -11,7 +12,10 @@ function App() {
         <BrowserRouter>
         <Switch>
             <Route exact path="/"><p>Welcome Home</p></Route>
-            <Route exact path="/users"><RegisterManager></RegisterManager></Route>
+            <Route exact path="/register"><RegisterForm></RegisterForm></Route>
+            <Route exact path="/login"><LoginForm></LoginForm></Route>
+            <Route exact path="/profile"><LoginForm></LoginForm></Route>
+            <Route exact path="/home"><HomeManager></HomeManager></Route>
 
         </Switch>
         </BrowserRouter>
