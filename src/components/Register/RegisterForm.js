@@ -6,16 +6,18 @@ import * as Yup from "yup";
 import Alert from "@material-ui/lab/Alert";
 import {withRouter} from "react-router"
 import {Link} from "react-router-dom";
-import "./LoginManager.css";
-import "./LoginManager.css";
+import "../Login/LoginManager.css";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
 
 const userValidator = Yup.object().shape({
+
     _id: Yup.string().optional().nullable(),
+
     password: Yup.string().min(6).required(),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+
     lastname: Yup.string().matches(/^[a-zA-Z\s]+$/, "Invalid Last name").min(2).required("Last name is a required field"),
     firstname: Yup.string().matches(/^[a-zA-Z\s]+$/, "Invalid First name").min(2).required(" First name is a required field"),
     email: Yup.string().email().required(),
@@ -85,7 +87,7 @@ const RegisterForm = (props) => {
 
     return (
 
-        <div>
+        <div className="form-container">
 
             <Grid>
                 <Paper elevation={10} id="paper">
@@ -97,7 +99,7 @@ const RegisterForm = (props) => {
 
                     {error && <Alert
                         severity="error"
-                        style={{margin: '25px'}}
+                        style={{margin: '15px'}}
                         onClose={() => setError(null)}>
                         <strong>{error}</strong>
                     </Alert>}
@@ -162,7 +164,7 @@ const RegisterForm = (props) => {
                             options={places}
                             fullWidth
                             onInputChange={(event, value) => loadPlaceOptions(value)}
-                            onChange={e => handleUserChange({city: e.target.value})}
+                            onChange={(event, value) => handleUserChange({city : value})}
                             renderInput={(params) => (
                                 <TextField  {...params} label="City"
                                             placeholder="City"

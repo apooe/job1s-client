@@ -1,0 +1,21 @@
+.container-background {
+    background: url("../../images/conferencing.jpg") no-repeat center fixed;
+    height: 70vh;
+    padding: 50px;
+
+}
+
+#slogan{
+    text-align: center;
+    color: white;
+    padding-top: 150px;
+    font-size: 50px;
+    font-weight: lighter;
+
+}
+
+hr{
+    border: 2px solid white;
+    border-radius: 5px;
+    width:30%;
+}
