@@ -67,6 +67,8 @@ const RegisterForm = (props) => {
                 }
 
                 http.post(url, user).then(response => {
+                    console.log(response.data._id);
+                    createProfile({userId: response.data._id});
                     setIsSubmitting(false);
                     history.push("/home");
                 }).catch(error => {
@@ -81,8 +83,17 @@ const RegisterForm = (props) => {
             setError(e.errors);
             setIsSubmitting(false)
         });
+    }
 
+    const createProfile = (userId) =>{
+        console.log(userId)
+        const url = '/profiles';
+        http.post(url, userId).then(response => {
+            console.log(response.data);
 
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
     }
 
     return (

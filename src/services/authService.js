@@ -2,16 +2,17 @@ import {isExpired, decodeToken} from "react-jwt";
 import {getInstance} from "../helpers/httpInstance";
 
 class AuthService {
+
     _tokenLabel = 'accessToken';
 
     _currentToken = '';
     _currentUser = null;
-    _http = null;
 
     constructor() {
         this._currentToken = this.getToken();
+        console.log("premiere entree:", this._currentToken);
         this._currentUser = this.getCurrentUser();
-        this._http = getInstance();
+        console.log(this._currentUser);
     }
 
     getToken() {
@@ -37,9 +38,11 @@ class AuthService {
     };
 
     logIn(email, password) {
-      const authUrl = '/users/login';
+        const http = getInstance();
 
-      return this._http.post(authUrl, {email, password}).then(response => {
+        const authUrl = '/users/login';
+
+      return http.post(authUrl, {email, password}).then(response => {
           const {token} = response.data;
 
           // Set token
@@ -90,6 +93,6 @@ export class AuthServiceFactory {
         if (!AuthServiceFactory._instance) {
             AuthServiceFactory._instance = new AuthService();
         }
-        return AuthServiceFactory._instance = new AuthService();
+        return AuthServiceFactory._instance;
     }
 }

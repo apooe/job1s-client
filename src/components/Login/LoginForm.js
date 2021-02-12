@@ -6,7 +6,8 @@ import {withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import {getInstance} from "../../helpers/httpInstance";
 import Alert from "@material-ui/lab/Alert";
-
+import {AuthServiceFactory} from "../../services/authService";
+const authService = AuthServiceFactory.getInstance();
 const LoginForm = (props) => {
 
     const {history} = props;
@@ -18,12 +19,10 @@ const LoginForm = (props) => {
     }
 
     const onSubmit = () => {
-        const http = getInstance();
-        const url = '/users/login';
-
-
-        http.post(url, user).then(response => {
+        const {email, password} = user;
+        authService.logIn(email, password).then(() => {
             history.push('/home');
+
         }).catch(error => {
             console.log(error.response.data);
             setError(error.response.data);
