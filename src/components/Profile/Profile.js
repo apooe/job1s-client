@@ -14,6 +14,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import axios from 'axios';
 
 const http = getInstance();
 
@@ -28,7 +29,9 @@ class Profile extends Component {
             onChangeInfo: false,
             onChangeExperiences: false,
             user: null,
-            selectedExperience: null
+            selectedExperience: null,
+            fileToUpload: null,
+            uploadedFile: null,
         };
 
     }
@@ -93,8 +96,8 @@ class Profile extends Component {
         if (isNewExperience) {
             console.log("NEW")
             // Add
-            newProfile.experience  = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
-        }else {
+            newProfile.experience = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
+        } else {
             console.log("UPDATE")
 
             // Update de larray
@@ -103,24 +106,51 @@ class Profile extends Component {
 
         console.log("HHH", newProfile);
 
+        // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
+        this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
+    }
 
-        const url = '/profiles';
-        http.put(url, newProfile).then(response => {
-            this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-        this.setState({onChangeExperience: false})
+    handleProfilePictureChange = (event) => {
+        // Get File Infos
+        this.setState({fileToUpload: event.target.files[0]});
+    }
+
+    uploadFile = () => {
+        if (!this.state.fileToUpload) {
+            return null; // Not file to upload
+        }
+
+        //Format file before uploading (BECAUSE IS NOT JSON)
+        const formData = new FormData();
+        formData.append(
+            "img",
+            this.state.fileToUpload,
+            this.state.fileToUpload.name
+        );
+        // TODO Ac changer avec env variable
+        const url = 'http://localhost:8080/api/upload';
+
+
+        // Im not using HttpInstance because i not send data in json so i use default
+        axios.post(url, formData).then(({data}) => {
+            // Change profile info
+            const newProfile = {...this.state.profile};
+            // Set link of the proile
+            newProfile.profileImg = data.link;
+            this.setState({profile: newProfile, fileToUpload: null});
+        })
     }
 
     render() {
-        const {user, profile, selectedExperience} = this.state;
+        const {user, profile, selectedExperience, fileToUpload} = this.state;
+        // TODO a changer avec env variable
+        const profilePictureImg = profile?.profileImg ? `http://localhost:8080${profile?.profileImg}` : picImage;
         return (
             <div>
                 {profile ? <div className="container-profile">
                     <section className="container background-info-pic">
                         <div className="picture">
-                            <img className="profile-pic" src={picImage} alt="profile picture"></img>
+                            <img className="profile-pic" src={profilePictureImg } alt="profile picture"></img>
                         </div>
                         <div className="infos">
                             <h1 className="name">{user.firstname} {user.lastname}</h1>
@@ -174,12 +204,27 @@ class Profile extends Component {
                                 </AddIcon>
                             </h1>
                             {
-                                profile.experience && profile.experience.map(exp => <p onClick={() => this.onClickUpdateExperience(exp)}>{exp.companyName}</p>)
+                                profile.experience && profile.experience.map(exp => <p
+                                    onClick={() => this.onClickUpdateExperience(exp)}>{exp.companyName}</p>)
                             }
 
                         </div>
 
-                        {this.state.onChangeInfo && <div>
+                        {this.state.onChangeInfo &&
+                        <div>
+                            <h1>Upload Profile Picture</h1>
+                            <div className="form-group">
+                                <input type="file" className="form-control" id="profilePicture"
+                                       onChange={this.handleProfilePictureChange} name="profile-picture"/>
+                            </div>
+                            <div className="form-group">
+                                {fileToUpload && <button className="btn btn-primary" type="submit"
+                                                         onClick={this.uploadFile}>Upload</button>
+                                }
+                            </div>
+                        </div>}
+
+                        {this.state.onChangeInfo && <div className="mt-5">
                             <Button
                                 color="default"
                                 variant="contained"
@@ -190,9 +235,13 @@ class Profile extends Component {
                             </Button>
                         </div>}
 
+
+
                     </section>
 
-                    <Dialog open={this.state.onChangeExperiences} onClose={() => this.setState({onChangeExperiences: false})} aria-labelledby="form-dialog-title">
+                    <Dialog open={this.state.onChangeExperiences}
+                            onClose={() => this.setState({onChangeExperiences: false})}
+                            aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title"><p className="text-center">Experience</p></DialogTitle>
                         <DialogContent>
                             <Experience experience={selectedExperience}
@@ -201,9 +250,6 @@ class Profile extends Component {
                     </Dialog>
 
                 </div> : <p>No data to display</p>}
-
-                <FileUpload/>
-
 
 
             </div>
