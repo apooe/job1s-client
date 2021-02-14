@@ -2,19 +2,19 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router";
 import picImage from '../../images/Unknown_person.jpg';
 import {getInstance} from "../../helpers/httpInstance";
-
 import './Profile.css';
 import {AuthServiceFactory} from "../../services/authService";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import AddIcon from '@material-ui/icons/Add';
-import FileUpload from "./ProfilePicture/FilesUploadComponent";
 import Experience from "./Experiences/Experience";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import axios from 'axios';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteExperience from "./Experiences/DeleteExperience";
+import {v4 as uuid} from "uuid";
 
 const http = getInstance();
 
@@ -28,10 +28,12 @@ class Profile extends Component {
             profile: null,
             onChangeInfo: false,
             onChangeExperiences: false,
+            onDeleteExperiences: false,
             user: null,
             selectedExperience: null,
             fileToUpload: null,
             uploadedFile: null,
+
         };
 
     }
@@ -78,36 +80,47 @@ class Profile extends Component {
     onClickUpdateInfos = () => {
         this.setState({onChangeInfo: !this.state.onChangeInfo})
     }
-    onClickAddExperience = () => {
+    onClickAddIcon = () => {
         this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null});
-
     }
 
-    onClickUpdateExperience = (experience) => {
+    onClickUpdate = (experience) => {
         this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: experience});
 
     }
 
+    onClickDelete = (data, mireille, selectedValue) => {
+        this.setState({mireille: !mireille, selectedValue: data});
+    }
+
     handleExperienceSubmit = (newExperience) => {
-        console.log("HHH", newExperience);
         const {profile, selectedExperience} = this.state;
         const newProfile = {...profile};
         const isNewExperience = !selectedExperience;
+
         if (isNewExperience) {
             console.log("NEW")
             // Add
             newProfile.experience = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
-        } else {
-            console.log("UPDATE")
+
+        }
+        else{
+            console.log("UPDATE ")
 
             // Update de larray
             newProfile.experience = newProfile?.experience.map(exp => exp._id === newExperience._id ? newExperience : exp);
         }
-
         console.log("HHH", newProfile);
 
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
+    }
+
+    handleExperienceDelete = (newExperience) => {
+        const {profile} = this.state;
+        const newProfile = {...profile};
+        newProfile.experience = newProfile.experience.filter(exp => exp._id !== newExperience._id);
+       this.setState({profile: newProfile, selectedExperience: null, onDeleteExperiences: false});
     }
 
     handleProfilePictureChange = (event) => {
@@ -128,11 +141,11 @@ class Profile extends Component {
             this.state.fileToUpload.name
         );
         // TODO Ac changer avec env variable
-        const url = 'http://localhost:8080/api/upload';
+        const url = '/upload';
 
 
         // Im not using HttpInstance because i not send data in json so i use default
-        axios.post(url, formData).then(({data}) => {
+        http.post(url, formData).then(({data}) => {
             // Change profile info
             const newProfile = {...this.state.profile};
             // Set link of the proile
@@ -140,6 +153,27 @@ class Profile extends Component {
             this.setState({profile: newProfile, fileToUpload: null});
         })
     }
+
+    onCloseWindowDelete = () =>{
+
+        this.setState({onDeleteExperiences : false});
+    };
+
+    onCloseWindowChange = () =>{
+
+        this.setState({onChangeExperiences : false});
+    };
+
+    formatDate(date) {
+        if(!date) {
+            return null;
+        }
+        const obj = new Date(date);
+        const options = { year: 'numeric', month: 'long' };
+        return obj.toLocaleDateString("en-US", options);
+
+    }
+
 
     render() {
         const {user, profile, selectedExperience, fileToUpload} = this.state;
@@ -150,10 +184,10 @@ class Profile extends Component {
                 {profile ? <div className="container-profile">
                     <section className="container background-info-pic">
                         <div className="picture">
-                            <img className="profile-pic" src={profilePictureImg } alt="profile picture"></img>
+                            <img className="profile-pic" src={profilePictureImg} alt="profile picture"></img>
                         </div>
                         <div className="infos">
-                            <h1 className="name">{user.firstname} {user.lastname}</h1>
+                            <h2 className="name">{user.firstname} {user.lastname}</h2>
                             <h3 className="city">{user.city}</h3>
                         </div>
                         <Button
@@ -182,30 +216,71 @@ class Profile extends Component {
                         </div>
 
 
-                        <div className="education"><h1>Education</h1>
-                            {this.state.onChangeInfo ?
-                                <TextField
-                                    id="outlined-multiline-static"
-                                    label="Education"
-                                    multiline
-                                    rows={4}
-                                    onChange={e => this.handleProfileChange({education: e.target.value})}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={profile.education}
-                                /> : profile.education}
+                        <div className="education">
+                            <h1>
+                                Education &nbsp;
+                                {this.state.onChangeInfo && <AddIcon
+                                    onClick={this.onClickAddIcon}>
+                                </AddIcon>}
+                            </h1>
+                            {
+                                profile.education && profile.education.map(exp =>
+
+                                    <div key={uuid()}>
+
+                                        <h4 className="education-exp">{exp.collegeName}</h4>
+                                        {this.state.onChangeInfo &&
+                                        <div style={{float:"right"}}>
+                                            <EditIcon
+                                                fontSize="small"
+                                                onClick={() => this.onClickUpdate(exp)}>
+                                            </EditIcon> &nbsp;
+                                            <DeleteIcon
+                                                fontSize="small"
+                                                onClick={() => this.onClickDelete(exp, this.state.onDeleteExperiences, this.state.selectedExperience)}>
+
+                                            </DeleteIcon>
+                                        </div>
+                                        }
+                                        <p className="degree-exp">{exp.degree}</p>
+                                        <p className="date-exp">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
+
+                                    </div>)
+                            }
+
                         </div>
+
 
                         <div className="experiences">
                             <h1>
                                 Experiences &nbsp;
-                                <AddIcon
-                                    onClick={this.onClickAddExperience}>
-                                </AddIcon>
+                                {this.state.onChangeInfo && <AddIcon
+                                    onClick={this.onClickAddIcon}>
+                                </AddIcon>}
                             </h1>
                             {
-                                profile.experience && profile.experience.map(exp => <p
-                                    onClick={() => this.onClickUpdateExperience(exp)}>{exp.companyName}</p>)
+                                profile.experience && profile.experience.map(exp =>
+
+                                    <div key={uuid()}>
+
+                                        <h4 className="company-exp">{exp.companyName}</h4>
+                                        {this.state.onChangeInfo &&
+                                        <div style={{float:"right"}}>
+                                            <EditIcon
+                                                fontSize="small"
+                                                onClick={() => this.onClickUpdate(exp)}>
+                                            </EditIcon> &nbsp;
+                                            <DeleteIcon
+                                                fontSize="small"
+                                                onClick={() => this.onClickDelete(exp)}>
+                                            </DeleteIcon>
+                                        </div>
+                                        }
+                                        <p className="position-exp">{exp.position}</p>
+                                        <p className="date-exp">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
+
+                                        <p className="description-exp">{exp.description}</p>
+                                    </div>)
                             }
 
                         </div>
@@ -229,23 +304,32 @@ class Profile extends Component {
                                 color="default"
                                 variant="contained"
                                 id="btn-update-profile"
-                                onClick={this.onSubmitUpdate}
-                            >
+                                onClick={this.onSubmitUpdate}>
                                 Validate
                             </Button>
                         </div>}
 
 
-
                     </section>
 
-                    <Dialog open={this.state.onChangeExperiences}
-                            onClose={() => this.setState({onChangeExperiences: false})}
+                    <Dialog open={this.state.onChangeInfo && this.state.onChangeExperiences}
+                            onClose={this.onClickUpdate}
                             aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title"><p className="text-center">Experience</p></DialogTitle>
                         <DialogContent>
                             <Experience experience={selectedExperience}
-                                        onExperienceSubmit={this.handleExperienceSubmit}/>
+                                        onExperienceSubmit={this.handleExperienceSubmit}
+                                        onClose={this.onClickUpdate}/>
+                        </DialogContent>
+                    </Dialog>
+
+
+                    <Dialog open={this.state.onChangeInfo && this.state.onDeleteExperiences}
+                            onClose={this.onClickDelete}
+                            aria-labelledby="form-dialog-title">
+                        <DialogContent>
+                            <DeleteExperience experience={selectedExperience}
+                                        onExperienceSubmit={this.handleExperienceDelete} onClose={this.onClickDelete}/>
                         </DialogContent>
                     </Dialog>
 

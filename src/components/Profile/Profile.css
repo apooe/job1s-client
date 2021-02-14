@@ -36,3 +36,25 @@
 
 }
 
+.date-exp{
+
+    font-size: 15px;
+    color: #5a5757;
+    font-style: italic;
+}
+
+.position-exp{
+
+    margin: 0;
+    font-size: 20px;
+}
+
+.company-exp{
+    margin: 0;
+    padding-top: 20px;
+}
+
+.description-exp{
+    margin: 0;
+}
+

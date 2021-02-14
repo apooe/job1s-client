@@ -1,49 +1,45 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 
-class Experience extends Component {
+class Education extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             profile: this.props.profile,
-            onChangeExperience : false,
-            experience: null
+            onChangeEducation : false,
+            education: null
         };
     }
 
     componentDidMount() {
-        const experience = this.props.experience || {companyName: ''};
-        this.setState({experience});
+        const education = this.props.education || {collegeName: ''};
+        this.setState({education});
     }
 
-    handleExperienceChange = (newValue) =>{
+    handleEducationChange = (newValue) =>{
 
-        const  oldExperience = {...this.state.experience}; // Deep Copy of the profile field
-        const newExperience = {...oldExperience, ...newValue};
-        this.setState({experience : newExperience })
+        const  oldEducation = {...this.state.education}; // Deep Copy of the profile field
+        const newEducation = {...oldEducation, ...newValue};
+        this.setState({education : newEducation })
 
     }
     onSubmit = () => {
 
-        console.log(this.state.experience);
-        this.props.onExperienceSubmit(this.state.experience);
+        console.log(this.state.education);
+        this.props.onEducationSubmit(this.state.education);
     }
 
     onClose = () => {
         this.props.onClose();
     }
 
-
-
-
-
     render() {
-      const {experience} = this.state;
+        const {education} = this.state;
 
-      if(!experience) {
-          return  null;
-      }
+        if(!education) {
+            return  null;
+        }
 
 
         return (
@@ -52,47 +48,37 @@ class Experience extends Component {
                     <div className="col-md-12" >
                         <input
                             type="text"
-                            onChange={e => this.handleExperienceChange({companyName: e.target.value})}
+                            onChange={e => this.handleEducationChange({collegeName: e.target.value})}
                             className="form-control w-100"
                             placeholder="Company Name"
-                            value={experience.companyName}
+                            value={education.collegeName}
                         />
                         <br/>
 
                         <input
                             type="text"
-                            onChange={e => this.handleExperienceChange({position: e.target.value})}
+                            onChange={e => this.handleEducationChange({degree: e.target.value})}
                             className="form-control"
                             placeholder="Position"
-                            value={experience.position}
+                            value={education.degree}
                         />
                         <br/>
 
                         <div className="input-group">
                             <input
                                 type="month"
-                                onChange={e => this.handleExperienceChange({startDate: e.target.value})}
+                                onChange={e => this.handleEducationChange({startDate: e.target.value})}
                                 className="form-control"
-                                value={experience.startDate}
+                                value={education.startDate}
                             />
                             <span className="input-group-addon">-</span>
                             <input
                                 type="month"
-                                onChange={e => this.handleExperienceChange({endDate: e.target.value})}
+                                onChange={e => this.handleEducationChange({endDate: e.target.value})}
                                 className="form-control"
-                                value={experience.endDate}
+                                value={education.endDate}
                             />
                         </div>
-                        <br/>
-
-                        <textarea
-                            className="form-control"
-                            rows="6"
-                            style={{width: '100%'}}
-                            onChange={e => this.handleExperienceChange({description: e.target.value})}
-                            placeholder="Description"
-                            value={experience.description}
-                        />
                         <br/>
 
                         <div className="btn btn-toolbar">
@@ -121,5 +107,5 @@ class Experience extends Component {
 
 }
 
-export default Experience;
+export default Education;
 
