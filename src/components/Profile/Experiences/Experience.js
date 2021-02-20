@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 
+
 class Experience extends Component {
 
     constructor(props) {
@@ -28,14 +29,12 @@ class Experience extends Component {
 
         console.log(this.state.experience);
         this.props.onExperienceSubmit(this.state.experience);
+
     }
 
     onClose = () => {
         this.props.onClose();
     }
-
-
-
 
 
     render() {

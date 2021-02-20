@@ -8,12 +8,14 @@ import {withRouter} from "react-router"
 import {Link} from "react-router-dom";
 import "../Login/LoginManager.css";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import {AuthServiceFactory} from "../../services/authService";
+const authService = AuthServiceFactory.getInstance();
 
 const userValidator = Yup.object().shape({
 
     _id: Yup.string().optional().nullable(),
-
     password: Yup.string().min(6).required(),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -22,6 +24,7 @@ const userValidator = Yup.object().shape({
     firstname: Yup.string().matches(/^[a-zA-Z\s]+$/, "Invalid First name").min(2).required(" First name is a required field"),
     email: Yup.string().email().required(),
     _v: Yup.number().optional().nullable()
+
 });
 const http = getInstance();
 
@@ -33,6 +36,13 @@ const RegisterForm = (props) => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [places, setPlace] = useState([]);
+    const [checked, setChecked] = useState( false);
+
+    const handleChange = () => {
+
+        setChecked(!checked);
+        setIsSubmitting(checked);
+    };
 
 
     const loadPlaceOptions = (newValue) => {
@@ -56,28 +66,44 @@ const RegisterForm = (props) => {
         setIsSubmitting(true);
         console.log(user);
 
+        console.log("checked:" ,checked);
+
 
         userValidator.validate(user).then(() => {
 
-                if (currentStep === 1) {
-                    setCurrentStep(currentStep + 1);
-                    setError(null);
-                    setIsSubmitting(false);
-                    return;
-                }
+            if(!checked) {
+                setError("Are you over 18 years old ?");
+                return;
+            }
 
-                http.post(url, user).then(response => {
-                    console.log(response.data._id);
-                    createProfile({userId: response.data._id});
-                    setIsSubmitting(false);
-                    history.push("/home");
+            if (currentStep === 1) {
+                setCurrentStep(currentStep + 1);
+                setError(null);
+                setIsSubmitting(false);
+                return;
+            }
+
+            http.post(url, user).then(response => {
+                console.log(response.data._id);
+                createProfile({userId: response.data._id});
+                setIsSubmitting(false);
+                //history.push("/home");
+                const {email, password} = user;
+                authService.logIn(email, password).then(() => {
+                    history.push('/home');
+
                 }).catch(error => {
-                    console.log(error?.response?.data);
-                    setError(error?.response?.data);
-                    setIsSubmitting(false);
-                    setCurrentStep( 1);
-
+                    console.log(error.response.data);
+                    setError(error.response.data);
                 });
+
+            }).catch(error => {
+                console.log(error?.response?.data);
+                setError(error?.response?.data);
+                setIsSubmitting(false);
+                setCurrentStep(1);
+
+            });
 
         }).catch((e) => {
             setError(e.errors);
@@ -85,7 +111,7 @@ const RegisterForm = (props) => {
         });
     }
 
-    const createProfile = (userId) =>{
+    const createProfile = (userId) => {
         console.log(userId)
         const url = '/profiles';
         http.post(url, userId).then(response => {
@@ -168,14 +194,27 @@ const RegisterForm = (props) => {
                             required
                         />
 
+                        <FormControlLabel
+                            className="checkbox"
+                            control={
+                                <Checkbox
+                                    onChange={handleChange}
+                                    color="primary"
+                                />
+                            }
+                            label={<span style={{ fontSize: '13px' }}>I am over 18 years old.</span>}
+
+                        />
+
                     </div>}
+
                     {currentStep === 2 && <div>
                         <Autocomplete
                             id="combo-box-demo"
                             options={places}
                             fullWidth
                             onInputChange={(event, value) => loadPlaceOptions(value)}
-                            onChange={(event, value) => handleUserChange({city : value})}
+                            onChange={(event, value) => handleUserChange({city: value})}
                             renderInput={(params) => (
                                 <TextField  {...params} label="City"
                                             placeholder="City"

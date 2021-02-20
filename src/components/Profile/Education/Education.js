@@ -50,7 +50,7 @@ class Education extends Component {
                             type="text"
                             onChange={e => this.handleEducationChange({collegeName: e.target.value})}
                             className="form-control w-100"
-                            placeholder="Company Name"
+                            placeholder="Name"
                             value={education.collegeName}
                         />
                         <br/>
@@ -59,7 +59,7 @@ class Education extends Component {
                             type="text"
                             onChange={e => this.handleEducationChange({degree: e.target.value})}
                             className="form-control"
-                            placeholder="Position"
+                            placeholder="Degree"
                             value={education.degree}
                         />
                         <br/>

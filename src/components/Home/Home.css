@@ -1,6 +1,6 @@
 .container-background {
     background: url("../../images/conferencing.jpg") no-repeat center fixed;
-    height: 70vh;
+    height: 100vh;
     padding: 50px;
 
 }
@@ -14,8 +14,8 @@
 
 }
 
-hr{
-    border: 2px solid white;
+.separator{
+    border: 1px ridge  white;
     border-radius: 5px;
-    width:30%;
+    width:50%;
 }

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 
-class DeleteExperience extends Component {
+class DeleteExperienceControl extends Component {
 
 
     constructor(props) {
@@ -19,7 +19,7 @@ class DeleteExperience extends Component {
     }
 
     onSubmit = () => {
-        this.props.onExperienceSubmit(this.state.experience);
+        this.props.onExperienceSubmit(this.state.experience, this.props.type);
     }
 
     onClose = () => {
@@ -57,5 +57,5 @@ class DeleteExperience extends Component {
 
 }
 
-export default DeleteExperience;
+export default DeleteExperienceControl;
 

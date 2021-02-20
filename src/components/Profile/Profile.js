@@ -13,10 +13,16 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import DeleteExperience from "./Experiences/DeleteExperience";
+import DeleteExperienceControl from "./Experiences/DeleteExperienceControl";
 import {v4 as uuid} from "uuid";
+import Education from "./Education/Education";
+import DeleteEducationControl from "./Education/DeleteEducationControl";
+import ContactForm from "../ContactForm/ContactForm";
 
 const http = getInstance();
+
+const EDUCATION_ARRAY = "EDUCATION_ARRAY";
+const EXPERIENCE_ARRAY = "EXPERIENCE_ARRAY";
 
 class Profile extends Component {
 
@@ -29,10 +35,14 @@ class Profile extends Component {
             onChangeInfo: false,
             onChangeExperiences: false,
             onDeleteExperiences: false,
+            onChangeEducations: false,
+            onDeleteEducations: false,
             user: null,
             selectedExperience: null,
+            selectedEducation: null,
             fileToUpload: null,
             uploadedFile: null,
+
 
         };
 
@@ -59,7 +69,6 @@ class Profile extends Component {
         });
     }
 
-
     onSubmitUpdate = () => {
         const url = '/profiles';
         const {profile} = this.state;
@@ -80,17 +89,27 @@ class Profile extends Component {
     onClickUpdateInfos = () => {
         this.setState({onChangeInfo: !this.state.onChangeInfo})
     }
-    onClickAddIcon = () => {
-        this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null});
+
+    addDataArray = (type) => {
+
+        type === EXPERIENCE_ARRAY ?
+            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null}) :
+            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: null});
+
     }
 
-    onClickUpdate = (experience) => {
-        this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: experience});
+    updateDataArray = (data, type) => {
 
+        type === EXPERIENCE_ARRAY ?
+            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: data}) :
+            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: data});
     }
 
-    onClickDelete = (data, mireille, selectedValue) => {
-        this.setState({mireille: !mireille, selectedValue: data});
+    deleteDataArray = (data, type) => {
+
+        type === EXPERIENCE_ARRAY ?
+            this.setState({onDeleteExperiences: !this.state.onDeleteExperiences, selectedExperience: data}) :
+            this.setState({onDeleteEducations: !this.state.onDeleteEducations, selectedEducation: data});
     }
 
     handleExperienceSubmit = (newExperience) => {
@@ -100,27 +119,48 @@ class Profile extends Component {
 
         if (isNewExperience) {
             console.log("NEW")
-            // Add
             newProfile.experience = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
 
-        }
-        else{
+        } else {
             console.log("UPDATE ")
-
-            // Update de larray
             newProfile.experience = newProfile?.experience.map(exp => exp._id === newExperience._id ? newExperience : exp);
         }
-        console.log("HHH", newProfile);
-
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
+
+    }
+    handleEducationSubmit = (newEducation) => {
+        const {profile, selectedEducation} = this.state;
+        const newProfile = {...profile};
+        const isNewEducation = !selectedEducation;
+
+        if (isNewEducation) {
+            console.log("NEW educatiom")
+            newProfile.education = newProfile?.education ? [...newProfile.education, newEducation] : [newEducation];
+
+        } else {
+            console.log("UPDATE education ")
+            newProfile.education = newProfile?.education.map(educ => educ._id === newEducation._id ? newEducation : educ);
+        }
+
+        console.log("newprofile", newProfile);
+
+        // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
+        this.setState({profile: newProfile, selectedEducation: null, onChangeEducations: false});
     }
 
-    handleExperienceDelete = (newExperience) => {
+    handleDelete = (dataToDelete, type) => {
+
         const {profile} = this.state;
         const newProfile = {...profile};
-        newProfile.experience = newProfile.experience.filter(exp => exp._id !== newExperience._id);
-       this.setState({profile: newProfile, selectedExperience: null, onDeleteExperiences: false});
+
+        if (type === EXPERIENCE_ARRAY) {
+            newProfile.experience = newProfile.experience.filter(exp => exp !== dataToDelete);
+            this.setState({profile: newProfile, selectedExperience: null, onDeleteExperiences: false});
+        } else {
+            newProfile.education = newProfile.education.filter(educ => educ !== dataToDelete);
+            this.setState({profile: newProfile, selectedEducation: null, onDeleteEducations: false});
+        }
     }
 
     handleProfilePictureChange = (event) => {
@@ -154,54 +194,59 @@ class Profile extends Component {
         })
     }
 
-    onCloseWindowDelete = () =>{
+    onCloseWindowDelete = (type) => {
 
-        this.setState({onDeleteExperiences : false});
+        type === EXPERIENCE_ARRAY ?
+            this.setState({onDeleteExperiences: false}) :
+            this.setState({onDeleteEducations: false});
     };
 
-    onCloseWindowChange = () =>{
+    onCloseWindowChange = (type) => {
 
-        this.setState({onChangeExperiences : false});
+        type === EXPERIENCE_ARRAY ?
+            this.setState({onChangeExperiences: false}) :
+            this.setState({onChangeEducations: false});
+
     };
 
     formatDate(date) {
-        if(!date) {
+        if (!date) {
             return null;
         }
         const obj = new Date(date);
-        const options = { year: 'numeric', month: 'long' };
+        const options = {year: 'numeric', month: 'long'};
         return obj.toLocaleDateString("en-US", options);
 
     }
 
-
     render() {
-        const {user, profile, selectedExperience, fileToUpload} = this.state;
+        const {user, profile, selectedExperience, selectedEducation, fileToUpload} = this.state;
+
         // TODO a changer avec env variable
         const profilePictureImg = profile?.profileImg ? `http://localhost:8080${profile?.profileImg}` : picImage;
         return (
-            <div>
-                {profile ? <div className="container-profile">
+            <div className="wrapper-body-profile">
+                {profile ? <div className="container profile">
+
                     <section className="container background-info-pic">
                         <div className="picture">
                             <img className="profile-pic" src={profilePictureImg} alt="profile picture"></img>
                         </div>
                         <div className="infos">
-                            <h2 className="name">{user.firstname} {user.lastname}</h2>
-                            <h3 className="city">{user.city}</h3>
+                            <p className="name">{user.firstname} {user.lastname}</p>
+                            <p className="city">{user.city}</p>
                         </div>
-                        <Button
-                            color="default"
-                            variant="contained"
+                        <EditIcon
                             id="btn-update-profile"
                             onClick={this.onClickUpdateInfos}>
                             Update profile
-                        </Button>
+                        </EditIcon>
                     </section>
 
 
-                    <section className="second-part">
-                        <div className="description"><h1>Description</h1>
+                    <section className="container profile-infos">
+                        <div className="container description">
+                            <h1 className="category-profile">Description</h1>
                             {this.state.onChangeInfo ?
                                 <TextField
                                     id="outlined-multiline-static"
@@ -215,47 +260,47 @@ class Profile extends Component {
                                 /> : profile.description}
                         </div>
 
-
-                        <div className="education">
-                            <h1>
+                        <hr className="between-category-separator"/>
+                        <div className="container education">
+                            <h1 className="category-profile">
                                 Education &nbsp;
                                 {this.state.onChangeInfo && <AddIcon
-                                    onClick={this.onClickAddIcon}>
+                                    onClick={() => this.addDataArray(EDUCATION_ARRAY)}>
                                 </AddIcon>}
                             </h1>
                             {
-                                profile.education && profile.education.map(exp =>
+                                profile.education && profile.education.map(formation =>
 
                                     <div key={uuid()}>
 
-                                        <h4 className="education-exp">{exp.collegeName}</h4>
+                                        <h4 className="company-educ-name">{formation.collegeName}</h4>
                                         {this.state.onChangeInfo &&
-                                        <div style={{float:"right"}}>
+                                        <div style={{float: "right"}}>
                                             <EditIcon
                                                 fontSize="small"
-                                                onClick={() => this.onClickUpdate(exp)}>
+                                                onClick={() => this.updateDataArray(formation, EDUCATION_ARRAY)}>
                                             </EditIcon> &nbsp;
                                             <DeleteIcon
                                                 fontSize="small"
-                                                onClick={() => this.onClickDelete(exp, this.state.onDeleteExperiences, this.state.selectedExperience)}>
+                                                onClick={() => this.deleteDataArray(formation, EDUCATION_ARRAY)}>
 
                                             </DeleteIcon>
                                         </div>
                                         }
-                                        <p className="degree-exp">{exp.degree}</p>
-                                        <p className="date-exp">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
+                                        <p className="position-type">{formation.degree}</p>
+                                        <p className="date">{this.formatDate(formation.startDate)} - {this.formatDate(formation.endDate)} </p>
 
                                     </div>)
                             }
 
                         </div>
 
-
-                        <div className="experiences">
-                            <h1>
+                        <hr className="between-category-separator"/>
+                        <div className="container experiences">
+                            <h1 className="category-profile">
                                 Experiences &nbsp;
                                 {this.state.onChangeInfo && <AddIcon
-                                    onClick={this.onClickAddIcon}>
+                                    onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}>
                                 </AddIcon>}
                             </h1>
                             {
@@ -263,23 +308,23 @@ class Profile extends Component {
 
                                     <div key={uuid()}>
 
-                                        <h4 className="company-exp">{exp.companyName}</h4>
+                                        <h4 className="company-educ-name">{exp.companyName}</h4>
                                         {this.state.onChangeInfo &&
-                                        <div style={{float:"right"}}>
+                                        <div style={{float: "right"}}>
                                             <EditIcon
                                                 fontSize="small"
-                                                onClick={() => this.onClickUpdate(exp)}>
+                                                onClick={() => this.updateDataArray(exp, EXPERIENCE_ARRAY)}>
                                             </EditIcon> &nbsp;
                                             <DeleteIcon
                                                 fontSize="small"
-                                                onClick={() => this.onClickDelete(exp)}>
+                                                onClick={() => this.deleteDataArray(exp, EXPERIENCE_ARRAY)}>
                                             </DeleteIcon>
                                         </div>
                                         }
-                                        <p className="position-exp">{exp.position}</p>
-                                        <p className="date-exp">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
-
+                                        <p className="position-type">{exp.position}</p>
+                                        <p className="date">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
                                         <p className="description-exp">{exp.description}</p>
+                                        <hr id="line"/>
                                     </div>)
                             }
 
@@ -303,7 +348,7 @@ class Profile extends Component {
                             <Button
                                 color="default"
                                 variant="contained"
-                                id="btn-update-profile"
+                                id="btn-validate-profile"
                                 onClick={this.onSubmitUpdate}>
                                 Validate
                             </Button>
@@ -312,28 +357,61 @@ class Profile extends Component {
 
                     </section>
 
+
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeExperiences}
-                            onClose={this.onClickUpdate}
+                            onClose={this.updateDataArray}
                             aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title"><p className="text-center">Experience</p></DialogTitle>
                         <DialogContent>
                             <Experience experience={selectedExperience}
                                         onExperienceSubmit={this.handleExperienceSubmit}
-                                        onClose={this.onClickUpdate}/>
+                                        onClose={() => this.onCloseWindowChange(EXPERIENCE_ARRAY)}/>
+                        </DialogContent>
+                    </Dialog>
+
+
+                    <Dialog open={this.state.onChangeInfo && this.state.onChangeEducations}
+                            onClose={this.updateDataArray}
+                            aria-labelledby="form-dialog-title">
+                        <DialogTitle id="form-dialog-title"><p className="text-center">Education</p></DialogTitle>
+                        <DialogContent>
+                            <Education education={selectedEducation}
+                                       onEducationSubmit={this.handleEducationSubmit}
+                                       onClose={() => this.onCloseWindowChange(EDUCATION_ARRAY)}/>
                         </DialogContent>
                     </Dialog>
 
 
                     <Dialog open={this.state.onChangeInfo && this.state.onDeleteExperiences}
-                            onClose={this.onClickDelete}
+                            onClose={this.deleteDataArray}
                             aria-labelledby="form-dialog-title">
                         <DialogContent>
-                            <DeleteExperience experience={selectedExperience}
-                                        onExperienceSubmit={this.handleExperienceDelete} onClose={this.onClickDelete}/>
+                            <DeleteExperienceControl experience={selectedExperience}
+                                                     type={EXPERIENCE_ARRAY}
+                                                     onExperienceSubmit={this.handleDelete}
+                                                     onClose={() => this.onCloseWindowDelete(EXPERIENCE_ARRAY)}/>
+                        </DialogContent>
+                    </Dialog>
+
+
+                    <Dialog open={this.state.onChangeInfo && this.state.onDeleteEducations}
+                            onClose={this.deleteDataArray}
+                            aria-labelledby="form-dialog-title">
+                        <DialogContent>
+                            <DeleteEducationControl education={selectedEducation}
+                                                    type={EDUCATION_ARRAY}
+                                                    onEducationSubmit={this.handleDelete}
+                                                    onClose={() => this.onCloseWindowDelete(EDUCATION_ARRAY)}/>
                         </DialogContent>
                     </Dialog>
 
                 </div> : <p>No data to display</p>}
+
+                <section className="container contact-form">
+                    <ContactForm emailDest={user?.email}></ContactForm>
+
+
+                </section>
 
 
             </div>

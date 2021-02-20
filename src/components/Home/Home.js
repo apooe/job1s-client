@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {withRouter} from "react-router";
-import Navbar from '../Navbar/Navbar'
 import './Home.css';
 
 class Home extends Component {
@@ -8,9 +7,8 @@ class Home extends Component {
         return(
             <div>
                 <div className="container-background">
-                    <Navbar></Navbar>
                     <h1 id="slogan">Find Your Ideal Job</h1>
-                    <hr></hr>
+                    <hr className="separator"/>
 
 
                 </div>
