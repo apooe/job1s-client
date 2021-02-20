@@ -1,5 +1,6 @@
 .NavbarItems{
-    background: transparent;
+    background-color: #17a2b8;
+    padding: 50px;
     height: 50px;
     display:flex;
     justify-content: center;

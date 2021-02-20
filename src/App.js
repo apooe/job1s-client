@@ -5,13 +5,15 @@ import LoginForm from './components/Login/LoginForm'
 import Home from './components/Home/Home'
 import Profile from './components/Profile/Profile'
 import Navbar from "./components/Navbar/Navbar";
-
+import {AuthServiceFactory} from './services/authService';
+const authService = AuthServiceFactory.getInstance();
 
 function App() {
+    const canShowToolBar = authService.isAuth();
     return (
         <div className="App">
             <BrowserRouter>
-                <Navbar></Navbar>
+                {canShowToolBar && <Navbar></Navbar>}
                 <Switch>
                     <Route exact path="/"><p>Welcome Home</p></Route>
                     <Route exact path="/register"><RegisterForm></RegisterForm></Route>

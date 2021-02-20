@@ -2,19 +2,10 @@
     font-size: 20px;
 }
 
-.row{
-    margn:0;
-}
 .col-lg-10{
     margin-left: 90px;
 }
 
-body
-{
-    font-family: 'Lato', sans-serif;
-    margin: 70px 0px;
-    background: #0069d6;
-}
 .divider
 {
     width:100px;

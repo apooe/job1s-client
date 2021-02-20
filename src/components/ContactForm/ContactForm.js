@@ -49,11 +49,14 @@ class ContactForm extends Component {
         let buttonText = this.state.status;
         return (
 
-            <div className="container col-lg-12">
-                <h2 className="contact-title">Contact</h2>
-                <div className="divider"></div>
-                <div className="row">
-                    <div className="col-lg-10 col-lg-offset-1">
+            <div className="row">
+                <div className="col-12">
+                    <h2 className="contact-title">Contact</h2>
+                    <div className="divider"></div>
+                </div>
+
+                <div className="col-12">
+                    <div className="col-12 col-md-10 offset-md-1">
                         <form onSubmit={this.handleSubmit.bind(this)}>
                             <div className="row">
                                 <div className="col-md-6">

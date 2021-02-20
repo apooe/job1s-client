@@ -18,6 +18,13 @@ import {v4 as uuid} from "uuid";
 import Education from "./Education/Education";
 import DeleteEducationControl from "./Education/DeleteEducationControl";
 import ContactForm from "../ContactForm/ContactForm";
+import IconButton from "@material-ui/core/IconButton";
+import WorkIcon from '@material-ui/icons/Work';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import Avatar from "@material-ui/core/Avatar";
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import {Divider} from "@material-ui/core";
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 const http = getInstance();
 
@@ -45,6 +52,9 @@ class Profile extends Component {
 
 
         };
+
+        this.uploadImg = React.createRef();
+
 
     }
 
@@ -165,11 +175,13 @@ class Profile extends Component {
 
     handleProfilePictureChange = (event) => {
         // Get File Infos
-        this.setState({fileToUpload: event.target.files[0]});
+        const fileToUpload = event.target.files[0];
+        this.setState({fileToUpload});
+        this.uploadFile(fileToUpload);
     }
 
-    uploadFile = () => {
-        if (!this.state.fileToUpload) {
+    uploadFile = (fileToUpload) => {
+        if (!fileToUpload) {
             return null; // Not file to upload
         }
 
@@ -177,8 +189,8 @@ class Profile extends Component {
         const formData = new FormData();
         formData.append(
             "img",
-            this.state.fileToUpload,
-            this.state.fileToUpload.name
+            fileToUpload,
+            fileToUpload.name
         );
         // TODO Ac changer avec env variable
         const url = '/upload';
@@ -225,137 +237,176 @@ class Profile extends Component {
         // TODO a changer avec env variable
         const profilePictureImg = profile?.profileImg ? `http://localhost:8080${profile?.profileImg}` : picImage;
         return (
-            <div className="wrapper-body-profile">
-                {profile ? <div className="container profile">
+            <div>
 
-                    <section className="container background-info-pic">
-                        <div className="picture">
-                            <img className="profile-pic" src={profilePictureImg} alt="profile picture"></img>
+                {profile ? <div className="container mt-5">
+
+                    <div className="row">
+                        <div className="col-12">
+                            <section className="border rounded p-5 bg-light">
+                                <div className="picture"
+                                     onClick={() => this.state.onChangeInfo && this.uploadImg.current.click()}>
+                                    <img className="profile-pic" src={profilePictureImg} alt="profile picture"/>
+                                </div>
+                                <div className="infos m-1">
+                                    <p className="name text-center font-weight-bold">{user.firstname} {user.lastname}</p>
+                                    <p className="city text-center font-italic">{user.city}</p>
+                                </div>
+                                <IconButton aria-label="edit" className="float-right p-2 text-info">
+
+                                    <EditIcon
+                                        onClick={this.onClickUpdateInfos}>
+                                        fontSize="small"
+                                        Update profile
+                                    </EditIcon>
+                                </IconButton>
+                            </section>
                         </div>
-                        <div className="infos">
-                            <p className="name">{user.firstname} {user.lastname}</p>
-                            <p className="city">{user.city}</p>
+                    </div>
+
+
+                    <div className="row mt-5">
+                        <div className="col-12">
+                            <section className="bg-light rounded p-5 border">
+                                <Avatar className="bg-info mx-auto">
+                                    <ImportContactsIcon/>
+                                </Avatar>
+                                <h1 className="category-profile mb-3 p-0 ">Description</h1>
+                                {this.state.onChangeInfo ?
+                                    <TextField
+                                        id="outlined-multiline-static"
+                                        label="Description"
+                                        multiline
+                                        rows={4}
+                                        onChange={e => this.handleProfileChange({description: e.target.value})}
+                                        variant="outlined"
+                                        fullWidth
+                                        value={profile.description}
+                                    /> : profile.description}
+                            </section>
                         </div>
-                        <EditIcon
-                            id="btn-update-profile"
-                            onClick={this.onClickUpdateInfos}>
-                            Update profile
-                        </EditIcon>
-                    </section>
+                    </div>
 
-
-                    <section className="container profile-infos">
-                        <div className="container description">
-                            <h1 className="category-profile">Description</h1>
-                            {this.state.onChangeInfo ?
-                                <TextField
-                                    id="outlined-multiline-static"
-                                    label="Description"
-                                    multiline
-                                    rows={4}
-                                    onChange={e => this.handleProfileChange({description: e.target.value})}
-                                    variant="outlined"
-                                    fullWidth
-                                    value={profile.description}
-                                /> : profile.description}
-                        </div>
-
-                        <hr className="between-category-separator"/>
-                        <div className="container education">
-                            <h1 className="category-profile">
-                                Education &nbsp;
-                                {this.state.onChangeInfo && <AddIcon
-                                    onClick={() => this.addDataArray(EDUCATION_ARRAY)}>
-                                </AddIcon>}
-                            </h1>
-                            {
-                                profile.education && profile.education.map(formation =>
-
-                                    <div key={uuid()}>
-
-                                        <h4 className="company-educ-name">{formation.collegeName}</h4>
+                    <div className="row mt-5">
+                        <div className="col-12">
+                            <section className="bg-light rounded p-5 border">
+                                <div className=" education">
+                                    <Avatar className="bg-info mx-auto">
+                                        <AccountBalanceIcon/>
+                                    </Avatar>
+                                    <h1 className="category-profile mb-4 p-0 ">
+                                        Education &nbsp;
                                         {this.state.onChangeInfo &&
-                                        <div style={{float: "right"}}>
-                                            <EditIcon
-                                                fontSize="small"
-                                                onClick={() => this.updateDataArray(formation, EDUCATION_ARRAY)}>
-                                            </EditIcon> &nbsp;
-                                            <DeleteIcon
-                                                fontSize="small"
-                                                onClick={() => this.deleteDataArray(formation, EDUCATION_ARRAY)}>
+                                        <IconButton aria-label="add" className="text-info"> <AddCircleOutlineIcon
+                                            onClick={() => this.addDataArray(EDUCATION_ARRAY)}>
+                                        </AddCircleOutlineIcon></IconButton>}
+                                    </h1>
+                                    {
+                                        profile.education && profile.education.map((formation, index) =>
 
-                                            </DeleteIcon>
-                                        </div>
-                                        }
-                                        <p className="position-type">{formation.degree}</p>
-                                        <p className="date">{this.formatDate(formation.startDate)} - {this.formatDate(formation.endDate)} </p>
+                                            <div className="mt-2 pl-2" key={uuid()}>
 
-                                    </div>)
-                            }
+                                                <h4 className="company-educ-name">{formation.collegeName}</h4>
+                                                {this.state.onChangeInfo &&
+                                                <div style={{float: "right"}}>
+                                                    <IconButton aria-label="edit" className="text-info">
+                                                        <EditIcon
+                                                            fontSize="small"
+                                                            onClick={() => this.updateDataArray(formation, EDUCATION_ARRAY)}>
+                                                        </EditIcon>
+                                                    </IconButton>
+                                                    <IconButton aria-label="delete" className="text-danger">
+                                                        <DeleteIcon
+                                                            fontSize="small"
+                                                            onClick={() => this.deleteDataArray(formation, EDUCATION_ARRAY)}>
 
-                        </div>
+                                                        </DeleteIcon>
+                                                    </IconButton>
+                                                </div>
+                                                }
+                                                <p className="position-type">{formation.degree}</p>
+                                                <p className="date">{this.formatDate(formation.startDate)} - {this.formatDate(formation.endDate)} </p>
+                                                {index !== profile.education.length - 1 &&
+                                                <hr className="between-category-separator"/>}
 
-                        <hr className="between-category-separator"/>
-                        <div className="container experiences">
-                            <h1 className="category-profile">
-                                Experiences &nbsp;
-                                {this.state.onChangeInfo && <AddIcon
-                                    onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}>
-                                </AddIcon>}
-                            </h1>
-                            {
-                                profile.experience && profile.experience.map(exp =>
+                                            </div>)
+                                    }
 
-                                    <div key={uuid()}>
-
-                                        <h4 className="company-educ-name">{exp.companyName}</h4>
+                                </div>
+                                <Divider className="my-5"/>
+                                <div className="experiences">
+                                    <Avatar className="bg-info mx-auto">
+                                        <WorkIcon/>
+                                    </Avatar>
+                                    <h1 className="category-profile mb-4 p-0 ">
+                                        Experiences &nbsp;
                                         {this.state.onChangeInfo &&
-                                        <div style={{float: "right"}}>
-                                            <EditIcon
-                                                fontSize="small"
-                                                onClick={() => this.updateDataArray(exp, EXPERIENCE_ARRAY)}>
-                                            </EditIcon> &nbsp;
-                                            <DeleteIcon
-                                                fontSize="small"
-                                                onClick={() => this.deleteDataArray(exp, EXPERIENCE_ARRAY)}>
-                                            </DeleteIcon>
-                                        </div>
-                                        }
-                                        <p className="position-type">{exp.position}</p>
-                                        <p className="date">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
-                                        <p className="description-exp">{exp.description}</p>
-                                        <hr id="line"/>
-                                    </div>)
-                            }
+                                        <IconButton aria-label="add" className="text-info"> <AddCircleOutlineIcon
+                                            onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}>
+                                        </AddCircleOutlineIcon></IconButton>}
+                                    </h1>
+                                    {
+                                        profile.experience && profile.experience.map((exp, index) =>
 
+                                            <div key={uuid()} className="mt-2 pl-2">
+
+                                                <h4 className="company-educ-name">{exp.companyName}</h4>
+                                                {this.state.onChangeInfo &&
+                                                <div style={{float: "right"}}>
+                                                    <IconButton aria-label="edit" className="text-info">
+
+                                                        <EditIcon
+                                                            fontSize="small"
+                                                            onClick={() => this.updateDataArray(exp, EXPERIENCE_ARRAY)}>
+                                                        </EditIcon>
+                                                    </IconButton>
+                                                    <IconButton aria-label="delete" className="text-danger">
+                                                        <DeleteIcon
+                                                            fontSize="small"
+                                                            onClick={() => this.deleteDataArray(exp, EXPERIENCE_ARRAY)}>
+                                                        </DeleteIcon>
+                                                    </IconButton>
+                                                </div>
+                                                }
+                                                <p className="position-type">{exp.position}</p>
+                                                <p className="date">{this.formatDate(exp.startDate)} - {this.formatDate(exp.endDate)} </p>
+                                                <p className="description-exp">{exp.description}</p>
+                                                {index !== profile.experience.length - 1 &&
+                                                <hr className="between-category-separator"/>}
+
+                                            </div>)
+                                    }
+
+                                </div>
+
+                                {this.state.onChangeInfo &&
+                                <div>
+                                    <div className="form-group">
+                                        <input type="file" ref={this.uploadImg} className="d-none" id="profilePicture"
+                                               onChange={this.handleProfilePictureChange} name="profile-picture"/>
+                                    </div>
+                                </div>}
+
+                                {this.state.onChangeInfo && <div className=" text-center mt-5">
+                                    <button className="btn btn-info w-50" onClick={this.onSubmitUpdate}>
+                                        Save
+                                    </button>
+                                </div>}
+
+                            </section>
                         </div>
 
-                        {this.state.onChangeInfo &&
-                        <div>
-                            <h1>Upload Profile Picture</h1>
-                            <div className="form-group">
-                                <input type="file" className="form-control" id="profilePicture"
-                                       onChange={this.handleProfilePictureChange} name="profile-picture"/>
-                            </div>
-                            <div className="form-group">
-                                {fileToUpload && <button className="btn btn-primary" type="submit"
-                                                         onClick={this.uploadFile}>Upload</button>
-                                }
-                            </div>
-                        </div>}
+                    </div>
 
-                        {this.state.onChangeInfo && <div className="mt-5">
-                            <Button
-                                color="default"
-                                variant="contained"
-                                id="btn-validate-profile"
-                                onClick={this.onSubmitUpdate}>
-                                Validate
-                            </Button>
-                        </div>}
+                    <div className="row mt-5 mb-2">
+                        <div className="col-12">
+                            <section className="bg-light rounded p-5 border contact-form">
+                                <ContactForm emailDest={user?.email}></ContactForm>
 
 
-                    </section>
+                            </section>
+                        </div>
+                    </div>
 
 
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeExperiences}
@@ -407,14 +458,11 @@ class Profile extends Component {
 
                 </div> : <p>No data to display</p>}
 
-                <section className="container contact-form">
-                    <ContactForm emailDest={user?.email}></ContactForm>
 
-
-                </section>
 
 
             </div>
+
 
         )
     }
