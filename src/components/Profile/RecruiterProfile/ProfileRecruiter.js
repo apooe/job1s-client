@@ -82,7 +82,7 @@ class ProfileRecruiter extends Component {
     }
 
     componentDidMount() {
-        const recruiter = AuthServiceFactory.getInstance().getCurrentRecruiter();
+        const recruiter = AuthServiceFactory.getInstance().getCurrentUser();
         console.log("cdm", recruiter);
         this.setState({recruiter});
         this.getProfile(recruiter._id);

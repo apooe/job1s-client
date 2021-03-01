@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Grid, Paper, Avatar, TextField, Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import "./LoginManager.css";
-import {withRouter} from "react-router";
+import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import {getInstance} from "../../helpers/httpInstance";
 import Alert from "@material-ui/lab/Alert";
@@ -32,6 +32,10 @@ const LoginForm = (props) => {
             console.log(error.response.data);
             setError(error.response.data);
         });
+    }
+
+    if(authService.isAuth()) {
+        return <Redirect to={'/home'} />
     }
 
     return (
@@ -81,7 +85,8 @@ const LoginForm = (props) => {
                                 id="btn"
                                 onClick={() => onSubmit(() => setContext({
                                     currentUser: authService.getCurrentUser(),
-                                    isAuth: authService.isAuth()
+                                    isAuth: authService.isAuth(),
+                                    userType: authService.getCurrentUser()?.userType
                                 }))}>
                                 Sign in
                             </Button>

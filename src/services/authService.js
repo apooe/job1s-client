@@ -40,7 +40,7 @@ class AuthService {
     logIn(email, password, type = null ) {
         const http = getInstance();
 
-        const authUrl = (type === 'USER') ? '/users/login' : '/recruiters/login';
+        const authUrl = '/users/login';
 
         return http.post(authUrl, {email, password}).then(response => {
             const {token} = response.data;
@@ -77,28 +77,9 @@ class AuthService {
             return null;
         }
 
-        const {_id, email, firstname, lastname, city} = decodedToken;
-
-
-        return {_id, email, firstname, lastname, city};
+        return decodedToken;
     }
 
-    getCurrentRecruiter() {
-        const token = this.getToken();
-        if (!this.isValidToken()) {
-            return null;
-        }
-        const decodedToken = decodeToken(token);
-
-        if (!decodedToken) {
-            return null;
-        }
-
-        const {_id, email, firstname, lastname, jobPosts } = decodedToken;
-
-
-        return {_id, email, firstname, lastname, jobPosts};
-    }
 
 }
 
