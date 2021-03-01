@@ -1,0 +1,53 @@
+.r-company-name{
+
+    font-size: 20px;
+
+}
+
+.r-description{
+
+
+}
+
+.r-location{
+
+    font-size: 15px;
+    color: #5a5757;
+    font-style: italic;
+}
+
+.r-employment{
+}
+
+.r-title{
+
+
+    font-size: 18px;
+}
+
+.each-one-jobpost{
+    cursor: pointer;
+    padding:0;
+
+
+}
+.each-one-jobpost:hover{
+
+    background-color: #e6f7ff;
+
+}
+
+.show-icon{
+    float:right;
+}
+
+Dialog .r-company-name{
+
+}
+
+.MuiDialogTitle-root {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0px 24px;
+}
+

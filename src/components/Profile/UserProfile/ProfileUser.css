@@ -113,6 +113,11 @@
     margin: 0;
     font-size: 20px;
 
+
+}
+
+a{
+    color: black;
 }
 
 .description-exp{
@@ -138,6 +143,13 @@
     position: relative;
     top:20px;
 
+}
+
+
+/*dialog*/
+
+.title-dialog{
+    font-size: 30px;
 }
 /* between 2 sections*/
 

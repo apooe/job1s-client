@@ -37,22 +37,23 @@ class AuthService {
         return token && !isExpired(token);
     };
 
-    logIn(email, password) {
+    logIn(email, password, type = null ) {
         const http = getInstance();
 
-        const authUrl = '/users/login';
+        const authUrl = (type === 'USER') ? '/users/login' : '/recruiters/login';
 
-      return http.post(authUrl, {email, password}).then(response => {
-          const {token} = response.data;
+        return http.post(authUrl, {email, password}).then(response => {
+            const {token} = response.data;
 
-          // Set token
-          this.setToken(token);
-          this._currentToken = token;
-          this._currentUser = this.getCurrentUser();
+            // Set token
+            this.setToken(token);
+            this._currentToken = token;
+            this._currentUser = this.getCurrentUser();
 
-          return response;
-      });
+            return response;
+        });
     }
+
 
     logOut() {
         this.setToken(null);
@@ -63,7 +64,6 @@ class AuthService {
     isAuth() {
         return this.isValidToken() && !!this._currentUser._id;
     }
-
 
 
     getCurrentUser() {
@@ -83,12 +83,33 @@ class AuthService {
         return {_id, email, firstname, lastname, city};
     }
 
+    getCurrentRecruiter() {
+        const token = this.getToken();
+        if (!this.isValidToken()) {
+            return null;
+        }
+        const decodedToken = decodeToken(token);
+
+        if (!decodedToken) {
+            return null;
+        }
+
+        const {_id, email, firstname, lastname, jobPosts } = decodedToken;
+
+
+        return {_id, email, firstname, lastname, jobPosts};
+    }
+
 }
 
 
 export class AuthServiceFactory {
     static _instance = null;
 
+    /**
+     * Create an insatnce of auth service
+     * @returns {AuthService}
+     */
     static getInstance() {
         if (!AuthServiceFactory._instance) {
             AuthServiceFactory._instance = new AuthService();

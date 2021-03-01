@@ -7,7 +7,11 @@ import {Link} from "react-router-dom";
 import {getInstance} from "../../helpers/httpInstance";
 import Alert from "@material-ui/lab/Alert";
 import {AuthServiceFactory} from "../../services/authService";
+import {AppContext} from "../../AppContext";
+
+
 const authService = AuthServiceFactory.getInstance();
+
 const LoginForm = (props) => {
 
     const {history} = props;
@@ -18,10 +22,11 @@ const LoginForm = (props) => {
         setUser({...user, ...newValue})
     }
 
-    const onSubmit = () => {
+    const onSubmit = (callback) => {
         const {email, password} = user;
         authService.logIn(email, password).then(() => {
             history.push('/home');
+            callback();
 
         }).catch(error => {
             console.log(error.response.data);
@@ -30,63 +35,72 @@ const LoginForm = (props) => {
     }
 
     return (
-        <div className="form-container">
-            <Grid>
-                <Paper elevation={10} id="paper">
-                    <Grid align="center">
-                        <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                        <h2>Sign in</h2>
+        <AppContext.Consumer>
+            {({context, setContext}) => (
+                <div className="form-container">
+                    <Grid>
+                        <Paper elevation={10} id="paper">
+                            <Grid align="center">
+                                <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
+                                <h2>Sign in</h2>
+                            </Grid>
+
+
+                            {error && <Alert
+                                severity="error"
+                                style={{margin: '15px'}}
+                                onClose={() => setError(null)}>
+                                <strong>{error}</strong>
+                            </Alert>}
+
+                            <TextField
+                                label="Email"
+                                onChange={e => onUserChange({email: e.target.value})}
+                                className="input-control"
+                                placeholder="enter your email"
+                                fullWidth
+                                required
+                            />
+
+                            <TextField
+                                label="Password"
+                                onChange={e => onUserChange({password: e.target.value})}
+                                className="input-control"
+                                placeholder="enter your password"
+                                type="password"
+                                fullWidth
+                                required
+                            />
+
+
+                            <Button
+                                type="submit"
+                                color="primary"
+                                fullWidth
+                                variant="contained"
+                                id="btn"
+                                onClick={() => onSubmit(() => setContext({
+                                    currentUser: authService.getCurrentUser(),
+                                    isAuth: authService.isAuth()
+                                }))}>
+                                Sign in
+                            </Button>
+
+
+                            <Grid container justify="flex-end">
+                                <Grid item>Already have an account? {" "}
+                                    <Link to={"/register"} variant="body2">
+                                        Sign Up
+                                    </Link>
+                                </Grid>
+                            </Grid>
+                        </Paper>
                     </Grid>
+                </div>
+            )}
 
+        </AppContext.Consumer>
 
-                    {error && <Alert
-                        severity="error"
-                        style={{margin: '15px'}}
-                        onClose={() => setError(null)}>
-                        <strong>{error}</strong>
-                    </Alert>}
-
-                    <TextField
-                        label="Email"
-                        onChange={e => onUserChange({email: e.target.value})}
-                        className="input-control"
-                        placeholder="enter your email"
-                        fullWidth
-                        required
-                    />
-
-                    <TextField
-                        label="Password"
-                        onChange={e => onUserChange({password: e.target.value})}
-                        className="input-control"
-                        placeholder="enter your password"
-                        type="password"
-                        fullWidth
-                        required
-                    />
-
-
-                    <Button
-                        type="submit"
-                        color="primary"
-                        fullWidth
-                        variant="contained"
-                        id="btn"
-                        onClick={() => onSubmit()}>
-                        Sign in
-                    </Button>
-
-
-                    <Grid container justify="flex-end">
-                        <Grid item>Already have an account? {" "}
-                            <Link to={"/register"} variant="body2">
-                                Sign Up
-                            </Link>
-                        </Grid>
-                    </Grid>
-                </Paper>
-            </Grid>
-        </div>
     )
 }
 

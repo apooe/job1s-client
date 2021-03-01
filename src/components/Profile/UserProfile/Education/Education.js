@@ -68,17 +68,27 @@ class Education extends Component {
                             <input
                                 type="month"
                                 onChange={e => this.handleEducationChange({startDate: e.target.value})}
-                                className="form-control"
+                                className="form-control mr-1"
                                 value={education.startDate}
                             />
                             <span className="input-group-addon">-</span>
                             <input
                                 type="month"
                                 onChange={e => this.handleEducationChange({endDate: e.target.value})}
-                                className="form-control"
+                                className="form-control ml-1"
                                 value={education.endDate}
                             />
+
                         </div>
+                        <br/>
+
+                        <input
+                            type="text"
+                            onChange={e => this.handleEducationChange({link: e.target.value})}
+                            className="form-control w-100"
+                            placeholder="URL"
+                            value={education.link}
+                        />
                         <br/>
 
                         <div className="btn btn-toolbar">

@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {withRouter} from "react-router";
-import picImage from '../../images/Unknown_person.jpg';
-import {getInstance} from "../../helpers/httpInstance";
-import './Profile.css';
-import {AuthServiceFactory} from "../../services/authService";
-import Button from "@material-ui/core/Button";
+import picImage from '../../../images/Unknown_person.jpg';
+import {getInstance} from "../../../helpers/httpInstance";
+import './ProfileUser.css';
+import {AuthServiceFactory} from "../../../services/authService";
 import TextField from "@material-ui/core/TextField";
-import AddIcon from '@material-ui/icons/Add';
 import Experience from "./Experiences/Experience";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -16,8 +14,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteExperienceControl from "./Experiences/DeleteExperienceControl";
 import {v4 as uuid} from "uuid";
 import Education from "./Education/Education";
+import ContactInfo from "./ContactInfo/ContactInfo";
 import DeleteEducationControl from "./Education/DeleteEducationControl";
-import ContactForm from "../ContactForm/ContactForm";
+import ContactForm from "../../ContactForm/ContactForm";
 import IconButton from "@material-ui/core/IconButton";
 import WorkIcon from '@material-ui/icons/Work';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
@@ -26,12 +25,14 @@ import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import {Divider} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
+
+
 const http = getInstance();
 
 const EDUCATION_ARRAY = "EDUCATION_ARRAY";
 const EXPERIENCE_ARRAY = "EXPERIENCE_ARRAY";
 
-class Profile extends Component {
+class ProfileUser extends Component {
 
     _currentUser = null;
 
@@ -49,6 +50,8 @@ class Profile extends Component {
             selectedEducation: null,
             fileToUpload: null,
             uploadedFile: null,
+            onContactInfo: false,
+
 
 
         };
@@ -123,17 +126,21 @@ class Profile extends Component {
     }
 
     handleExperienceSubmit = (newExperience) => {
+
         const {profile, selectedExperience} = this.state;
         const newProfile = {...profile};
         const isNewExperience = !selectedExperience;
 
         if (isNewExperience) {
-            console.log("NEW")
+            console.log("NEW experience")
             newProfile.experience = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
 
         } else {
-            console.log("UPDATE ")
+            console.log("UPDATE experience")
+            console.log(newExperience);
+            console.log(newProfile)
             newProfile.experience = newProfile?.experience.map(exp => exp._id === newExperience._id ? newExperience : exp);
+            console.log("le nv profile est :",newProfile);
         }
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
@@ -141,6 +148,7 @@ class Profile extends Component {
     }
     handleEducationSubmit = (newEducation) => {
         const {profile, selectedEducation} = this.state;
+        console.log(newEducation)
         const newProfile = {...profile};
         const isNewEducation = !selectedEducation;
 
@@ -171,6 +179,8 @@ class Profile extends Component {
             newProfile.education = newProfile.education.filter(educ => educ !== dataToDelete);
             this.setState({profile: newProfile, selectedEducation: null, onDeleteEducations: false});
         }
+
+        console.log("le profile apres delete est:", this.state.profile);
     }
 
     handleProfilePictureChange = (event) => {
@@ -196,7 +206,7 @@ class Profile extends Component {
         const url = '/upload';
 
 
-        // Im not using HttpInstance because i not send data in json so i use default
+
         http.post(url, formData).then(({data}) => {
             // Change profile info
             const newProfile = {...this.state.profile};
@@ -231,8 +241,13 @@ class Profile extends Component {
 
     }
 
+    onContactInfo = () =>{
+        console.log("je suis ds onContactinfo")
+        this.setState({onContactInfo : !this.state.onContactInfo})
+    }
+
     render() {
-        const {user, profile, selectedExperience, selectedEducation, fileToUpload} = this.state;
+        const {user, profile, selectedExperience, selectedEducation} = this.state;
 
         // TODO a changer avec env variable
         const profilePictureImg = profile?.profileImg ? `http://localhost:8080${profile?.profileImg}` : picImage;
@@ -252,10 +267,14 @@ class Profile extends Component {
                                     <p className="name text-center font-weight-bold">{user.firstname} {user.lastname}</p>
                                     <p className="city text-center font-italic">{user.city}</p>
                                 </div>
-                                <IconButton aria-label="edit" className="float-right p-2 text-info">
+                                <div className="contact-info"
+                                    onClick={()=> this.onContactInfo()}>Contact info</div>
 
-                                    <EditIcon
-                                        onClick={this.onClickUpdateInfos}>
+
+                                <IconButton aria-label="edit" className="float-right p-2 text-info"
+                                            onClick={this.onClickUpdateInfos}>
+
+                                    <EditIcon>
                                         fontSize="small"
                                         Update profile
                                     </EditIcon>
@@ -290,15 +309,15 @@ class Profile extends Component {
                     <div className="row mt-5">
                         <div className="col-12">
                             <section className="bg-light rounded p-5 border">
-                                <div className=" education">
+                                <div className="education">
                                     <Avatar className="bg-info mx-auto">
                                         <AccountBalanceIcon/>
                                     </Avatar>
                                     <h1 className="category-profile mb-4 p-0 ">
                                         Education &nbsp;
                                         {this.state.onChangeInfo &&
-                                        <IconButton aria-label="add" className="text-info"> <AddCircleOutlineIcon
-                                            onClick={() => this.addDataArray(EDUCATION_ARRAY)}>
+                                        <IconButton aria-label="add" className="text-info"
+                                                    onClick={() => this.addDataArray(EDUCATION_ARRAY)}> <AddCircleOutlineIcon>
                                         </AddCircleOutlineIcon></IconButton>}
                                     </h1>
                                     {
@@ -306,19 +325,17 @@ class Profile extends Component {
 
                                             <div className="mt-2 pl-2" key={uuid()}>
 
-                                                <h4 className="company-educ-name">{formation.collegeName}</h4>
+                                                <h4 className="company-educ-name"><a href={formation.link}>{formation.collegeName}</a></h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
-                                                    <IconButton aria-label="edit" className="text-info">
-                                                        <EditIcon
-                                                            fontSize="small"
-                                                            onClick={() => this.updateDataArray(formation, EDUCATION_ARRAY)}>
-                                                        </EditIcon>
+                                                    <IconButton aria-label="edit" className="text-info"
+                                                                onClick={() => this.updateDataArray(formation, EDUCATION_ARRAY)}>
+                                                        <EditIcon fontSize="small"></EditIcon>
                                                     </IconButton>
-                                                    <IconButton aria-label="delete" className="text-danger">
+                                                    <IconButton aria-label="delete" className="text-danger"
+                                                                onClick={() => this.deleteDataArray(formation, EDUCATION_ARRAY)}>
                                                         <DeleteIcon
-                                                            fontSize="small"
-                                                            onClick={() => this.deleteDataArray(formation, EDUCATION_ARRAY)}>
+                                                            fontSize="small">
 
                                                         </DeleteIcon>
                                                     </IconButton>
@@ -341,8 +358,8 @@ class Profile extends Component {
                                     <h1 className="category-profile mb-4 p-0 ">
                                         Experiences &nbsp;
                                         {this.state.onChangeInfo &&
-                                        <IconButton aria-label="add" className="text-info"> <AddCircleOutlineIcon
-                                            onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}>
+                                        <IconButton aria-label="add" className="text-info"
+                                                    onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}> <AddCircleOutlineIcon>
                                         </AddCircleOutlineIcon></IconButton>}
                                     </h1>
                                     {
@@ -350,20 +367,20 @@ class Profile extends Component {
 
                                             <div key={uuid()} className="mt-2 pl-2">
 
-                                                <h4 className="company-educ-name">{exp.companyName}</h4>
+                                                <h4 className="company-educ-name"><a href={exp.link}>{exp.companyName}</a></h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
-                                                    <IconButton aria-label="edit" className="text-info">
+                                                    <IconButton aria-label="edit" className="text-info"
+                                                                onClick={() => this.updateDataArray(exp, EXPERIENCE_ARRAY)}>
 
                                                         <EditIcon
-                                                            fontSize="small"
-                                                            onClick={() => this.updateDataArray(exp, EXPERIENCE_ARRAY)}>
+                                                            fontSize="small">
                                                         </EditIcon>
                                                     </IconButton>
-                                                    <IconButton aria-label="delete" className="text-danger">
+                                                    <IconButton aria-label="delete" className="text-danger"
+                                                                onClick={() => this.deleteDataArray(exp, EXPERIENCE_ARRAY)}>
                                                         <DeleteIcon
-                                                            fontSize="small"
-                                                            onClick={() => this.deleteDataArray(exp, EXPERIENCE_ARRAY)}>
+                                                            fontSize="small">
                                                         </DeleteIcon>
                                                     </IconButton>
                                                 </div>
@@ -412,7 +429,7 @@ class Profile extends Component {
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeExperiences}
                             onClose={this.updateDataArray}
                             aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title"><p className="text-center">Experience</p></DialogTitle>
+                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Experience</p></DialogTitle>
                         <DialogContent>
                             <Experience experience={selectedExperience}
                                         onExperienceSubmit={this.handleExperienceSubmit}
@@ -424,7 +441,7 @@ class Profile extends Component {
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeEducations}
                             onClose={this.updateDataArray}
                             aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title"><p className="text-center">Education</p></DialogTitle>
+                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Education</p></DialogTitle>
                         <DialogContent>
                             <Education education={selectedEducation}
                                        onEducationSubmit={this.handleEducationSubmit}
@@ -456,6 +473,15 @@ class Profile extends Component {
                         </DialogContent>
                     </Dialog>
 
+                    <Dialog open={this.state.onContactInfo}
+                            onClose={this.onContactInfo}
+                            aria-labelledby="form-dialog-title">
+                        <DialogContent>
+                            <ContactInfo email={user?.email}/>
+                        </DialogContent>
+                    </Dialog>
+
+
                 </div> : <p>No data to display</p>}
 
 
@@ -468,4 +494,4 @@ class Profile extends Component {
     }
 }
 
-export default withRouter(Profile);
+export default withRouter(ProfileUser);

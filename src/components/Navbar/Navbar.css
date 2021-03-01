@@ -9,10 +9,12 @@
 }
 
 .navbar-logo{
-    color: #000;
-    justify-self: start;
+    color: #fff;
     margin-left: 20px;
     cursor:pointer;
+
+
+
 }
 
 .fa-react {
@@ -31,7 +33,7 @@
     justify-content: end;
 }
 .nav-links {
-    color:black;
+    color:white;
     text-decoration: none;
     padding: 0.5rem;
 }

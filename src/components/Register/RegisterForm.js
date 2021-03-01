@@ -13,6 +13,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {AuthServiceFactory} from "../../services/authService";
 const authService = AuthServiceFactory.getInstance();
 
+const USER = 'USER';
+
 const userValidator = Yup.object().shape({
 
     _id: Yup.string().optional().nullable(),
@@ -30,7 +32,7 @@ const http = getInstance();
 
 const RegisterForm = (props) => {
 
-    const {history} = props;
+    const {history, isUser} = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
@@ -39,7 +41,6 @@ const RegisterForm = (props) => {
     const [checked, setChecked] = useState( false);
 
     const handleChange = () => {
-
         setChecked(!checked);
         setIsSubmitting(checked);
     };
@@ -62,12 +63,47 @@ const RegisterForm = (props) => {
     }
 
     const onSubmit = () => {
+        isUser ? userSubmit(): recruiterSubmit();
+
+    }
+
+    const recruiterSubmit = () => {
+        const url = '/recruiters';
+        setIsSubmitting(true);
+
+        userValidator.validate(user).then(() => {
+
+            http.post(url, user).then(response => {
+                console.log(response.data._id);
+                //createProfile({userId: response.data._id});
+                setIsSubmitting(false);
+                const {email, password} = user;
+                authService.logIn(email, password ).then(() => {
+                    history.push('/home');
+
+                }).catch(error => {
+                    console.log(error.response.data);
+                    setError(error.response.data);
+                });
+
+            }).catch(error => {
+                console.log(error?.response?.data);
+                setError(error?.response?.data);
+                setIsSubmitting(false);
+
+            });
+
+        }).catch((e) => {
+            setError(e.errors);
+            setIsSubmitting(false)
+        });
+    }
+
+    const userSubmit = () => {
         const url = '/users';
         setIsSubmitting(true);
+
         console.log(user);
-
-        console.log("checked:" ,checked);
-
 
         userValidator.validate(user).then(() => {
 
@@ -89,7 +125,7 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 //history.push("/home");
                 const {email, password} = user;
-                authService.logIn(email, password).then(() => {
+                authService.logIn(email, password, USER).then(() => {
                     history.push('/home');
 
                 }).catch(error => {
@@ -194,6 +230,7 @@ const RegisterForm = (props) => {
                             required
                         />
 
+                        {isUser &&
                         <FormControlLabel
                             className="checkbox"
                             control={
@@ -204,11 +241,11 @@ const RegisterForm = (props) => {
                             }
                             label={<span style={{ fontSize: '13px' }}>I am over 18 years old.</span>}
 
-                        />
+                        />}
 
                     </div>}
 
-                    {currentStep === 2 && <div>
+                    {currentStep === 2  && isUser && <div>
                         <Autocomplete
                             id="combo-box-demo"
                             options={places}

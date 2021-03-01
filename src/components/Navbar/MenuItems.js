@@ -1,3 +1,6 @@
+import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
+
+
 export const MenuItems = [
     {
         title:"Profiles",
@@ -11,7 +14,7 @@ export const MenuItems = [
     },
     {
         title:"My profile",
-        url:"/my-profile",
+        url: "/my-profile",
         cName:"nav-links"
     },
     {
@@ -19,4 +22,6 @@ export const MenuItems = [
         url:"#",
         cName:"nav-links"
     },
+
+
 ]

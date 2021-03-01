@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
+
 
 
 class Experience extends Component {
@@ -67,18 +67,27 @@ class Experience extends Component {
                         />
                         <br/>
 
+                        <input
+                            type="text"
+                            onChange={e => this.handleExperienceChange({link: e.target.value})}
+                            className="form-control"
+                            placeholder="URL"
+                            value={experience.link}
+                        />
+                        <br/>
+
                         <div className="input-group">
                             <input
                                 type="month"
                                 onChange={e => this.handleExperienceChange({startDate: e.target.value})}
-                                className="form-control"
+                                className="form-control mr-1"
                                 value={experience.startDate}
                             />
                             <span className="input-group-addon">-</span>
                             <input
                                 type="month"
                                 onChange={e => this.handleExperienceChange({endDate: e.target.value})}
-                                className="form-control"
+                                className="form-control ml-1"
                                 value={experience.endDate}
                             />
                         </div>

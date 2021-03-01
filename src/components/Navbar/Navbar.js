@@ -2,11 +2,16 @@ import React, {Component} from 'react';
 import {withRouter} from "react-router";
 import {MenuItems} from "./MenuItems";
 import './Navbar.css';
+import logo from './../../images/logo.png';
 
 class Navbar extends Component {
+
     state  = { clicked: false,
-                active: false
+                active: false,
+                isUser:null
+
     }
+
 
     handleClick = () => {
         this.setState({clicked: !this.state.clicked});
@@ -15,11 +20,12 @@ class Navbar extends Component {
 
 
 
-
     render(){
+
+
         return(
             <nav className="NavbarItems">
-                <h1 className="navbar-logo">React<i className="fab fa-react"></i></h1>
+                <h1 className="navbar-logo"><img src={logo}/></h1>
 
                 <div className="menu-icon"  onClick={this.handleClick}>
                     <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
