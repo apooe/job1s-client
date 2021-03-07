@@ -60,7 +60,7 @@ const LoginForm = (props) => {
                             <TextField
                                 label="Email"
                                 onChange={e => onUserChange({email: e.target.value})}
-                                className="input-control"
+                                className="input-control label-field"
                                 placeholder="enter your email"
                                 fullWidth
                                 required
@@ -69,7 +69,7 @@ const LoginForm = (props) => {
                             <TextField
                                 label="Password"
                                 onChange={e => onUserChange({password: e.target.value})}
-                                className="input-control"
+                                className="input-control label-field"
                                 placeholder="enter your password"
                                 type="password"
                                 fullWidth

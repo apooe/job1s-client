@@ -60,7 +60,7 @@ class ContactForm extends Component {
                         <form onSubmit={this.handleSubmit.bind(this)}>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <label for="firstname">First Name <span className="red">*</span></label>
+                                    <label htmlFor="firstname">First Name <span className="red">*</span></label>
                                     <input
                                         type="text"
                                         className="form-control"
@@ -72,7 +72,7 @@ class ContactForm extends Component {
                                     />
                                 </div>
                                 <div className="col-md-6">
-                                    <label for="lastname">Last Name <span className="red">*</span></label>
+                                    <label htmlFor="lastname">Last Name <span className="red">*</span></label>
                                     <input
                                         type="text"
                                         id="lastname"
@@ -86,7 +86,7 @@ class ContactForm extends Component {
                             </div>
                             <div className="row">
                                 <div className="col-md-6">
-                                    <label for="email">Email <span className="red">*</span></label>
+                                    <label htmlFor="email">Email <span className="red">*</span></label>
                                     <input
                                         type="email"
                                         id="email"
@@ -98,7 +98,7 @@ class ContactForm extends Component {
                                     />
                                 </div>
                                 <div className="col-md-6">
-                                    <label for="phone">Phone</label>
+                                    <label htmlFor="phone">Phone</label>
                                     <input
                                         type="phone"
                                         id="phone"
@@ -112,7 +112,7 @@ class ContactForm extends Component {
                             </div>
                             <div className="row">
                                 <div className="col-md-12">
-                                    <label for="message">Message <span className="red">*</span></label>
+                                    <label htmlFor="message">Message <span className="red">*</span></label>
                                     <textarea
                                         id="message"
                                         rows="4"

@@ -11,6 +11,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {AuthServiceFactory} from "../../services/authService";
+import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
 const authService = AuthServiceFactory.getInstance();
 
 const USER = 'USER';
@@ -32,7 +33,7 @@ const http = getInstance();
 
 const RegisterForm = (props) => {
 
-    const {history, isUser} = props;
+    const {history, isJobseeker} = props;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
@@ -59,11 +60,13 @@ const RegisterForm = (props) => {
     }
 
     const handleUserChange = (newValue) => {
+
+        console.log(isJobseeker)
         setUser({...user, ...newValue})
     }
 
     const onSubmit = () => {
-        isUser ? userSubmit(): recruiterSubmit();
+        isJobseeker === AUTH_TYPE_JOB_SEEKER ? userSubmit(): recruiterSubmit();
 
     }
 
@@ -230,7 +233,7 @@ const RegisterForm = (props) => {
                             required
                         />
 
-                        {isUser &&
+                        {isJobseeker ==="job_seeker" &&
                         <FormControlLabel
                             className="checkbox"
                             control={
@@ -245,7 +248,7 @@ const RegisterForm = (props) => {
 
                     </div>}
 
-                    {currentStep === 2  && isUser && <div>
+                    {currentStep === 2  && isJobseeker=== "job_seeker" && <div>
                         <Autocomplete
                             id="combo-box-demo"
                             options={places}

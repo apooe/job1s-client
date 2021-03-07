@@ -26,7 +26,6 @@ import {Divider} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 
-
 const http = getInstance();
 
 const EDUCATION_ARRAY = "EDUCATION_ARRAY";
@@ -45,8 +44,10 @@ class ProfileUser extends Component {
             onDeleteExperiences: false,
             onChangeEducations: false,
             onDeleteEducations: false,
+            originalSelectedEducation: null,
             user: null,
             selectedExperience: null,
+            originalSelectedExperience: null,
             selectedEducation: null,
             fileToUpload: null,
             uploadedFile: null,
@@ -106,23 +107,23 @@ class ProfileUser extends Component {
     addDataArray = (type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null}) :
-            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: null});
+            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null, originalSelectedExperience: null}) :
+            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: null, originalSelectedEducation : null});
 
     }
 
     updateDataArray = (data, type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: data}) :
-            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: data});
+            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: data, originalSelectedExperience: {...data}}) :
+            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: data, originalSelectedEducation : {...data}});
     }
 
     deleteDataArray = (data, type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onDeleteExperiences: !this.state.onDeleteExperiences, selectedExperience: data}) :
-            this.setState({onDeleteEducations: !this.state.onDeleteEducations, selectedEducation: data});
+            this.setState({onDeleteExperiences: !this.state.onDeleteExperiences, selectedExperience: data, originalSelectedExperience: {...data}}) :
+            this.setState({onDeleteEducations: !this.state.onDeleteEducations, selectedEducation: data, originalSelectedEducation : {...data}});
     }
 
     handleExperienceSubmit = (newExperience) => {
@@ -139,7 +140,9 @@ class ProfileUser extends Component {
             console.log("UPDATE experience")
             console.log(newExperience);
             console.log(newProfile)
-            newProfile.experience = newProfile?.experience.map(exp => exp._id === newExperience._id ? newExperience : exp);
+            newProfile.experience = newProfile?.experience.map(
+                exp => exp.companyName === this.state.originalSelectedExperience.companyName &&
+                exp.startDate === this.state.originalSelectedExperience.startDate ? newExperience : exp);
             console.log("le nv profile est :",newProfile);
         }
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
@@ -158,7 +161,8 @@ class ProfileUser extends Component {
 
         } else {
             console.log("UPDATE education ")
-            newProfile.education = newProfile?.education.map(educ => educ._id === newEducation._id ? newEducation : educ);
+            newProfile.education = newProfile?.education.map(
+                educ => educ.collegeName === this.state.originalSelectedEducation.collegeName ? newEducation : educ);
         }
 
         console.log("newprofile", newProfile);
@@ -241,10 +245,10 @@ class ProfileUser extends Component {
 
     }
 
-    onContactInfo = () =>{
-        console.log("je suis ds onContactinfo")
-        this.setState({onContactInfo : !this.state.onContactInfo})
-    }
+    // onContactInfo = () =>{
+    //     console.log("je suis ds onContactinfo")
+    //     this.setState({onContactInfo : !this.state.onContactInfo})
+    // }
 
     render() {
         const {user, profile, selectedExperience, selectedEducation} = this.state;
@@ -267,8 +271,8 @@ class ProfileUser extends Component {
                                     <p className="name text-center font-weight-bold">{user.firstname} {user.lastname}</p>
                                     <p className="city text-center font-italic">{user.city}</p>
                                 </div>
-                                <div className="contact-info"
-                                    onClick={()=> this.onContactInfo()}>Contact info</div>
+                                {/*<div className="contact-info"*/}
+                                {/*    onClick={()=> this.onContactInfo()}>Contact info</div>*/}
 
 
                                 <IconButton aria-label="edit" className="float-right p-2 text-info"
@@ -325,7 +329,7 @@ class ProfileUser extends Component {
 
                                             <div className="mt-2 pl-2" key={uuid()}>
 
-                                                <h4 className="company-educ-name"><a href={formation.link}>{formation.collegeName}</a></h4>
+                                                <h4 className="company-educ-name"><a href={formation.link} target="_blank">{formation.collegeName}</a></h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
                                                     <IconButton aria-label="edit" className="text-info"
@@ -342,7 +346,7 @@ class ProfileUser extends Component {
                                                 </div>
                                                 }
                                                 <p className="position-type">{formation.degree}</p>
-                                                <p className="date">{this.formatDate(formation.startDate)} - {this.formatDate(formation.endDate)} </p>
+                                                <p className="date"> {this.formatDate(formation.startDate)} - {this.formatDate(formation.endDate)} </p>
                                                 {index !== profile.education.length - 1 &&
                                                 <hr className="between-category-separator"/>}
 
@@ -367,7 +371,7 @@ class ProfileUser extends Component {
 
                                             <div key={uuid()} className="mt-2 pl-2">
 
-                                                <h4 className="company-educ-name"><a href={exp.link}>{exp.companyName}</a></h4>
+                                                <h4 className="company-educ-name"><a href={exp.link} target="_blank">{exp.companyName}</a></h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
                                                     <IconButton aria-label="edit" className="text-info"

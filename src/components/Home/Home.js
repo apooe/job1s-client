@@ -9,8 +9,6 @@ class Home extends Component {
                 <div className="container-background">
                     <h1 id="slogan">Find Your Ideal Job</h1>
                     <hr className="separator"/>
-
-
                 </div>
             </div>
 

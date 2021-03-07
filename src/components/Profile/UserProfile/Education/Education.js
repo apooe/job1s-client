@@ -52,6 +52,7 @@ class Education extends Component {
                             className="form-control w-100"
                             placeholder="Name"
                             value={education.collegeName}
+                            required
                         />
                         <br/>
 

@@ -4,13 +4,14 @@ import {MenuItems} from "./MenuItems";
 import './Navbar.css';
 import logo from './../../images/logo.png';
 import {AppContext} from "../../AppContext";
+import { Link } from 'react-router-dom';
 
 class Navbar extends Component {
 
     state = {
         clicked: false,
         active: false,
-        isUser: null
+
 
     }
 
@@ -28,7 +29,8 @@ class Navbar extends Component {
             <AppContext.Consumer>
                 {(globalContext) => (
                     <nav className="NavbarItems">
-                        <h1 className="navbar-logo"><img src={logo}/></h1>
+                        <Link to='/home' className="navbar-logo"><img src={logo}/></Link>
+
 
                         <div className="menu-icon" onClick={this.handleClick}>
                             <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
@@ -38,11 +40,10 @@ class Navbar extends Component {
                             {MenuItems(globalContext).map((item, index) => {
                                 return (
                                     <li key={index}>
-                                        <a onClick={item.command ? item.command : () => {
-                                        }} className={item.cName} id={this.state.clicked ? "active" : "none"}
-                                           href={item.url}>
+                                        <Link to={item.url} onClick={item.command ? item.command : () => {
+                                        }} className={item.cName} id={this.state.clicked ? "active" : "none"}>
                                             {item.title}
-                                        </a>
+                                        </Link>
                                     </li>
                                 )
                             })}

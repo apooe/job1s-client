@@ -1,53 +1,127 @@
-.r-company-name{
+.r-company-name {
 
     font-size: 20px;
 
 }
 
-.r-description{
-
-
+.name {
+    font-size: 20px;
 }
 
-.r-location{
+.pic-recruiter {
+
+    width:225px;
+    height:225px;
+    border-radius: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+}
+
+.r-location {
 
     font-size: 15px;
     color: #5a5757;
     font-style: italic;
 }
 
-.r-employment{
-}
-
-.r-title{
-
-
+.r-title {
     font-size: 18px;
 }
 
-.each-one-jobpost{
+.each-one-jobpost {
     cursor: pointer;
-    padding:0;
+    padding: 0;
 
 
 }
-.each-one-jobpost:hover{
+
+.each-one-jobpost:hover {
 
     background-color: #e6f7ff;
 
 }
 
-.show-icon{
-    float:right;
+.show-icon {
+    float: right;
 }
 
-Dialog .r-company-name{
-
-}
 
 .MuiDialogTitle-root {
     flex: 0 0 auto;
     margin: 0;
     padding: 0px 24px;
+}
+
+.MuiDialog-paperWidthSm {
+    width: 850px;
+    margin: 70px;
+}
+
+.edit-icon {
+
+    float: right;
+}
+
+.add-website input {
+    font-size: 20px;
+    margin-bottom: 0;
+
+}
+
+.btn-save {
+    float:right;
+    font-size:20px;
+    border-radius: 40px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+.edit-info, .name {
+    font-size: 30px;
+}
+
+.visit-website{
+
+    border-radius: 50px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 10px;
+    margin-top: 25px;
+    font-size: 15px;
+
+}
+
+.MuiSvgIcon-fontSizeSmall {
+    font-size: 1.25rem;
+    margin-left: 6px;
+}
+
+.add-website
+{
+    font-size: 17px;
+    margin-bottom: 15px;
+    width: 100%;
+    font-style: italic;
+}
+
+.remove-link{
+    color:black!important;
+    float:right;
+    font-size: 16px;
+}
+
+.remove-link:hover{
+    color:#007bff!important;
+    text-decoration:none;
+    float:right;
+    font-size: 17px;
+}
+
+.update-pic{
+    font-size: 25px;
+    margin-bottom: 10px;
 }
 

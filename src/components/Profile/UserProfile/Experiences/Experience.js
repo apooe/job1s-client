@@ -55,6 +55,7 @@ class Experience extends Component {
                             className="form-control w-100"
                             placeholder="Company Name"
                             value={experience.companyName}
+                            required
                         />
                         <br/>
 
@@ -64,6 +65,7 @@ class Experience extends Component {
                             className="form-control"
                             placeholder="Position"
                             value={experience.position}
+                            required
                         />
                         <br/>
 
@@ -82,6 +84,7 @@ class Experience extends Component {
                                 onChange={e => this.handleExperienceChange({startDate: e.target.value})}
                                 className="form-control mr-1"
                                 value={experience.startDate}
+
                             />
                             <span className="input-group-addon">-</span>
                             <input
@@ -89,6 +92,7 @@ class Experience extends Component {
                                 onChange={e => this.handleExperienceChange({endDate: e.target.value})}
                                 className="form-control ml-1"
                                 value={experience.endDate}
+
                             />
                         </div>
                         <br/>

@@ -8,15 +8,15 @@ class JobPost extends Component {
         this.state = {
             onChangeJobPost: false,
             jobPost: null,
-            newJobPost : false
+            newJobPost: false
         };
     }
 
     componentDidMount() {
         const jobPost = this.props.jobPost || {companyName: ''};
         this.setState({jobPost});
-        if(this.props.jobPost)//exist
-            this.setState({newJobPost : true});
+        if (this.props.jobPost)//exist
+            this.setState({newJobPost: true});
     }
 
     handleJobPostChange = (newValue) => {
@@ -26,8 +26,8 @@ class JobPost extends Component {
         this.setState({jobPost: newJobPost})
 
     }
-    onSubmit = () => {
-
+    onSubmit = (e) => {
+        e.preventDefault();
         this.props.onFormSubmit(this.state.jobPost);
     }
 
@@ -48,66 +48,66 @@ class JobPost extends Component {
 
 
         return (
-            <div className="container">
+            <div className="container ">
                 <div className="row">
                     <div className="col-md-12">
-                        <input
-                            type="text"
-                            onChange={e => this.handleJobPostChange({companyName: e.target.value})}
-                            className="form-control companyName"
-                            placeholder="Name"
-                            value={jobPost.companyName}
-                            required
-                        />
+                        <form action="" onSubmit={this.onSubmit}>
+                            <input
+                                type="text"
+                                onChange={e => this.handleJobPostChange({companyName: e.target.value})}
+                                className="form-control companyName"
+                                placeholder="Name"
+                                value={jobPost.companyName}
+                                required
+                            />
 
-                        <input
-                            type="text"
-                            onChange={e => this.handleJobPostChange({title: e.target.value})}
-                            className="form-control"
-                            placeholder="Title"
-                            value={jobPost.title}
-                        />
+                            <input
+                                type="text"
+                                onChange={e => this.handleJobPostChange({title: e.target.value})}
+                                className="form-control"
+                                placeholder="Title"
+                                value={jobPost.title}
+                            />
 
 
-                        <input
-                            type="text"
-                            onChange={e => this.handleJobPostChange({location: e.target.value})}
-                            className="form-control"
-                            placeholder="Location"
-                            value={jobPost.location}
-                        />
+                            <input
+                                type="text"
+                                onChange={e => this.handleJobPostChange({location: e.target.value})}
+                                className="form-control"
+                                placeholder="Location"
+                                value={jobPost.location}
+                            />
 
-                        <input
-                            type="text"
-                            onChange={e => this.handleJobPostChange({employment: e.target.value})}
-                            className="form-control"
-                            placeholder="Employment"
-                            value={jobPost.employment}
+                            <input
+                                type="text"
+                                onChange={e => this.handleJobPostChange({employment: e.target.value})}
+                                className="form-control"
+                                placeholder="Employment"
+                                value={jobPost.employment}
 
-                        />
+                            />
 
-                        <textarea
-                            className="form-control"
-                            rows="6"
-                            onChange={e => this.handleExperienceChange({description: e.target.value})}
-                            placeholder="Description"
-                            value={jobPost.description}
-                        />
+                            <textarea
+                                className="form-control"
+                                rows="6"
+                                onChange={e => this.handleExperienceChange({description: e.target.value})}
+                                placeholder="Description"
+                                value={jobPost.description}
+                            />
 
-                        <input
-                            type="text"
-                            onChange={e => this.handleJobPostChange({url: e.target.value})}
-                            className="form-control"
-                            placeholder="URL"
-                            value={jobPost.url}
+                            <input
+                                type="text"
+                                onChange={e => this.handleJobPostChange({url: e.target.value})}
+                                className="form-control"
+                                placeholder="URL"
+                                value={jobPost.url}
 
-                        />
-
+                            />
 
 
                             <button
-                                className="btn btn-primary mt-3 mb-4 "
-                                onClick={this.onSubmit}>
+                                type="submit"
+                                className="btn btn-primary mt-3 mb-4 ">
                                 Save
                             </button>
 
@@ -117,10 +117,7 @@ class JobPost extends Component {
                                 Remove
                             </button>}
 
-                            <button type="button" className="close" aria-label="Close"
-                            onClick={this.onClose}>
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                        </form>
 
 
                     </div>
