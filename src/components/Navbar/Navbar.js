@@ -4,23 +4,28 @@ import {MenuItems} from "./MenuItems";
 import './Navbar.css';
 import logo from './../../images/logo.png';
 import {AppContext} from "../../AppContext";
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
+import SearchBar from "../SearchBar/SearchBar";
+
 
 class Navbar extends Component {
 
     state = {
         clicked: false,
         active: false,
-
-
     }
-
 
     handleClick = () => {
         this.setState({clicked: !this.state.clicked});
 
     }
 
+
+    handleSearchProfiles = (inputSearch) => {
+        console.log("ds navbar", inputSearch);
+        this.props.history.push(`/home/?job=${inputSearch}`);
+
+    }
 
     render() {
 
@@ -31,10 +36,12 @@ class Navbar extends Component {
                     <nav className="NavbarItems">
                         <Link to='/home' className="navbar-logo"><img src={logo}/></Link>
 
+                        <div className="search-navbar">
+                            <SearchBar searchProfiles = {this.handleSearchProfiles}/>
+                        </div>
 
                         <div className="menu-icon" onClick={this.handleClick}>
                             <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
-
                         </div>
                         <ul className={this.state.clicked ? 'nav-menu active' : 'nav-menu'}>
                             {MenuItems(globalContext).map((item, index) => {
@@ -48,6 +55,8 @@ class Navbar extends Component {
                                 )
                             })}
                         </ul>
+
+
                     </nav>)}
             </AppContext.Consumer>
         )
@@ -55,4 +64,4 @@ class Navbar extends Component {
 }
 
 
-export default withRouter(Navbar);
+export default withRouter(Navbar );

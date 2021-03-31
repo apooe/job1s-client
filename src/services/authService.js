@@ -4,7 +4,6 @@ import {getInstance} from "../helpers/httpInstance";
 class AuthService {
 
     _tokenLabel = 'accessToken';
-
     _currentToken = '';
     _currentUser = null;
 
@@ -79,8 +78,6 @@ class AuthService {
 
         return decodedToken;
     }
-
-
 }
 
 

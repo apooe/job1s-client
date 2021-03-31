@@ -12,16 +12,19 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {AuthServiceFactory} from "../../services/authService";
 import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
+import {debounce} from "lodash";
+import axios from "axios";
 const authService = AuthServiceFactory.getInstance();
+
 
 const USER = 'USER';
 
 const userValidator = Yup.object().shape({
 
     _id: Yup.string().optional().nullable(),
+    job: Yup.string(),
     password: Yup.string().min(6).required(),
-    confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
 
     lastname: Yup.string().matches(/^[a-zA-Z\s]+$/, "Invalid Last name").min(2).required("Last name is a required field"),
     firstname: Yup.string().matches(/^[a-zA-Z\s]+$/, "Invalid First name").min(2).required(" First name is a required field"),
@@ -39,6 +42,7 @@ const RegisterForm = (props) => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [places, setPlace] = useState([]);
+    const [jobs, setJob] = useState([]);
     const [checked, setChecked] = useState( false);
 
     const handleChange = () => {
@@ -56,12 +60,11 @@ const RegisterForm = (props) => {
             console.log(error?.response?.data);
 
         });
-
     }
 
     const handleUserChange = (newValue) => {
 
-        console.log(isJobseeker)
+        console.log(newValue)
         setUser({...user, ...newValue})
     }
 
@@ -126,7 +129,6 @@ const RegisterForm = (props) => {
                 console.log(response.data._id);
                 createProfile({userId: response.data._id});
                 setIsSubmitting(false);
-                //history.push("/home");
                 const {email, password} = user;
                 authService.logIn(email, password, USER).then(() => {
                     history.push('/home');
@@ -161,6 +163,19 @@ const RegisterForm = (props) => {
         });
     }
 
+    const searchJob = async (newValue) => {
+        console.log(newValue)
+        const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
+        await axios.get(url, {params: {begins_with: newValue}}).then(response => {
+            setJob(response?.data || [])
+
+
+        }).catch(error => {
+            console.log(error?.response?.data);
+
+        });
+    }
+
     return (
 
         <div className="form-container">
@@ -169,7 +184,9 @@ const RegisterForm = (props) => {
                 <Paper elevation={10} id="paper">
                     <Grid align="center">
                         <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                        <h2>register </h2>
+                        {currentStep === 1 ? <h2>register </h2>:
+                            <h2 className="job-search">Search for a job</h2>
+                        }
 
                     </Grid>
 
@@ -249,8 +266,24 @@ const RegisterForm = (props) => {
                     </div>}
 
                     {currentStep === 2  && isJobseeker=== "job_seeker" && <div>
+
                         <Autocomplete
                             id="combo-box-demo"
+                            className="job-autocomplete-register"
+                            options={jobs}
+                            getOptionLabel={j => j.suggestion}
+                            fullWidth
+                            onInputChange={debounce((event, value) => searchJob(value), 300)}
+                            onChange={(event, value) => handleUserChange({job: value.suggestion})}
+                            renderInput={(params) => (
+                                <TextField  {...params} label="Jobs" className="location-title"
+                                            variant="outlined"/>
+                            )}
+                        />
+
+                        <Autocomplete
+                            id="combo-box-demo"
+                            className="city-autocomplete-register"
                             options={places}
                             fullWidth
                             onInputChange={(event, value) => loadPlaceOptions(value)}
@@ -261,7 +294,10 @@ const RegisterForm = (props) => {
                                             variant="outlined"/>
                             )}
                         />
+
                     </div>}
+
+
 
                     <Button
                         type="submit"
@@ -271,7 +307,7 @@ const RegisterForm = (props) => {
                         id="btn"
                         disabled={isSubmitting}
                         onClick={() => onSubmit()}>
-                        Join us
+                        Next
                     </Button>
 
                     <Grid container justify="flex-end">

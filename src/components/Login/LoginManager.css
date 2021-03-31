@@ -33,3 +33,17 @@
 .MuiFormControlLabel-label{
     font-size: 5px;
 }
+
+.job-autocomplete-register{
+    margin:  40px auto 20px auto;
+}
+
+.city-autocomplete-register{
+    margin:  0 auto 20px auto;
+
+}
+
+.job-search{
+    text-align: center;
+
+}

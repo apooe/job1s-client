@@ -13,9 +13,9 @@
     align-items: center;
 }
 
-.login-btn, .register-btn{
-    color:white;
-    font-size: 20px;
+.login-btn{
+    color:#fff;
+    font-size: 25px;
 
 }
 
@@ -31,8 +31,8 @@ h1{
 }
 
 .homepage-img{
-    width: 700px;
-    height: 700px;
+    width: 620px;
+    height: 600px;
 
 }
 
@@ -44,7 +44,7 @@ h1{
 
 .btn-mainpage{
 
-    width: 90%;
+    width: 75%;
     margin-bottom: 20px;
     padding: 15px 20px;
     text-align: left;
@@ -55,7 +55,7 @@ h1{
 
 .btn-mainpage:hover{
 
-    width: 90%;
+    width: 75%;
     margin-bottom: 20px;
     padding: 15px 20px;
     text-align: left;
@@ -69,4 +69,5 @@ h1{
     color: #5d5b5b;
 
 }
+
 

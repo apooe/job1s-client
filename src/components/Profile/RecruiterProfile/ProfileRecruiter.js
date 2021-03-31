@@ -13,6 +13,8 @@ import {getInstance} from "../../../helpers/httpInstance";
 import {v4 as uuid} from "uuid";
 import EditIcon from "@material-ui/icons/Edit";
 import picImage from "../../../images/Unknown_person.jpg";
+import defaultPic from "../../../images/unknown-company.PNG";
+import DeleteIcon from '@material-ui/icons/Delete';
 import LaunchIcon from '@material-ui/icons/Launch';
 
 
@@ -33,7 +35,8 @@ class ProfileRecruiter extends Component {
             newImgSource: null,
             uploadedFile: null,
             onViewJob: false,
-            onEditInfos: false
+            onEditInfos: false,
+            originalSelectedJp:null
         };
         this.uploadImg = React.createRef();
     }
@@ -44,7 +47,6 @@ class ProfileRecruiter extends Component {
         const fileToUpload = event.target.files[0];
         await this.setState({fileToUpload, onEditImg: true});
         await this.uploadFile(this.state.fileToUpload);
-
 
     }
 
@@ -81,7 +83,7 @@ class ProfileRecruiter extends Component {
             fileToUpload.name
         );
 
-        const url = '/upload';
+        const url = '/uploadImg';
 
         await http.post(url, formData).then(({data}) => {
             // Change profile info
@@ -113,21 +115,23 @@ class ProfileRecruiter extends Component {
     }
 
     addJobPost = () => {
-        this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: null});
+        this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: null, originalSelectedJp: null});
     }
 
     updateArray = (data) => {
 
-        this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: data});
+        this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: data, originalSelectedJp: data});
     }
 
     onCloseWindow = () => {
 
-        this.setState({onChangeJobPost: false, selectedJobPost: null, onViewJob: false, onEditInfos: false});
+        this.setState({onChangeJobPost: false, selectedJobPost: null, onViewJob: false, onEditInfos: false, originalSelectedJp: null});
 
     };
 
     handleJobSubmit = async (newPostJob) => {
+
+        console.log(newPostJob)
 
         const {recruiter, selectedJobPost} = this.state;
         const newRecruiter = {...recruiter};
@@ -139,30 +143,34 @@ class ProfileRecruiter extends Component {
 
         } else {
             console.log("UPDATE jobPost")
-            newRecruiter.jobPosts = newRecruiter?.jobPosts.map(jp => jp._id === newPostJob._id ? newPostJob : jp);
-            console.log("le nv recruiter est :", newRecruiter);
+            newRecruiter.jobPosts = newRecruiter?.jobPosts.map(jp => (
+                jp.companyName === this.state.originalSelectedJp.companyName &&
+                jp.title === this.state.originalSelectedJp.title ) ? newPostJob : jp);
         }
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
-        this.updateArrayJobPost();
+        await this.updateArrayJobPost();
     }
 
     handleDelete = async (jobpost) => {
-
+        console.log(jobpost)
         const {recruiter} = this.state;
         const newRecruiter = {...recruiter};
-
-        newRecruiter.jobPosts = newRecruiter.jobPosts.filter(jp => jp !== jobpost);
+        newRecruiter.jobPosts = newRecruiter.jobPosts.filter(
+            jp => (jp.companyName !== this.state.originalSelectedJp.companyName ||
+                jp.title !== this.state.originalSelectedJp.title ||
+                jp.description !== this.state.originalSelectedJp.description));
+        console.log("delete", newRecruiter)
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
-        this.updateArrayJobPost();
+        await this.updateArrayJobPost();
 
     }
 
 
-    updateArrayJobPost = () => {
+    updateArrayJobPost = async () => {
         const url = '/recruiters';
         const {recruiter} = this.state;
-        http.put(url, recruiter).then(response => {
+        await http.put(url, recruiter).then(response => {
             console.log("data dans update arr: ", response.data);
         }).catch(error => {
             console.log(error?.response?.data);
@@ -189,14 +197,16 @@ class ProfileRecruiter extends Component {
     render() {
 
         const {recruiter, selectedJobPost, onEditInfos, onViewJob, onChangeJobPost, onEditImg} = this.state;
-        const profilePictureImg = recruiter?.profileImg ? `http://localhost:8080${recruiter?.profileImg}` : picImage;
+        const profilePictureImg = recruiter?.profileImg ? `http://localhost:8080${recruiter?.profileImg}` : defaultPic;
         const newImg = onEditImg ? `http://localhost:8080${this.state.newImgSource}` : "";
 
-        return (
+            return (
             <div>
                 <div className="container mt-5">
                     <div className="row">
-                        <div className="col-4">
+                        {/*profile picture + name + infos + visit website*/}
+                        <div className="col-4 presentation-profile">
+
                             <div>
                                 <IconButton aria-label="edit" className="text-info edit-icon"
                                             onClick={() => this.handleChangeInfos()}>
@@ -205,9 +215,8 @@ class ProfileRecruiter extends Component {
                                     </EditIcon>
                                 </IconButton>
                             </div>
-                            <section className="border rounded p-5 bg-light">
 
-
+                            <section className="border rounded p-5">
                                 <div className="picture pb-4">
                                     {<a href={recruiter?.companyLink} target="_blank">
                                         <img className="pic-recruiter" src={profilePictureImg} alt="profile picture"/>
@@ -228,7 +237,7 @@ class ProfileRecruiter extends Component {
                             </section>
                         </div>
 
-
+                        {/*jobposts of recruiter*/}
                         <div className="col-8">
                             <section className="bg-light rounded  border">
                                 <h1 className="category-profile ml-3 "> JobPosts
@@ -246,6 +255,13 @@ class ProfileRecruiter extends Component {
 
                                                     <div className="row" onClick={() => this.showJobPost(jp)}>
                                                         <div className="col ml-3">
+
+                                                            {jp.companyImg ?
+                                                            <img className="company-pic" src={profilePictureImg}
+                                                                 alt="company picture"/> :
+                                                                <img className="company-pic" src={defaultPic}
+                                                                     alt="company picture"/>}
+
                                                             <h5 className="r-company-name pt-2">{jp.companyName}</h5>
                                                             <p className="r-title p-0 m-0">{jp.title}</p>
                                                             <p className="r-location p-0 m-0">{jp.location}</p>
@@ -274,7 +290,7 @@ class ProfileRecruiter extends Component {
                         </div>
                     </div>
 
-
+                    {/*contact formulaire*/}
                     <div className="row mt-5 mb-2">
                         <div className="col-12">
                             <section className="bg-light rounded p-5 border contact-form">
@@ -283,6 +299,7 @@ class ProfileRecruiter extends Component {
                         </div>
                     </div>
 
+                    {/*change jobpost*/}
                     {(onViewJob || onChangeJobPost) &&
                     <Dialog open={onChangeJobPost}
                             onClose={this.onCloseWindow}
@@ -304,13 +321,20 @@ class ProfileRecruiter extends Component {
                         </DialogContent>
                     </Dialog>}
 
-
+                    {/*view jobpost*/}
                     {selectedJobPost && !onChangeJobPost &&
                     <Dialog open={onViewJob}
                             onClose={this.onCloseWindow}
                             aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title">
-                            <p className="text-center pt-3 font-weight-bold ">
+
+                            {selectedJobPost.companyImg ? <img className="company-pic-view"
+                                 src={profilePictureImg} alt="company picture"/> :
+                                <img className="company-pic-view"
+                                     src={defaultPic} alt="company picture"/>
+                            }
+
+                            <p className="text-center jp-title-view">
                                 {selectedJobPost.title}
                             </p>
                             <small>
@@ -325,10 +349,11 @@ class ProfileRecruiter extends Component {
 
                         <DialogContent>
                             <div className="row ">
-                                <p className="col pl-4">
+                                <p className="col pl-4 jp-descr-current">
                                     {selectedJobPost.description}
                                 </p>
                             </div>
+
                             <div className="row">
                                 <p className="col pl-4 ">Employment type: <br/>
                                     <strong>{selectedJobPost.employment}</strong>
@@ -353,6 +378,7 @@ class ProfileRecruiter extends Component {
                         </DialogContent>
                     </Dialog>}
 
+                    {/*edit infos*/}
                     {onEditInfos &&
                     <Dialog open={onEditInfos}
                             onClose={this.onCloseWindow}
@@ -369,15 +395,30 @@ class ProfileRecruiter extends Component {
                             </div>
 
 
-                            <label><p className="update-pic">Update you profile picture</p>
+                            <p className="update-pic">Update you profile picture</p>
+                            <div>
+                                <input type="file"
+                                       ref={this.uploadImg}
+                                       className="form-control input-file"
+                                       id="actual-btn"
+                                       name="profile-picture"
+                                       hidden
+                                       onChange={this.handleProfilePictureChange} name="profile-picture"/>
+                                <label className="label-upload" htmlFor="actual-btn">Choose File
+                                    <i className="pl-2 fa fa-upload" aria-hidden="true"></i>
+                                </label>
+                                <span id="file-chosen">No file chosen</span>
 
-                                <input type="file" ref={this.uploadImg} id="Fvis"
-                                       onChange={this.handleProfilePictureChange}
-                                       name="profile-picture"/>
-                            </label>
+                                {/*<IconButton aria-label="delete" className=""*/}
+                                {/*            onClick={() => {}}>*/}
+                                {/*    <DeleteIcon*/}
+                                {/*        fontSize="small">*/}
+                                {/*    </DeleteIcon>*/}
+                                {/*</IconButton>*/}
+                            </div>
 
 
-                            <label className="add-website"> Website URL
+                            <label className="add-website "> Website URL
                                 <input
                                     type="TEXT"
                                     onChange={e => this.handleCompanyLinkChange(e.target.value)}
@@ -402,8 +443,8 @@ class ProfileRecruiter extends Component {
 
 
                         </DialogContent>
-                    </Dialog>}
-
+                    </Dialog>
+                    }
 
                 </div>
             </div>

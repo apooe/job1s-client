@@ -14,7 +14,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import DeleteExperienceControl from "./Experiences/DeleteExperienceControl";
 import {v4 as uuid} from "uuid";
 import Education from "./Education/Education";
-import ContactInfo from "./ContactInfo/ContactInfo";
 import DeleteEducationControl from "./Education/DeleteEducationControl";
 import ContactForm from "../../ContactForm/ContactForm";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,7 +23,8 @@ import Avatar from "@material-ui/core/Avatar";
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import {Divider} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-
+import ChangeNameAndJob from "./ChangeNameAndJob/ChangeNameAndJob";
+import CallIcon from '@material-ui/icons/Call';
 
 const http = getInstance();
 
@@ -39,7 +39,8 @@ class ProfileUser extends Component {
         super(props);
         this.state = {
             profile: null,
-            onChangeInfo: false,
+            onChangeProfileInfo: false,
+            onChangeUserPersonalInfo: false,
             onChangeExperiences: false,
             onDeleteExperiences: false,
             onChangeEducations: false,
@@ -51,31 +52,39 @@ class ProfileUser extends Component {
             selectedEducation: null,
             fileToUpload: null,
             uploadedFile: null,
-            onContactInfo: false,
-
-
+            isMyProfile: true
 
         };
-
         this.uploadImg = React.createRef();
-
-
     }
 
     /**
      * Quand le html a ete init
      */
-    componentDidMount() {
-        const user = AuthServiceFactory.getInstance().getCurrentUser();
-        this.setState({user});
-        this.getProfile(user._id);
+    async componentDidMount() {
 
+        const user = AuthServiceFactory.getInstance().getCurrentUser();
+
+        this.props.match.params.id ? // if user visit other profiles or his profile
+            await this.isVisitedProfile(false, `/users/${this.props.match.params.id}`) :
+            await this.isVisitedProfile(true, `/users/${user._id}`)
+
+    }
+
+    isVisitedProfile = async (isMyProfile, url) => {
+
+        await http.get(url).then(response => {
+            this.setState({user: response.data, isMyProfile: isMyProfile});
+            this.getProfile(this.state.user._id);
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
     }
 
     getProfile = (userId) => {
         const url = `/profiles/${userId}`;
         http.get(url).then(response => {
-            console.log("data: ", response.data);
+            console.log("data profile: ", response.data);
             this.setState({profile: response.data});
             console.log(this.state);
         }).catch(error => {
@@ -83,15 +92,26 @@ class ProfileUser extends Component {
         });
     }
 
-    onSubmitUpdate = () => {
+    handlePictureChange = async () => {
+        if (this.state.profile.profileImg) {
+            const oldUser = {...this.state.user};
+            const userRecord = {...oldUser, picture: this.state.profile.profileImg};
+            await this.setState({user: userRecord});
+            await this.onSaveInfo(this.state.user);
+        }
+    }
+
+    onSubmitUpdate = async () => {
         const url = '/profiles';
         const {profile} = this.state;
         http.put(url, profile).then(response => {
-            console.log("data: ", response.data);
+            console.log("data profile: ", response.data);
         }).catch(error => {
             console.log(error?.response?.data);
         });
-        this.setState({onChangeInfo: false})
+        this.setState({onChangeInfo: false});
+        await this.handlePictureChange();
+
     }
 
     handleProfileChange = (newValueObject) => {
@@ -101,29 +121,53 @@ class ProfileUser extends Component {
     }
 
     onClickUpdateInfos = () => {
-        this.setState({onChangeInfo: !this.state.onChangeInfo})
+        this.setState({onChangeInfo: !this.state.onChangeInfo, stepOneForChange: !this.state.stepOneForChange})
     }
 
     addDataArray = (type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: null, originalSelectedExperience: null}) :
-            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: null, originalSelectedEducation : null});
+            this.setState({
+                onChangeExperiences: !this.state.onChangeExperiences,
+                selectedExperience: null,
+                originalSelectedExperience: null
+            }) :
+            this.setState({
+                onChangeEducations: !this.state.onChangeEducations,
+                selectedEducation: null,
+                originalSelectedEducation: null
+            });
 
     }
 
     updateDataArray = (data, type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onChangeExperiences: !this.state.onChangeExperiences, selectedExperience: data, originalSelectedExperience: {...data}}) :
-            this.setState({onChangeEducations: !this.state.onChangeEducations, selectedEducation: data, originalSelectedEducation : {...data}});
+            this.setState({
+                onChangeExperiences: !this.state.onChangeExperiences,
+                selectedExperience: data,
+                originalSelectedExperience: {...data}
+            }) :
+            this.setState({
+                onChangeEducations: !this.state.onChangeEducations,
+                selectedEducation: data,
+                originalSelectedEducation: {...data}
+            });
     }
 
     deleteDataArray = (data, type) => {
 
         type === EXPERIENCE_ARRAY ?
-            this.setState({onDeleteExperiences: !this.state.onDeleteExperiences, selectedExperience: data, originalSelectedExperience: {...data}}) :
-            this.setState({onDeleteEducations: !this.state.onDeleteEducations, selectedEducation: data, originalSelectedEducation : {...data}});
+            this.setState({
+                onDeleteExperiences: !this.state.onDeleteExperiences,
+                selectedExperience: data,
+                originalSelectedExperience: {...data}
+            }) :
+            this.setState({
+                onDeleteEducations: !this.state.onDeleteEducations,
+                selectedEducation: data,
+                originalSelectedEducation: {...data}
+            });
     }
 
     handleExperienceSubmit = (newExperience) => {
@@ -143,12 +187,13 @@ class ProfileUser extends Component {
             newProfile.experience = newProfile?.experience.map(
                 exp => exp.companyName === this.state.originalSelectedExperience.companyName &&
                 exp.startDate === this.state.originalSelectedExperience.startDate ? newExperience : exp);
-            console.log("le nv profile est :",newProfile);
+            console.log("le nv profile est :", newProfile);
         }
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
 
     }
+
     handleEducationSubmit = (newEducation) => {
         const {profile, selectedEducation} = this.state;
         console.log(newEducation)
@@ -207,9 +252,7 @@ class ProfileUser extends Component {
             fileToUpload.name
         );
         // TODO Ac changer avec env variable
-        const url = '/upload';
-
-
+        const url = '/uploadImg';
 
         http.post(url, formData).then(({data}) => {
             // Change profile info
@@ -235,6 +278,12 @@ class ProfileUser extends Component {
 
     };
 
+    onCloseWindow = () => {
+
+        this.setState({onChangeUserPersonalInfo: !this.state.onChangeUserPersonalInfo})
+
+    };
+
     formatDate(date) {
         if (!date) {
             return null;
@@ -245,10 +294,23 @@ class ProfileUser extends Component {
 
     }
 
-    // onContactInfo = () =>{
-    //     console.log("je suis ds onContactinfo")
-    //     this.setState({onContactInfo : !this.state.onContactInfo})
-    // }
+    OnchangeUserInfos = () => {
+        this.setState({onChangeUserPersonalInfo: !this.state.onChangeUserPersonalInfo})
+    }
+
+    onSaveInfo = async (user) => {
+
+        const url = '/users';
+        await http.put(url, user).then(response => {
+            console.log("data user: ", response.data);
+            this.setState({user: response.data});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+        this.setState({onChangeInfo: false, onChangeUserPersonalInfo: false})
+        console.log("user est:", this.state.user);
+
+    }
 
     render() {
         const {user, profile, selectedExperience, selectedEducation} = this.state;
@@ -262,27 +324,43 @@ class ProfileUser extends Component {
 
                     <div className="row">
                         <div className="col-12">
-                            <section className="border rounded p-5 bg-light">
+                            <section className="presentation-section border rounded p-2">
                                 <div className="picture"
                                      onClick={() => this.state.onChangeInfo && this.uploadImg.current.click()}>
                                     <img className="profile-pic" src={profilePictureImg} alt="profile picture"/>
+                                    {this.state.onChangeInfo &&
+                                    <i className="icon fa fa-edit"></i>}
                                 </div>
+
                                 <div className="infos m-1">
-                                    <p className="name text-center font-weight-bold">{user.firstname} {user.lastname}</p>
-                                    <p className="city text-center font-italic">{user.city}</p>
+                                    <p className="name">{user.firstname} {user.lastname}</p>
+                                    <p className="job">{user.job}</p>
+                                    {user.phone && <p className="phone">
+                                        <CallIcon fontSize="small"/>{user.phone}</p>}
+                                    <p className="city">{user.city}</p>
+
+
                                 </div>
-                                {/*<div className="contact-info"*/}
-                                {/*    onClick={()=> this.onContactInfo()}>Contact info</div>*/}
 
+                                {this.state.isMyProfile &&
+                                <div className="row">
+                                    <div className="col-12">
+                                        {this.state.onChangeInfo ?
+                                            <button className="float-right btn btn-info"
+                                                    onClick={() => this.OnchangeUserInfos()}>Change Account
+                                                infos</button> :
 
-                                <IconButton aria-label="edit" className="float-right p-2 text-info"
-                                            onClick={this.onClickUpdateInfos}>
+                                            <IconButton aria-label="edit" className="float-right p-2 text-info"
+                                                        onClick={this.onClickUpdateInfos}>
 
-                                    <EditIcon>
-                                        fontSize="small"
-                                        Update profile
-                                    </EditIcon>
-                                </IconButton>
+                                                <EditIcon>
+                                                    fontSize="small"
+                                                    Update profile
+                                                </EditIcon>
+                                            </IconButton>}
+                                    </div>
+                                </div>}
+
                             </section>
                         </div>
                     </div>
@@ -294,6 +372,7 @@ class ProfileUser extends Component {
                                 <Avatar className="bg-info mx-auto">
                                     <ImportContactsIcon/>
                                 </Avatar>
+                                <h1 className="category-profile mb-3 p-0 ">Description</h1>
                                 <h1 className="category-profile mb-3 p-0 ">Description</h1>
                                 {this.state.onChangeInfo ?
                                     <TextField
@@ -321,15 +400,18 @@ class ProfileUser extends Component {
                                         Education &nbsp;
                                         {this.state.onChangeInfo &&
                                         <IconButton aria-label="add" className="text-info"
-                                                    onClick={() => this.addDataArray(EDUCATION_ARRAY)}> <AddCircleOutlineIcon>
-                                        </AddCircleOutlineIcon></IconButton>}
+                                                    onClick={() => this.addDataArray(EDUCATION_ARRAY)}>
+                                            <AddCircleOutlineIcon>
+                                            </AddCircleOutlineIcon></IconButton>}
                                     </h1>
                                     {
                                         profile.education && profile.education.map((formation, index) =>
 
                                             <div className="mt-2 pl-2" key={uuid()}>
 
-                                                <h4 className="company-educ-name"><a href={formation.link} target="_blank">{formation.collegeName}</a></h4>
+                                                <h4 className="company-educ-name"><a href={formation.link}
+                                                                                     target="_blank">{formation.collegeName}</a>
+                                                </h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
                                                     <IconButton aria-label="edit" className="text-info"
@@ -363,15 +445,18 @@ class ProfileUser extends Component {
                                         Experiences &nbsp;
                                         {this.state.onChangeInfo &&
                                         <IconButton aria-label="add" className="text-info"
-                                                    onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}> <AddCircleOutlineIcon>
-                                        </AddCircleOutlineIcon></IconButton>}
+                                                    onClick={() => this.addDataArray(EXPERIENCE_ARRAY)}>
+                                            <AddCircleOutlineIcon>
+                                            </AddCircleOutlineIcon></IconButton>}
                                     </h1>
                                     {
                                         profile.experience && profile.experience.map((exp, index) =>
 
                                             <div key={uuid()} className="mt-2 pl-2">
 
-                                                <h4 className="company-educ-name"><a href={exp.link} target="_blank">{exp.companyName}</a></h4>
+                                                <h4 className="company-educ-name"><a href={exp.link}
+                                                                                     target="_blank">{exp.companyName}</a>
+                                                </h4>
                                                 {this.state.onChangeInfo &&
                                                 <div style={{float: "right"}}>
                                                     <IconButton aria-label="edit" className="text-info"
@@ -433,7 +518,8 @@ class ProfileUser extends Component {
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeExperiences}
                             onClose={this.updateDataArray}
                             aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Experience</p></DialogTitle>
+                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Experience</p>
+                        </DialogTitle>
                         <DialogContent>
                             <Experience experience={selectedExperience}
                                         onExperienceSubmit={this.handleExperienceSubmit}
@@ -445,7 +531,8 @@ class ProfileUser extends Component {
                     <Dialog open={this.state.onChangeInfo && this.state.onChangeEducations}
                             onClose={this.updateDataArray}
                             aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Education</p></DialogTitle>
+                        <DialogTitle id="form-dialog-title"><p className="text-center title-dialog">Education</p>
+                        </DialogTitle>
                         <DialogContent>
                             <Education education={selectedEducation}
                                        onEducationSubmit={this.handleEducationSubmit}
@@ -477,18 +564,23 @@ class ProfileUser extends Component {
                         </DialogContent>
                     </Dialog>
 
-                    <Dialog open={this.state.onContactInfo}
-                            onClose={this.onContactInfo}
+
+                    <Dialog open={this.state.onChangeUserPersonalInfo}
+                            onClose={this.onCloseWindow}
                             aria-labelledby="form-dialog-title">
                         <DialogContent>
-                            <ContactInfo email={user?.email}/>
+                            <button type="button" className="close" aria-label="Close"
+                                    onClick={this.onCloseWindow}>
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <ChangeNameAndJob user={user}
+                                              onSubmit={this.onSaveInfo}
+                                              onClose={this.onCloseWindow}/>
                         </DialogContent>
                     </Dialog>
 
 
                 </div> : <p>No data to display</p>}
-
-
 
 
             </div>

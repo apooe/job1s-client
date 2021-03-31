@@ -14,18 +14,21 @@ const MainPage = ({history}) => {
     return (
         <AppContext.Consumer>
             {({context, setContext}) => (<div>
-                <div className="wrapper">
 
-                    <nav className="navbar-home">
-                        <Link to='/' className="navbar-logo"><img src={logo}/></Link>
-                        <ul className="nav-menu">
-                            <li>
-                                <Link to='/login' className='btn login-btn'>Sign in</Link>
+                <header className="site-header">
+                    <div className="wrapper site-header__wrapper">
+                        <nav className="navbar-home">
+                            <Link to='/' className=" navbar-logo"><img src={logo}/></Link>
+                            <ul className="nav-menu">
+                                <li>
+                                    <Link to='/login' className='btn login-btn'>Sign in</Link>
+                                </li>
+                            </ul>
+                        </nav>
 
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                    </div>
+                </header>
+
                 <div className='container-fluid'>
                     <div className='row'>
                         <div className='col headline'>
@@ -37,7 +40,9 @@ const MainPage = ({history}) => {
                             }} className="btn btn-mainpage border mt-5" type="button">
                                 Post a Job
                                 <ArrowForwardIosIcon className="arrow-icon"
-                                                     style={{fontSize: 30}}></ArrowForwardIosIcon>
+                                                     style={{fontSize: 30}}>
+
+                                </ArrowForwardIosIcon>
                             </button>
 
                             <button onClick={() => {
@@ -46,7 +51,20 @@ const MainPage = ({history}) => {
                             }} className="btn btn-mainpage border" type="button">
                                 Search for a job
                                 <ArrowForwardIosIcon className="arrow-icon"
-                                                     style={{fontSize: 30}}></ArrowForwardIosIcon>
+                                                     style={{fontSize: 30}}>
+
+                                </ArrowForwardIosIcon>
+                            </button>
+
+                            <button onClick={() => {
+                                setContext({userType: AUTH_TYPE_RECRUITER});
+                                history.push('/register')
+                            }} className="btn btn-mainpage border" type="button">
+                                Search for a profile
+                                <ArrowForwardIosIcon className="arrow-icon"
+                                                     style={{fontSize: 30}}>
+
+                                </ArrowForwardIosIcon>
                             </button>
 
                         </div>

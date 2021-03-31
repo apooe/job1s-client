@@ -1,0 +1,185 @@
+/*jobpost list */
+.jobPost-list, .current-jp {
+
+    margin-top: 80px;
+}
+
+.one-jp {
+    cursor: pointer;
+    padding: 0;
+}
+
+.one-jp:hover {
+
+    background-color: #e6f7ff;
+    cursor: pointer;
+}
+
+/*elements jobpost*/
+
+.jp-pic{
+    width: 75px;
+    height: 75px;
+    float:left;
+    margin: 10px 20px 10px 0px;
+}
+.jp-title {
+
+    color: #17a2b8;
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.jp-title:hover {
+
+    color: #17a2b8;
+    margin-top: 10px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.jp-company {
+
+    color: #5a5757;
+    margin-bottom: 0;
+}
+
+.jp-company:hover {
+
+    color: #5a5757;
+    text-decoration: underline;
+    margin-bottom: 0;
+    cursor: pointer;
+
+}
+
+.jp-loc {
+
+    color: #5a5757;
+}
+
+
+/*current jobpost*/
+
+.current-jp {
+    padding-left: 25px;
+}
+
+.jp-title-current {
+    font-size: 30px;
+    margin-bottom: 0;
+}
+
+.jp-title-current:hover {
+
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.jp-company-current {
+
+    color: #5a5757;
+    font-size: 20px;
+
+}
+
+.jp-company-current:hover {
+
+    color: #5a5757;
+    text-decoration: underline;
+    font-size: 20px;
+    cursor: pointer;
+
+}
+
+.jp-pic-current{
+    width: 110px;
+    height: 110px;
+    float:left;
+    margin: 0;
+    padding: 0px;
+}
+
+.jp-loc-current {
+
+    margin-top: 5px;
+    color: #5a5757;
+}
+
+.jp-descr-current{
+
+    font-size: 14px;
+
+}
+
+.jp-empl-current{
+    font-size: 14px;
+}
+
+.btn-jp-apply {
+    border-radius: 25px;
+    background-color: #0a66c2;
+    color: white;
+    padding: 8px 13px;
+    float: right;
+    margin-left: 10px;
+}
+
+.btn-jp-apply:hover {
+    border-radius: 25px;
+    background-color: #0551a0;
+    color: white;
+    padding: 8px 13px;
+    float: right;
+
+
+}
+
+.btn-jp-visit a {
+    color:#0a66c2;
+}
+
+.btn-jp-visit {
+    border-radius: 25px;
+    background-color: white;
+    color: #0a66c2;
+    border-color: #0a66c2;
+    padding: 8px 13px;
+    float: right;
+
+}
+
+.btn-jp-visit:hover {
+    border-radius: 25px;
+    background-color: #e6f7ff;
+    color: #0a66c2;
+    border-color: #0a66c2;
+    padding: 8px 13px;
+    float: right;
+
+}
+
+.line-separator {
+
+    margin-top: 30px;
+    width: 100%;
+}
+
+#form-dialog-title{
+    padding-bottom: 0;
+}
+
+.jobPost-list {
+    height: 80vh;
+    overflow-y: scroll;
+    margin: 10px;
+}
+
+.jobPost-list::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+.jobPost-list::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #c2c9d2;
+}

@@ -1,0 +1,76 @@
+.apply-city-contact {
+    font-size: 13px;
+    margin-top: 0;
+}
+
+.apply-name-contact {
+    margin: 0;
+
+}
+
+.input-apply {
+    margin-bottom: 0;
+    height: 40px;
+
+}
+
+.pic-jobseeker-apply {
+
+    width: 80px;
+    height: 80px;
+    border-radius: 50px;
+}
+
+.button-apply {
+
+    margin: 0 0 20px 0;
+    padding: 8px 12px;
+    color: white;
+    background-color: #0b67c2;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.button-apply:hover {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: #105092;
+    border-radius: 20px;
+}
+
+.button-back {
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    color: #0b67c2;
+    background-color: white;
+    float: left;
+    font-size: 17px;
+    border-radius: 20px;
+}
+
+.button-back:hover {
+
+    margin-bottom: 20px;
+    padding: 8px 12px;
+    color: white;
+    background-color: #0b67c2;
+    font-size: 17px;
+    font-weight: bold;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.separator-apply {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    border: 1px solid #eee;
+}
+
+
+#stepper .MuiStepper-root {
+
+    padding: 0;
+    margin-bottom: 15px;
+}

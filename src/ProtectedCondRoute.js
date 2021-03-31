@@ -7,6 +7,7 @@ const ProtectedCondRoute = ({ componentTrue, componentFalse, condition, ...rest 
         {...rest}
         render={(props) => {
                 return <ProtectedRoute component={condition ? componentTrue : componentFalse} {...rest} />;
+
         }}
     />
 );

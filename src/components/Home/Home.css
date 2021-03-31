@@ -19,3 +19,23 @@
     border-radius: 5px;
     width:50%;
 }
+
+.profiles-users{
+    margin-top: 50px;
+}
+
+.profile-user{
+    height:250px;
+    border: 1px solid #eeeeee;
+    max-width: 250px;
+}
+
+
+.pic-profile-home{
+    height: 150px;
+    width:150px;
+    border-radius: 50%;
+
+}
+
+

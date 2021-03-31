@@ -5,12 +5,12 @@ import {AuthServiceFactory} from "../../services/authService";
 export const MenuItems = (ctx = null) => [
     {
         title: "Profiles",
-        url: "#",
+        url: "/home",
         cName: "nav-links"
     },
     {
         title: "Jobs",
-        url: "#",
+        url: "/jobs",
         cName: "nav-links"
     },
     {

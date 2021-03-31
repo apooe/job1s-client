@@ -1,12 +1,14 @@
 .r-company-name {
 
     font-size: 20px;
+    margin-top: 10px;
 
 }
 
 .name {
     font-size: 20px;
 }
+
 
 .pic-recruiter {
 
@@ -68,6 +70,7 @@
     font-size: 20px;
     margin-bottom: 0;
 
+
 }
 
 .btn-save {
@@ -101,10 +104,13 @@
 
 .add-website
 {
-    font-size: 17px;
+    font-size: 20px;
     margin-bottom: 15px;
     width: 100%;
     font-style: italic;
+    margin-top: 15px;
+    font-weight: lighter;
+
 }
 
 .remove-link{
@@ -121,7 +127,41 @@
 }
 
 .update-pic{
-    font-size: 25px;
-    margin-bottom: 10px;
+    font-size: 22px;
+    font-weight: lighter;
+    margin-bottom: 5px;
+
 }
 
+.company-pic{
+
+    float:left;
+    width: 80px;
+    height: 80px;
+    margin: 20px 30px 20px 0px;
+}
+
+.jp-descr-current{
+    white-space: pre-line;
+}
+
+.jp-title-view{
+    padding-top: 8px;
+    margin-bottom: 4px;
+    font-weight: bold;
+
+}
+.company-pic-view{
+    width: 90px;
+    height: 90px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.presentation-profile{
+    background-image: url("../../../images/bg-profile.jpg");
+    padding: 0;
+
+}
