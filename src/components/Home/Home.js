@@ -6,74 +6,40 @@ import {AuthServiceFactory} from "../../services/authService";
 import {v4 as uuid} from "uuid";
 import defaultPic from '../../images/Unknown_person.jpg';
 import {Link} from 'react-router-dom';
-import {AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
+import {AppContext, AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
 
 const http = getInstance();
-const context = defaultContextValue;
 
 class Home extends Component {
+    static contextType = AppContext;
+
     constructor(props) {
         super(props);
         this.state = {
             profiles: null,
-            currentUser: null,
-
         }
     }
 
     async componentDidMount() {
-
-        const user = AuthServiceFactory.getInstance().getCurrentUser();
-        const url = context.userType === AUTH_TYPE_JOB_SEEKER ? `/users/${user._id}` : `/recruiters/${user._id}`;
-        await this.getProfilesAndCurrentUser(url, this.state.currentUser);
-
-        await this.onSearchProfiles();
-
-    }
-
-    getProfilesAndCurrentUser = async (url, currentUser) => {
-
-        await http.get(url).then(({data}) => {
-            !currentUser ? this.setState({currentUser: data}) : this.setState({profiles: data});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-    }
-
-    getCurrentUser = async (url) => {
-
-
-        await http.get(url).then(({data}) => {
-            this.setState({currentUser: data});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-    }
-
-    getProfiles = async (url) => {
-
-        await http.get(url).then(({data}) => {
-            this.setState({profiles: data});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-    }
-
-
-
-    onSearchProfiles = async () => {
-
-        await this.getProfilesAndCurrentUser(`/users`, this.state.currentUser);
-        const {history} = this.props;
-        history.listen((location) => {
+        await this.getAllUsersProfiles();
+        this.props.history.listen((location) => {
             const job = new URLSearchParams(location.search).get('job');
-            this.searchAction(job);
+            this.searchJob(job);
         })
     }
 
+    getAllUsersProfiles = async () => {
+        try {
+            const url = '/users';
+            const response = await http.get(url);
+            this.setState({profiles: response?.data})
+        } catch (e) {
+            console.log(e?.response?.data);
+        }
+    }
 
 
-    searchAction = (job) => {
+    searchJob = (job) => {
 
         const url = `/users/search/?job=${job}`;
         http.get(url).then(({data}) => {
@@ -86,10 +52,10 @@ class Home extends Component {
 
 
     render() {
+        const currentUser = this.context.context.currentUser;
+        const {profiles} = this.state;
 
-
-        const {profiles, currentUser} = this.state;
-        if (!profiles || !currentUser)
+        if (!currentUser)
             return null;
 
         return (
@@ -101,8 +67,8 @@ class Home extends Component {
 
                 <div className="container profiles-users">
                     <div className="row justify-content-center">
-                        {profiles.length === 0 && <h1> We didn't find profile according to your search...</h1>}
-                        {profiles.map((profile, index) =>
+                        {!profiles?.length && <h1> We didn't find profile according to your search...</h1>}
+                        {profiles?.length && profiles?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">
                                     {profile.picture ?
@@ -117,13 +83,9 @@ class Home extends Component {
                                         <Link to={`/profiles/${profile._id}`}>view profile</Link></button>
 
                                 </div>
-
-
                             </div>
                         )}
                     </div>
-
-
                 </div>
             </div>
 
