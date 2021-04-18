@@ -7,8 +7,9 @@ let axiosInstance = null;
 const createInstance = () => {
 
     const authService = AuthServiceFactory.getInstance();
+    const apiURL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
     const instance = Axios.create({
-        baseURL: 'http://localhost:8080/api',//base url for all request
+        baseURL: apiURL,//base url for all request
         paramsSerializer: params => Qs.stringify(params, {arrayFormat: 'brackets'})
     });
 
