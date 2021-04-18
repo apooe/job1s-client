@@ -15,7 +15,7 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            profile: null,
+            profiles: null,
             currentUser: null,
 
         }
@@ -29,8 +29,37 @@ class Home extends Component {
 
         await this.onSearchProfiles();
 
-
     }
+
+    getProfilesAndCurrentUser = async (url, currentUser) => {
+
+        await http.get(url).then(({data}) => {
+            !currentUser ? this.setState({currentUser: data}) : this.setState({profiles: data});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+    }
+
+    getCurrentUser = async (url) => {
+
+
+        await http.get(url).then(({data}) => {
+            this.setState({currentUser: data});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+    }
+
+    getProfiles = async (url) => {
+
+        await http.get(url).then(({data}) => {
+            this.setState({profiles: data});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+    }
+
+
 
     onSearchProfiles = async () => {
 
@@ -42,14 +71,7 @@ class Home extends Component {
         })
     }
 
-    getProfilesAndCurrentUser = async (url, currentUser) => {
 
-        await http.get(url).then(({data}) => {
-            !currentUser ? this.setState({currentUser: data}) : this.setState({profiles: data});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-    }
 
     searchAction = (job) => {
 
