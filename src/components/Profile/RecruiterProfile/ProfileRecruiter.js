@@ -197,8 +197,8 @@ class ProfileRecruiter extends Component {
     render() {
 
         const {recruiter, selectedJobPost, onEditInfos, onViewJob, onChangeJobPost, onEditImg} = this.state;
-        const profilePictureImg = recruiter?.profileImg ? `${process.env.REACT_APP_API_URL}${recruiter?.profileImg}` : defaultPic;
-        const newImg = onEditImg ? `${process.env.REACT_APP_API_URL}${this.state.newImgSource}` : "";
+        const profilePictureImg = recruiter?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}` : defaultPic;
+        const newImg = onEditImg ? `${process.env.REACT_APP_API_BASE_URL}${this.state.newImgSource}` : "";
 
             return (
             <div>
