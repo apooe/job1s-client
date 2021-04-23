@@ -3,11 +3,9 @@ import {Grid, Paper, Avatar, TextField, Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import "./LoginManager.css";
 import {Redirect, withRouter} from "react-router";
-import {Link} from "react-router-dom";
-import {getInstance} from "../../helpers/httpInstance";
 import Alert from "@material-ui/lab/Alert";
 import {AuthServiceFactory} from "../../services/authService";
-import {AppContext} from "../../AppContext";
+import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER} from "../../AppContext";
 
 
 const authService = AuthServiceFactory.getInstance();
@@ -94,9 +92,15 @@ const LoginForm = (props) => {
 
                             <Grid container justify="flex-end">
                                 <Grid item>Already have an account? {" "}
-                                    <Link to={"/register"} variant="body2">
-                                        Sign Up
-                                    </Link>
+                                    <button onClick={() => {
+
+                                            setContext({userType: AUTH_TYPE_JOB_SEEKER});
+                                            history.push('/register')
+
+
+                                    }} className="btn p-0 " type="button">
+                                        Sign up
+                                    </button>
                                 </Grid>
                             </Grid>
                         </Paper>

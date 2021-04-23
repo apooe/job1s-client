@@ -1,13 +1,6 @@
 import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
 import {AuthServiceFactory} from "../../services/authService";
-
-
-export const MenuItems = (ctx = null) => [
-    {
-        title: "Profiles",
-        url: "/home",
-        cName: "nav-links"
-    },
+const menuItemsJobSeeker = ctx => [
     {
         title: "Jobs",
         url: "/jobs",
@@ -34,6 +27,19 @@ export const MenuItems = (ctx = null) => [
 
         }
     },
+];
+
+const menuItemRecruiter = ctx => [
+    {
+        title: "Profiles",
+        url: "/home",
+        cName: "nav-links",
+
+    },
+    ...menuItemsJobSeeker(ctx)
+];
 
 
-]
+export const MenuItems = (ctx = null) => {
+    return ctx?.context?.userType === AUTH_TYPE_JOB_SEEKER ? menuItemsJobSeeker(ctx): menuItemRecruiter(ctx);
+}

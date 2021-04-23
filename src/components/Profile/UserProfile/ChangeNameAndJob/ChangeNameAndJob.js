@@ -1,10 +1,15 @@
 import React, {Component} from 'react';
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import {TextField} from "@material-ui/core";
+import AddIcon from '@material-ui/icons/Add';
+import {IconButton, TextField} from "@material-ui/core";
 import {debounce} from "lodash";
 import axios from "axios";
 import {getInstance} from "../../../../helpers/httpInstance";
+import "./ChangeNameAndJob.css"
+import {v4 as uuid} from "uuid";
+import LinkIcon from '@material-ui/icons/Link';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const http = getInstance();
 
@@ -17,6 +22,9 @@ class ChangeNameAndJob extends Component {
             user: null,
             places: [],
             jobs: [],
+            onAddWebsite: false,
+            websites: [],
+            url: null
 
         };
     }
@@ -24,6 +32,8 @@ class ChangeNameAndJob extends Component {
     componentDidMount() {
         const {user} = this.props;
         this.setState({user});
+        this.setState({websites: user.websites});
+
     }
 
     loadPlaceOptions = async (newValue) => {
@@ -53,7 +63,7 @@ class ChangeNameAndJob extends Component {
     onSubmit = (e) => {
 
         e.preventDefault();
-        this.props.onSubmit(this.state.user);
+        this.props.onEdit(this.state.user);
     }
 
     handleUserChange = (newInfos) => {
@@ -61,11 +71,48 @@ class ChangeNameAndJob extends Component {
         const oldInfos = {...this.state.user};
         const infos = {...oldInfos, ...newInfos};
         this.setState({user: infos});
+
     }
 
-    render() {
-        const {user} = this.state;
+    onAddWebsite = () => {
 
+        this.setState({onAddWebsite: true})
+    }
+
+    AddWebsite = async () => {
+
+        const arrayUrls = this.state.websites;
+        if(this.state.url) {
+            await arrayUrls.push(this.state.url);
+            await this.handleUserChange( {...this.state.websites});
+        }
+        await this.closeAddWebsite();
+
+    }
+
+    closeAddWebsite = async () => {
+        await this.setState({onAddWebsite: false})
+
+    }
+
+    handleAddWebsite = async (newUrl) => {
+        await this.setState({url: newUrl});
+    }
+
+    onDeleteWebsite = async (url) => {
+
+        const arrayUrls = this.state.websites;
+        const index = arrayUrls.indexOf(url);
+        if (index > -1) {
+            await arrayUrls.splice(index, 1);
+        }
+        const websites = {...this.state.websites};
+        this.handleUserChange(websites);
+    }
+
+
+    render() {
+        const {user, onAddWebsite, websites} = this.state;
 
         if (!user) {
             return null;
@@ -83,7 +130,6 @@ class ChangeNameAndJob extends Component {
                         type="text"
                         onChange={e => this.handleUserChange({firstname: e.target.value})}
                         className="form-control"
-
                         placeholder="first name"
                         value={user.firstname}
                         required
@@ -93,10 +139,17 @@ class ChangeNameAndJob extends Component {
                         type="text"
                         onChange={e => this.handleUserChange({lastname: e.target.value})}
                         className="form-control"
-
                         placeholder="last name"
                         value={user.lastname}
                         required
+                    />
+
+                    <input
+                        type="email"
+                        onChange={e => this.handleUserChange({email: e.target.value})}
+                        className="form-control"
+                        placeholder="Email"
+                        value={user.email}
                     />
 
                     <input
@@ -105,7 +158,15 @@ class ChangeNameAndJob extends Component {
                         className="form-control"
                         placeholder="phone"
                         value={user.phone}
-                        required
+                    />
+
+                    <input
+                        type="text"
+                        onChange={e => this.handleUserChange({address: e.target.value})}
+                        className="form-control"
+                        placeholder="Address"
+                        value={user.address}
+
                     />
 
                     <Autocomplete
@@ -124,7 +185,7 @@ class ChangeNameAndJob extends Component {
 
                     <Autocomplete
                         id="combo-box-demo"
-                        className=""
+                        className="mb-3"
                         options={this.state.places}
                         fullWidth
                         onInputChange={(event, value) => this.loadPlaceOptions(value)}
@@ -136,12 +197,83 @@ class ChangeNameAndJob extends Component {
                         )}
                     />
 
+                    <h5>Websites</h5>
+                    {websites && websites.map((url) => {
+                        return (
+                            <div key={uuid()} className="py-1">
+                                <LinkIcon color="primary" fontSize="small"/><a className="ml-1"
+                                                                              href={`${url}`}>{url}</a>
+                                <IconButton className="ml-3 "  onClick={() => this.onDeleteWebsite(url)}>
+                                    <DeleteIcon  fontSize="small" color="action"
+                                    />
+                                </IconButton>
+
+                            </div>
+                        )
+                    })}
+                    <a href="#" className="p-0 mt-2 d-flex"
+                            onClick={this.onAddWebsite}><AddIcon color="primary"/> Add website
+                    </a>
+
+
+                    {onAddWebsite && <input
+                        type="text"
+                        onChange={e => this.handleAddWebsite(e.target.value)}
+                        className="form-control mt-3"
+                        placeholder="url"
+                    />}
+
                     <button
                         type="submit"
-                        className="btn btn-primary mt-2 mb-4 float-right">
+                        onClick={()=> this.AddWebsite()}
+                        className="btn btn-primary  save-change-btn ">
                         Save
                     </button>
+
                 </form>
+
+
+                {/*<Dialog open={onAddWebsite}*/}
+                {/*        onClose={this.closeAddWebsite}*/}
+                {/*        aria-labelledby="form-dialog-title">*/}
+                {/*    <DialogContent>*/}
+                {/*        <button type="button" className="close" aria-label="Close"*/}
+                {/*                onClick={this.closeAddWebsite}>*/}
+                {/*            <span aria-hidden="true">&times;</span>*/}
+                {/*        </button>*/}
+
+
+                {/*        {websites && websites.map((url) => {*/}
+
+                {/*            return (*/}
+                {/*                <div key={uuid()} className="pb-3">*/}
+                {/*                    <LinkIcon color="action" fontSize="small"/><a className="ml-1"*/}
+                {/*                                                                  href={`${url}`}>{url}</a>*/}
+                {/*                    <DeleteIcon className="ml-3" fontSize="small" color="action"*/}
+                {/*                                onClick={() => this.onDeleteWebsite(url)}/>*/}
+                {/*                </div>*/}
+                {/*            )*/}
+                {/*        })}*/}
+
+                {/*        <p><strong><AddIcon*/}
+                {/*        onClick={this.onAddWebsite}/>Add website</strong></p>*/}
+
+                {/*        <input*/}
+                {/*            type="text"*/}
+                {/*            onChange={e => this.handleAddWebsite(e.target.value)}*/}
+                {/*            className="form-control"*/}
+                {/*            placeholder="url"*/}
+                {/*        />*/}
+
+                {/*        <button*/}
+                {/*            type="button"*/}
+                {/*            className="btn btn-primary mt-2 mb-4 float-right"*/}
+                {/*            onClick={() => this.AddWebsite()}>*/}
+                {/*            Save*/}
+                {/*        </button>*/}
+
+                {/*    </DialogContent>*/}
+                {/*</Dialog>*/}
 
             </div>
 

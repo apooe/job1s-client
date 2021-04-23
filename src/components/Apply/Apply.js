@@ -136,7 +136,7 @@ class Apply extends Component {
     render() {
         const {classes} = this.props;
         const {user, applyForm, fileToUpload, nextStep, steps} = this.state;
-        const imgSrc = `http://localhost:8080${user?.picture}`;
+        const imgSrc = `${process.env.REACT_APP_API_BASE_URL}${user?.picture}`;
         if (!user) {
             return null;
         }

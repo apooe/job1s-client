@@ -25,9 +25,13 @@
 }
 
 .profile-user{
-    height:250px;
+    height:300px;
     border: 1px solid #eeeeee;
     max-width: 250px;
+}
+
+.profile-user:hover {
+    background-color: #eeeeee;
 }
 
 

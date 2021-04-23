@@ -38,7 +38,6 @@ class JobPost extends Component {
     componentDidMount() {
 
         if (this.props.jobPost) {// if exist
-            console.log("exist", this.props.jobPost)
             this.setState({checked: this.props.jobPost.companyImg});
         }
         else{
@@ -96,7 +95,6 @@ class JobPost extends Component {
     }
 
     searchJob = async (newValue) => {
-        console.log(newValue)
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
         await axios.get(url, {params: {contains: newValue}}).then(response => {
             this.setState({jobs: response?.data || []})
@@ -140,9 +138,9 @@ class JobPost extends Component {
                         onChange={(event, value) => this.handleJobPostChange({title: value.suggestion})}
                         renderInput={(params) => (
                             <TextField  {...params} label="Job" className="location-title"
-                                        variant="outlined" />
+                                        variant="outlined" required/>
                         )}
-                        required
+
                     />
 
 
@@ -164,9 +162,9 @@ class JobPost extends Component {
                         onChange={(event, value) => this.handleJobPostChange({location: value})}
                         renderInput={(params) => (
                             <TextField  {...params} label="Location" className="location-title"
-                                        variant="outlined"/>
+                                        variant="outlined" required/>
                         )}
-                        required
+
                     />
 
 

@@ -25,6 +25,8 @@ import {Divider} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import ChangeNameAndJob from "./ChangeNameAndJob/ChangeNameAndJob";
 import CallIcon from '@material-ui/icons/Call';
+import ContactInfo from "../ContactInfos/ContactInfo";
+import {AppContext} from "../../../AppContext";
 
 const http = getInstance();
 
@@ -33,14 +35,13 @@ const EXPERIENCE_ARRAY = "EXPERIENCE_ARRAY";
 
 class ProfileUser extends Component {
 
-    _currentUser = null;
+    static contextType = AppContext;
 
     constructor(props) {
         super(props);
         this.state = {
             profile: null,
             onChangeProfileInfo: false,
-            onChangeUserPersonalInfo: false,
             onChangeExperiences: false,
             onDeleteExperiences: false,
             onChangeEducations: false,
@@ -52,7 +53,8 @@ class ProfileUser extends Component {
             selectedEducation: null,
             fileToUpload: null,
             uploadedFile: null,
-            isMyProfile: true
+            isMyProfile: true,
+            onContactinfo: false,
 
         };
         this.uploadImg = React.createRef();
@@ -64,7 +66,6 @@ class ProfileUser extends Component {
     async componentDidMount() {
 
         const user = AuthServiceFactory.getInstance().getCurrentUser();
-
         this.props.match.params.id ? // if user visit other profiles or his profile
             await this.isVisitedProfile(false, `/users/${this.props.match.params.id}`) :
             await this.isVisitedProfile(true, `/users/${user._id}`)
@@ -86,7 +87,7 @@ class ProfileUser extends Component {
         http.get(url).then(response => {
             console.log("data profile: ", response.data);
             this.setState({profile: response.data});
-            console.log(this.state);
+
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -118,10 +119,6 @@ class ProfileUser extends Component {
         const oldProfile = {...this.state.profile}; // Deep Copy of the profile field
         const newProfile = {...oldProfile, ...newValueObject}; // Merge two profile
         this.setState({profile: newProfile});
-    }
-
-    onClickUpdateInfos = () => {
-        this.setState({onChangeInfo: !this.state.onChangeInfo, stepOneForChange: !this.state.stepOneForChange})
     }
 
     addDataArray = (type) => {
@@ -278,11 +275,9 @@ class ProfileUser extends Component {
 
     };
 
-    onCloseWindow = () => {
-
-        this.setState({onChangeUserPersonalInfo: !this.state.onChangeUserPersonalInfo})
-
-    };
+    onClickUpdateInfos = () => {
+        this.setState({onChangeInfo: !this.state.onChangeInfo})
+    }
 
     formatDate(date) {
         if (!date) {
@@ -294,10 +289,6 @@ class ProfileUser extends Component {
 
     }
 
-    OnchangeUserInfos = () => {
-        this.setState({onChangeUserPersonalInfo: !this.state.onChangeUserPersonalInfo})
-    }
-
     onSaveInfo = async (user) => {
 
         const url = '/users';
@@ -307,16 +298,28 @@ class ProfileUser extends Component {
         }).catch(error => {
             console.log(error?.response?.data);
         });
-        this.setState({onChangeInfo: false, onChangeUserPersonalInfo: false})
+
         console.log("user est:", this.state.user);
+        await this.context.setContext({currentUser: this.state.user});
+        console.log("curreent user est:", this.context.context.currentUser);
+        this.setState({onChangeInfo: false});
 
     }
+
+    onContactInfo = () => {
+        this.setState({onContactInfo: true});
+    };
+
+    onCloseWindow = () => {
+        this.setState({ onContactInfo: false})
+    };
 
     render() {
         const {user, profile, selectedExperience, selectedEducation} = this.state;
 
+
         // TODO a changer avec env variable
-        const profilePictureImg = profile?.profileImg ? `http://localhost:8080${profile?.profileImg}` : picImage;
+        const profilePictureImg = profile?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${profile?.profileImg}` : picImage;
         return (
             <div>
 
@@ -332,39 +335,39 @@ class ProfileUser extends Component {
                                     <i className="icon fa fa-edit"></i>}
                                 </div>
 
-                                <div className="infos m-1">
+                                <div className="infos m-1 text-center">
                                     <p className="name">{user.firstname} {user.lastname}</p>
                                     <p className="job">{user.job}</p>
                                     {user.phone && <p className="phone">
                                         <CallIcon fontSize="small"/>{user.phone}</p>}
                                     <p className="city">{user.city}</p>
 
-
+                                    <a href="#" className="contact-info-btn"
+                                            onClick={this.onContactInfo}>Contact Info
+                                    </a>
                                 </div>
+
 
                                 {this.state.isMyProfile &&
                                 <div className="row">
                                     <div className="col-12">
-                                        {this.state.onChangeInfo ?
-                                            <button className="float-right btn btn-info"
-                                                    onClick={() => this.OnchangeUserInfos()}>Change Account
-                                                infos</button> :
 
-                                            <IconButton aria-label="edit" className="float-right p-2 text-info"
-                                                        onClick={this.onClickUpdateInfos}>
 
-                                                <EditIcon>
-                                                    fontSize="small"
-                                                    Update profile
-                                                </EditIcon>
-                                            </IconButton>}
+                                        <IconButton aria-label="edit" className="float-right p-2 text-info"
+                                                    onClick={this.onClickUpdateInfos}>
+
+                                            <EditIcon>
+                                                fontSize="small"
+                                                Update profile
+                                            </EditIcon>
+                                        </IconButton>
                                     </div>
                                 </div>}
+
 
                             </section>
                         </div>
                     </div>
-
 
                     <div className="row mt-5">
                         <div className="col-12">
@@ -372,7 +375,6 @@ class ProfileUser extends Component {
                                 <Avatar className="bg-info mx-auto">
                                     <ImportContactsIcon/>
                                 </Avatar>
-                                <h1 className="category-profile mb-3 p-0 ">Description</h1>
                                 <h1 className="category-profile mb-3 p-0 ">Description</h1>
                                 {this.state.onChangeInfo ?
                                     <TextField
@@ -565,7 +567,7 @@ class ProfileUser extends Component {
                     </Dialog>
 
 
-                    <Dialog open={this.state.onChangeUserPersonalInfo}
+                    <Dialog open={this.state.onContactInfo}
                             onClose={this.onCloseWindow}
                             aria-labelledby="form-dialog-title">
                         <DialogContent>
@@ -573,9 +575,7 @@ class ProfileUser extends Component {
                                     onClick={this.onCloseWindow}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <ChangeNameAndJob user={user}
-                                              onSubmit={this.onSaveInfo}
-                                              onClose={this.onCloseWindow}/>
+                            <ContactInfo onSubmit={this.onSaveInfo}/>
                         </DialogContent>
                     </Dialog>
 

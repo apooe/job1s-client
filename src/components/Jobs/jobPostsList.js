@@ -9,11 +9,12 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Apply from "../Apply/Apply";
+import {AppContext, AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
 
 const http = getInstance();
 
 class JobPostsList extends Component {
-
+    static contextType = AppContext;
 
     constructor(props) {
         super(props);
@@ -22,7 +23,8 @@ class JobPostsList extends Component {
             onclickJobPost: false,
             currentJobPost: null,
             currentRecruiter: null,
-            onApply: false
+            onApply: false,
+            jobposts : null
         };
 
     }
@@ -40,6 +42,24 @@ class JobPostsList extends Component {
         }).catch(error => {
             console.log(error?.response?.data);
         });
+
+
+        this.props.history.listen((location) => {
+            const job = new URLSearchParams(location.search).get('job');
+            this.searchJobPosts(job);
+        });
+
+    }
+
+    searchJobPosts = (job) => {
+
+        console.log(job);
+        // const url = `/recruiters/search/?job=${job}`;
+        // http.get(url).then(({data}) => {
+        //     this.setState({jobposts: data})
+        // }).catch(error => {
+        //     console.log(error?.response?.data);
+        // });
     }
 
     onClickJobPost = (jobPost, recruiter) => {
@@ -60,10 +80,12 @@ class JobPostsList extends Component {
 
     render() {
 
+        const currentUser = this.context.context.currentUser;
         const {recruiters, currentJobPost, currentRecruiter, onApply} = this.state;
         const imgSource = currentJobPost && currentJobPost.companyImg ? defaultPic : defaultPic;
 
         return (
+
             <div>
                 <div className="container">
                     <div className="row">
@@ -77,7 +99,7 @@ class JobPostsList extends Component {
 
                                                 {jp.companyImg ?
                                                     <img className="jp-pic"
-                                                         src={`http://localhost:8080${recruiter?.profileImg}`}
+                                                         src={`${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}`}
                                                          alt="company logo"/> :
                                                     <img className="jp-pic" src={imgSource} alt="company logo"/>}
                                                 <h5 className="jp-title">{jp.title}</h5>
@@ -102,7 +124,7 @@ class JobPostsList extends Component {
                                         <div className="col-3">
                                             {currentJobPost.companyImg ?
                                                 <img className="jp-pic-current"
-                                                     src={`http://localhost:8080${currentRecruiter?.profileImg}`}
+                                                     src={`${process.env.REACT_APP_API_BASE_URL}${currentRecruiter?.profileImg}`}
                                                      alt="company logo"/> :
                                                 <img className="jp-pic" src={imgSource} alt="company logo"/>}
 
@@ -116,7 +138,13 @@ class JobPostsList extends Component {
                                     </div>
 
                                     <div className="row">
-                                        <div className="col-8 mt-3">
+
+                                        <div className="col-6 mt-3 ml-1">
+                                            <button className="btn btn-jp-visit ">
+                                                <a href={currentJobPost.url} target="_blank">Visit Website
+                                                </a>
+                                            </button>
+                                            { currentUser.userType === AUTH_TYPE_JOB_SEEKER &&
                                             <button className="btn btn-jp-apply font-weight-bolder"
                                                     onClick={() => this.onApply()}>
                                                 <a>Apply
@@ -124,11 +152,8 @@ class JobPostsList extends Component {
                                                         fontSize="small">
                                                     </LaunchIcon>
                                                 </a>
-                                            </button>
-                                            <button className="btn ml-2 btn-jp-visit">
-                                                <a href={currentJobPost.url} target="_blank">Visit Website
-                                                </a>
-                                            </button>
+                                            </button>}
+
                                         </div>
                                     </div>
 

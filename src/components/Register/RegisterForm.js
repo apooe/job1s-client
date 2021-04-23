@@ -18,7 +18,6 @@ const authService = AuthServiceFactory.getInstance();
 
 
 const USER = 'USER';
-
 const userValidator = Yup.object().shape({
 
     _id: Yup.string().optional().nullable(),
@@ -52,7 +51,6 @@ const RegisterForm = (props) => {
 
 
     const loadPlaceOptions = (newValue) => {
-        console.log("newValue", newValue);
         const url = '/place';
         http.get(url, {params: {city: newValue}}).then(response => {
             setPlace(response?.data || [])
@@ -64,7 +62,6 @@ const RegisterForm = (props) => {
 
     const handleUserChange = (newValue) => {
 
-        console.log(newValue)
         setUser({...user, ...newValue})
     }
 
@@ -80,8 +77,6 @@ const RegisterForm = (props) => {
         userValidator.validate(user).then(() => {
 
             http.post(url, user).then(response => {
-                console.log(response.data._id);
-                //createProfile({userId: response.data._id});
                 setIsSubmitting(false);
                 const {email, password} = user;
                 authService.logIn(email, password ).then(() => {
@@ -109,7 +104,6 @@ const RegisterForm = (props) => {
         const url = '/users';
         setIsSubmitting(true);
 
-        console.log(user);
 
         userValidator.validate(user).then(() => {
 
@@ -126,7 +120,6 @@ const RegisterForm = (props) => {
             }
 
             http.post(url, user).then(response => {
-                console.log(response.data._id);
                 createProfile({userId: response.data._id});
                 setIsSubmitting(false);
                 const {email, password} = user;
@@ -153,18 +146,15 @@ const RegisterForm = (props) => {
     }
 
     const createProfile = (userId) => {
-        console.log(userId)
         const url = '/profiles';
         http.post(url, userId).then(response => {
-            console.log(response.data);
-
+;
         }).catch(error => {
             console.log(error?.response?.data);
         });
     }
 
     const searchJob = async (newValue) => {
-        console.log(newValue)
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
         await axios.get(url, {params: {begins_with: newValue}}).then(response => {
             setJob(response?.data || [])

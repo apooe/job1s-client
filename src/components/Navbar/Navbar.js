@@ -13,31 +13,42 @@ class Navbar extends Component {
     state = {
         clicked: false,
         active: false,
+        isjobSeeker: false
+    }
+
+    componentDidMount() {
+        console.log("is job seeker est: ", this.props.isJobSeeker);
+        this.setState({isJobSeeker: this.props.isJobSeeker});
     }
 
     handleClick = () => {
         this.setState({clicked: !this.state.clicked});
-
     }
 
 
     handleSearchProfiles = (inputSearch) => {
         console.log("ds navbar", inputSearch);
-        this.props.history.push(`/home/?job=${inputSearch}`);
+        this.state.isjobSeeker ?
+            this.props.history.push(`/home/?job=${inputSearch}`) :
+            this.props.history.push(`/jobs/?job=${inputSearch}`);
+
 
     }
 
     render() {
 
+        const {isJobSeeker} = this.state;
 
         return (
             <AppContext.Consumer>
                 {(globalContext) => (
                     <nav className="NavbarItems">
+
                         <Link to='/home' className="navbar-logo"><img src={logo}/></Link>
 
+
                         <div className="search-navbar">
-                            <SearchBar searchProfiles = {this.handleSearchProfiles}/>
+                            <SearchBar searchProfiles={this.handleSearchProfiles}/>
                         </div>
 
                         <div className="menu-icon" onClick={this.handleClick}>
@@ -55,8 +66,6 @@ class Navbar extends Component {
                                 )
                             })}
                         </ul>
-
-
                     </nav>)}
             </AppContext.Consumer>
         )
@@ -64,4 +73,4 @@ class Navbar extends Component {
 }
 
 
-export default withRouter(Navbar );
+export default withRouter(Navbar);

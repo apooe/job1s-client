@@ -10,7 +10,8 @@ const defaultCurrentUser =  authService.getCurrentUser();
 export const defaultContextValue = {
     currentUser: defaultCurrentUser,
     isAuth: authService.isAuth(),
-    userType: defaultCurrentUser?.userType
+    userType: defaultCurrentUser?.userType,
+    menu: []
 };
 
 export const AppContext = createContext(defaultContextValue);

@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import {AuthServiceFactory} from "../../../services/authService";
 import {withRouter} from "react-router";
 import './ProfileRecruiter.css';
@@ -16,16 +16,17 @@ import picImage from "../../../images/Unknown_person.jpg";
 import defaultPic from "../../../images/unknown-company.PNG";
 import DeleteIcon from '@material-ui/icons/Delete';
 import LaunchIcon from '@material-ui/icons/Launch';
+import {AppContext, defaultContextValue} from "../../../AppContext";
 
 
 const http = getInstance();
 
 class ProfileRecruiter extends Component {
+    static contextType = AppContext;
 
-    _currentRecruiter = null;
 
-    constructor(props) {
-        super(props);
+    constructor(props, context) {
+        super(props, context);
         this.state = {
             recruiter: null,
             onChangeJobPost: false,
@@ -36,9 +37,31 @@ class ProfileRecruiter extends Component {
             uploadedFile: null,
             onViewJob: false,
             onEditInfos: false,
-            originalSelectedJp:null
+            originalSelectedJp:null,
+            isMyProfile: true,
+
         };
         this.uploadImg = React.createRef();
+    }
+
+    componentDidMount() {
+        const recruiter = AuthServiceFactory.getInstance().getCurrentUser();
+        this.setState({recruiter});
+        this.getProfile(recruiter._id);
+
+        this.props.match.params.id ? // if user visit other profiles or his profile
+            this.isVisitedProfile(false, `/recruiters/${this.props.match.params.id}`) :
+            this.isVisitedProfile(true, `/recruiters/${recruiter._id}`)
+
+    }
+
+    isVisitedProfile = async (isMyProfile, url) => {
+
+        await http.get(url).then(response => {
+            this.setState({recruiter: response.data, isMyProfile: isMyProfile});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
     }
 
     handleProfilePictureChange = async (event) => {
@@ -97,18 +120,13 @@ class ProfileRecruiter extends Component {
     }
 
 
-    componentDidMount() {
-        const recruiter = AuthServiceFactory.getInstance().getCurrentUser();
-        this.setState({recruiter});
-        this.getProfile(recruiter._id);
-
-    }
-
     getProfile = (id) => {
         const url = `/recruiters/${id}`;
         http.get(url).then(response => {
             console.log("data from getprofile: ", response.data);
             this.setState({recruiter: response.data});
+
+
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -118,7 +136,7 @@ class ProfileRecruiter extends Component {
         this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: null, originalSelectedJp: null});
     }
 
-    updateArray = (data) => {
+    updateJobPostsList = (data) => {
 
         this.setState({onChangeJobPost: !this.state.onChangeJobPost, selectedJobPost: data, originalSelectedJp: data});
     }
@@ -126,30 +144,29 @@ class ProfileRecruiter extends Component {
     onCloseWindow = () => {
 
         this.setState({onChangeJobPost: false, selectedJobPost: null, onViewJob: false, onEditInfos: false, originalSelectedJp: null});
-
     };
+
+
 
     handleJobSubmit = async (newPostJob) => {
 
-        console.log(newPostJob)
-
-        const {recruiter, selectedJobPost} = this.state;
+        const {recruiter, selectedJobPost, isMyProfile} = this.state;
         const newRecruiter = {...recruiter};
         const isNewPostJob = !selectedJobPost;
 
         if (isNewPostJob) {
-            console.log("NEW JobPost")
             newRecruiter.jobPosts = newRecruiter?.jobPosts ? [...newRecruiter.jobPosts, newPostJob] : [newPostJob];
 
         } else {
-            console.log("UPDATE jobPost")
             newRecruiter.jobPosts = newRecruiter?.jobPosts.map(jp => (
                 jp.companyName === this.state.originalSelectedJp.companyName &&
                 jp.title === this.state.originalSelectedJp.title ) ? newPostJob : jp);
         }
-        // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
-        await this.updateArrayJobPost();
+        await this.updateJobPost();
+
+
+
     }
 
     handleDelete = async (jobpost) => {
@@ -162,12 +179,11 @@ class ProfileRecruiter extends Component {
                 jp.description !== this.state.originalSelectedJp.description));
         console.log("delete", newRecruiter)
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
-        await this.updateArrayJobPost();
+        await this.updateJobPost();
 
     }
 
-
-    updateArrayJobPost = async () => {
+    updateJobPost = async () => {
         const url = '/recruiters';
         const {recruiter} = this.state;
         await http.put(url, recruiter).then(response => {
@@ -175,13 +191,16 @@ class ProfileRecruiter extends Component {
         }).catch(error => {
             console.log(error?.response?.data);
         });
-        this.setState({onChangeJobPost: false})
+        this.setState({onChangeJobPost: false});
+        await this.context.setContext({currentUser: this.state.recruiter});
+
     }
 
     showJobPost = (jobPost) => {
         this.setState({onViewJob: !this.state.onViewJob, selectedJobPost: jobPost});
 
     }
+
     handleChangeInfos = () => {
         this.setState({onEditInfos: !this.state.onEditInfos});
 
@@ -193,10 +212,9 @@ class ProfileRecruiter extends Component {
         this.setState({recruiter: newRecruiter})
     }
 
-
     render() {
 
-        const {recruiter, selectedJobPost, onEditInfos, onViewJob, onChangeJobPost, onEditImg} = this.state;
+        const {recruiter, selectedJobPost, onEditInfos, onViewJob, onChangeJobPost, onEditImg, isMyProfile} = this.state;
         const profilePictureImg = recruiter?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}` : defaultPic;
         const newImg = onEditImg ? `${process.env.REACT_APP_API_BASE_URL}${this.state.newImgSource}` : "";
 
@@ -207,14 +225,14 @@ class ProfileRecruiter extends Component {
                         {/*profile picture + name + infos + visit website*/}
                         <div className="col-4 presentation-profile">
 
-                            <div>
+                            {isMyProfile && <div>
                                 <IconButton aria-label="edit" className="text-info edit-icon"
                                             onClick={() => this.handleChangeInfos()}>
                                     <EditIcon
                                         fontSize="small">
                                     </EditIcon>
                                 </IconButton>
-                            </div>
+                            </div>}
 
                             <section className="border rounded p-5">
                                 <div className="picture pb-4">
@@ -234,6 +252,7 @@ class ProfileRecruiter extends Component {
                                         </LaunchIcon></a>
                                 </button>
 
+
                             </section>
                         </div>
 
@@ -241,12 +260,14 @@ class ProfileRecruiter extends Component {
                         <div className="col-8">
                             <section className="bg-light rounded  border">
                                 <h1 className="category-profile ml-3 "> JobPosts
-                                    <IconButton aria-label="add" className="text-info"
+                                    {isMyProfile && <IconButton aria-label="add" className="text-info"
                                                 onClick={() => this.addJobPost()}>
                                         <AddCircleOutlineIcon
                                             fontSize="large">
-                                        </AddCircleOutlineIcon></IconButton></h1>
-                                {recruiter?.jobPosts.length ?
+                                        </AddCircleOutlineIcon>
+                                    </IconButton>}
+                                </h1>
+                                {recruiter?.jobPosts && recruiter?.jobPosts.length ?
                                     <div>
                                         {
                                             recruiter?.jobPosts && recruiter.jobPosts.map((jp, index) =>
@@ -267,13 +288,13 @@ class ProfileRecruiter extends Component {
                                                             <p className="r-location p-0 m-0">{jp.location}</p>
 
 
-                                                            <IconButton aria-label="show"
+                                                            {isMyProfile && <IconButton aria-label="show"
                                                                         className="text-info show-icon"
-                                                                        onClick={() => this.updateArray(jp)}>
+                                                                        onClick={() => this.updateJobPostsList(jp)}>
                                                                 <EditIcon
                                                                     fontSize="small">
                                                                 </EditIcon>
-                                                            </IconButton>
+                                                            </IconButton>}
 
 
                                                         </div>

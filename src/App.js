@@ -21,7 +21,7 @@ function App() {
         <div >
             <AppContext.Provider value={{context, setContext}}>
                 <BrowserRouter>
-                    {context.isAuth && <Navbar></Navbar>}
+                    {context.isAuth && <Navbar isJobSeeker = {context.userType === AUTH_TYPE_JOB_SEEKER}></Navbar>}
                     <Switch>
                         <Route exact path="/"><MainPage/></Route>
                         <Route exact path="/register"><RegisterForm isJobseeker={context.userType}></RegisterForm></Route>
@@ -32,6 +32,8 @@ function App() {
                         <ProtectedRoute exact path="/my-profile-recruiter" component={ProfileRecruiter} />
                         <ProtectedRoute exact path="/jobs" component={Jobs} />
                         <ProtectedCondRoute exact path="/profiles/:id" component={ProfileUser} />
+                        <ProtectedCondRoute exact path="/recruiters/:id" component={ProfileRecruiter} />
+
 
 
                     </Switch>
