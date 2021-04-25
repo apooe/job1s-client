@@ -82,7 +82,7 @@ class ContactInfo extends Component {
                 </DialogTitle>
 
 
-                {user.websites && <section className="pl-4 pb-2">
+                {user.websites.length !== 0 && <section className="pl-4 pb-2">
                     <div className="row">
                         <LinkIcon/>
                         <header className="ml-2 font-weight-bold pb-1">Websites</header>

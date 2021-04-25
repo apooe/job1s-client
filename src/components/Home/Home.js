@@ -17,7 +17,8 @@ class Home extends Component {
         super(props);
         this.state = {
             profiles: null,
-            relatedJobs: []
+            relatedJobs: [],
+            allProfiles: null
 
         }
     }
@@ -70,9 +71,21 @@ class Home extends Component {
                 console.log(e?.response?.data);
             }
         } else {
-            await currentUser.jobPosts.map(jp => {
-                this.searchRelatedJobs(jp.title);
-            })
+            if(currentUser.jobPosts.length === 0){
+                try {
+                    const url = '/users';
+                    const response = await http.get(url);
+                    this.setState({profiles: response?.data})
+                } catch (e) {
+                    console.log(e?.response?.data);
+                }
+            }
+            else{
+                await currentUser.jobPosts.map(jp => {
+                    this.searchRelatedJobs(jp.title);
+                })
+            }
+
         }
     }
 
@@ -115,7 +128,8 @@ class Home extends Component {
 
                 <div className="container profiles-users">
                     <div className="row justify-content-center">
-                        {profiles?.length === 0 && <h1> We didn't find profile according to your search...</h1>}
+
+                        {profiles?.length === 0 && <h1> We didn't find profiles according to your search...</h1>}
                         {profiles?.length && profiles?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">
