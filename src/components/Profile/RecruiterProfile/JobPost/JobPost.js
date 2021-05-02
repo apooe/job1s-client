@@ -108,7 +108,6 @@ class JobPost extends Component {
 
     render() {
         const {jobPost} = this.state;
-        console.log(jobPost);
 
         if (!jobPost) {
             return null;

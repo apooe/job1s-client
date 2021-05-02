@@ -98,11 +98,10 @@ class Home extends Component {
 
     getAllUsersProfiles = async () => {
 
-        await this.context.context.currentUser;
-        const currentUser = this.context.context.currentUser;
+        const {currentUser, userType } = await this.context.context;
 
         //job seeker
-        if (currentUser.userType === AUTH_TYPE_JOB_SEEKER) {
+        if (userType === AUTH_TYPE_JOB_SEEKER) {
            await this.getAllRecruiters();
         }
 
