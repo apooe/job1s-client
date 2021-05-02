@@ -38,7 +38,8 @@ class JobPost extends Component {
     componentDidMount() {
 
         if (this.props.jobPost) {// if exist
-            this.setState({checked: this.props.jobPost.companyImg});
+            this.setState({checked: this.props.jobPost.companyImg });
+
         }
         else{
             this.setState({newJobPost: true});
@@ -107,6 +108,7 @@ class JobPost extends Component {
 
     render() {
         const {jobPost} = this.state;
+        console.log(jobPost);
 
         if (!jobPost) {
             return null;
@@ -117,6 +119,7 @@ class JobPost extends Component {
             <div className="container ">
 
                 <form action="" onSubmit={this.onSubmit}>
+                    <label className="label-jp">Company name <span className="mandatory">*</span></label>
                     <input
                         type="text"
                         onChange={e => this.handleJobPostChange({companyName: e.target.value})}
@@ -128,8 +131,10 @@ class JobPost extends Component {
                     />
 
 
+                    <label className="label-jp">Job <span className="mandatory">*</span></label>
                     <Autocomplete
                         id="combo-box-demo"
+                        inputValue={jobPost.title}
                         className="location-autocomplete"
                         options={this.state.jobs}
                         getOptionLabel={j => j.suggestion}
@@ -137,13 +142,13 @@ class JobPost extends Component {
                         onInputChange={debounce((event, value) => this.searchJob(value), 100)}
                         onChange={(event, value) => this.handleJobPostChange({title: value.suggestion})}
                         renderInput={(params) => (
-                            <TextField  {...params} label="Job" className="location-title"
-                                        variant="outlined" required/>
+                            <TextField   {...params}  className="location-title"
+                                        variant="outlined" required />
                         )}
 
                     />
 
-
+                    <label className="label-jp">Employment type <span className="mandatory">*</span></label>
                     <input
                         type="text"
                         onChange={e => this.handleJobPostChange({employment: e.target.value})}
@@ -153,22 +158,25 @@ class JobPost extends Component {
                         required
                     />
 
+
+                    <label className="label-jp">Location <span className="mandatory">*</span></label>
                     <Autocomplete
                         id="combo-box-demo"
+                        inputValue={jobPost.location}
                         className="location-autocomplete"
                         options={this.state.places}
                         fullWidth
                         onInputChange={(event, value) => this.loadPlaceOptions(value)}
                         onChange={(event, value) => this.handleJobPostChange({location: value})}
                         renderInput={(params) => (
-                            <TextField  {...params} label="Location" className="location-title"
+                            <TextField  {...params} className="location-title"
                                         variant="outlined" required/>
                         )}
 
                     />
 
 
-
+                    <label className="label-jp">Description <span className="mandatory">*</span></label>
                     <textarea
                         className="form-control "
                         rows="6"
@@ -178,7 +186,7 @@ class JobPost extends Component {
                         required
 
                     />
-
+                    <label className="label-jp">URL</label>
                     <input
                         type="text"
                         onChange={e => this.handleJobPostChange({url: e.target.value})}
@@ -212,6 +220,7 @@ class JobPost extends Component {
                     {/*    <span id="file-chosen">No file chosen</span>*/}
                     {/*</div>*/}
 
+                    <p><span className="mandatory">*Required fields</span></p>
 
                     <button
                         type="submit"

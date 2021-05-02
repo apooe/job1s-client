@@ -9,6 +9,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Paper from "@material-ui/core/Paper";
 import './SearchBar.css';
 import {createFilterOptions} from "@material-ui/lab";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     input: {
         marginLeft: theme.spacing(1),
         flex: 1,
+
     },
     iconButton: {
         padding: 10,
@@ -38,15 +40,21 @@ function SearchBar(props) {
 
     const onKeyUp =  (event) => {
         if (event.charCode === 13) {
-            props.searchProfiles(event.target.value);
+            setJobs([]);
+            props.search(event.target.value);
         }
+    }
+
+    const onBlur = (event) => {
+        setJobs([]);
+        props.search(event.target.value);
     }
 
     const searchJob =  (e, newValue) => {
 
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
          axios.get(url, {params: {contains: newValue}}).then(response => {
-             setJobs( response?.data || [])
+             setJobs( response?.data?.map(j => j.suggestion) || [])
 
         }).catch(error => {
             console.log(error?.response?.data);
@@ -64,12 +72,13 @@ function SearchBar(props) {
                 className={classes.input}
                 filterOptions={filterOptions}
                 options={jobs}
-                getOptionLabel={j => j.suggestion}
+                freeSolo={true}
+                onBlur={onBlur}
                 onInputChange={((event, value) => searchJob(event, value))}
                 renderInput={(params) => (
-                    <div  ref={params.InputProps.ref}>
-                        <InputBase  placeholder="Search by title"
-                                   type="text" {...params.inputProps} />
+                    <div className={'search-bar'}>
+                        <TextField   placeholder="Search by title"
+                                   type="text" {...params} className={'APOOE'} />
                     </div>
                 )}
             />

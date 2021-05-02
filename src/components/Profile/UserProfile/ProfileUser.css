@@ -149,6 +149,8 @@ a {
 
 .description-exp {
     margin: 0;
+    white-space: pre-line;
+
 }
 
 
@@ -194,7 +196,6 @@ a {
     -ms-transform: translate(-50%, -50%);
     text-align: center;
     transition: .3s ease;
-    cursor: pointer;
 }
 
 .icon:hover{
@@ -204,4 +205,13 @@ a {
 
 .contact-info-btn{
     color: #0d73b7;
+}
+
+.change-img:hover{
+    cursor: pointer;
+
+}
+
+.description-user{
+    white-space: pre-line;
 }

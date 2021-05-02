@@ -21,7 +21,7 @@ function App() {
         <div >
             <AppContext.Provider value={{context, setContext}}>
                 <BrowserRouter>
-                    {context.isAuth && <Navbar isJobSeeker = {context.userType === AUTH_TYPE_JOB_SEEKER}></Navbar>}
+                    {context.isAuth && <Navbar></Navbar>}
                     <Switch>
                         <Route exact path="/"><MainPage/></Route>
                         <Route exact path="/register"><RegisterForm isJobseeker={context.userType}></RegisterForm></Route>

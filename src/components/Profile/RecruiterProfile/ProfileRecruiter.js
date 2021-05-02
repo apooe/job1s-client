@@ -304,7 +304,7 @@ class ProfileRecruiter extends Component {
                                         }
                                     </div> :
 
-                                    <p className="p-3">you didn't post any job !</p>
+                                    <p className="p-3">there is no job post !</p>
                                 }
 
                             </section>
@@ -315,7 +315,10 @@ class ProfileRecruiter extends Component {
                     <div className="row mt-5 mb-2">
                         <div className="col-12">
                             <section className="bg-light rounded p-5 border contact-form">
-                                <ContactForm emailDt={recruiter?.email}></ContactForm>
+                                <ContactForm
+                                    profileFirstName={recruiter?.firstname}
+                                    profileLastName={recruiter?.lastname}
+                                    emailDt={recruiter?.email}></ContactForm>
                             </section>
                         </div>
                     </div>

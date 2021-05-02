@@ -42,3 +42,9 @@
     font-family: sans-serif;
 }
 
+.label-jp{
+    margin-bottom: 0;
+}
+.mandatory{
+    color: #e00505;
+}

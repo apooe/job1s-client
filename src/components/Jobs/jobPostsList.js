@@ -24,15 +24,47 @@ class JobPostsList extends Component {
             currentJobPost: null,
             currentRecruiter: null,
             onApply: false,
-            jobposts : null
+            jobposts: null,
+            onSearch: false
         };
 
     }
 
     componentDidMount() {
+        this.getRecruitersJobPosts();
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (this.props.location !== prevProps.location) {
+            console.log("URL CHANGED");
+            this.getRecruitersJobPosts();
+        }
+    }
+
+    getRecruitersJobPosts = () =>{
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('job')) {
+            this.getJobParam();
+        } else {
+            this.getAllRecruiters();
+        }
+
+    }
+
+
+
+    getJobParam = async () => {
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const job = urlParams.get('job');
+        this.searchJobPosts(job);
+
+    }
+
+    getAllRecruiters = async () => {
         const url = `/recruiters`;
-        http.get(url).then(response => {
-            console.log("all recruiters : ", response.data);
+        await http.get(url).then(response => {
             this.setState({
                 recruiters: response.data,
                 currentJobPost: response.data[0].jobPosts[0],
@@ -42,24 +74,26 @@ class JobPostsList extends Component {
         }).catch(error => {
             console.log(error?.response?.data);
         });
-
-
-        this.props.history.listen((location) => {
-            const job = new URLSearchParams(location.search).get('job');
-            this.searchJobPosts(job);
-        });
-
     }
 
-    searchJobPosts = (job) => {
+    searchJobPosts = async (job) => {
 
-        console.log(job);
-        // const url = `/recruiters/search/?job=${job}`;
-        // http.get(url).then(({data}) => {
-        //     this.setState({jobposts: data})
-        // }).catch(error => {
-        //     console.log(error?.response?.data);
-        // });
+        const url = `/recruiters/search/?job=${job}`;
+        await http.get(url).then(({data}) => {
+            this.setState({recruiters: data});
+            if (data.length !== 0) {
+                const firstJp = this.state.recruiters[0]?.jobPosts[0];
+                this.setState({currentJobPost: firstJp, currentRecruiter: this.state.recruiters[0]});
+            }
+            else{
+                this.setState({currentJobPost: null, currentRecruiter: null});
+            }
+
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+
+
     }
 
     onClickJobPost = (jobPost, recruiter) => {
@@ -80,19 +114,21 @@ class JobPostsList extends Component {
 
     render() {
 
-        const currentUser = this.context.context.currentUser;
+        const {userType} = this.context.context;
         const {recruiters, currentJobPost, currentRecruiter, onApply} = this.state;
-        const imgSource = currentJobPost && currentJobPost.companyImg ? defaultPic : defaultPic;
+        const imgSource = currentJobPost && currentJobPost.companyImg ? defaultPic : defaultPic; //pb a checker
 
         return (
 
             <div>
                 <div className="container">
                     <div className="row">
-                        <div className="col-5 jobPost-list">
+                        {currentRecruiter ?
+                            <div className="col-5 jobPost-list">
                             {recruiters && recruiters.map((recruiter, index) =>
                                 <div key={uuid()} className="row">
                                     <div className="col-12 ">
+
                                         {recruiter.jobPosts && recruiter.jobPosts.map((jp) =>
                                             <div key={uuid()} className="one-jp border pl-3"
                                                  onClick={() => this.onClickJobPost(jp, recruiter)}>
@@ -112,8 +148,12 @@ class JobPostsList extends Component {
                                         }
                                     </div>
                                 </div>)
+
                             }
-                        </div>
+
+                        </div> : <div>No job posts to display !</div>
+
+                        }
 
 
                         <div className="col-6 current-jp">
@@ -144,7 +184,7 @@ class JobPostsList extends Component {
                                                 <a href={currentJobPost.url} target="_blank">Visit Website
                                                 </a>
                                             </button>
-                                            { currentUser.userType === AUTH_TYPE_JOB_SEEKER &&
+                                            {userType === AUTH_TYPE_JOB_SEEKER &&
                                             <button className="btn btn-jp-apply font-weight-bolder"
                                                     onClick={() => this.onApply()}>
                                                 <a>Apply

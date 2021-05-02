@@ -1,6 +1,6 @@
 import React from "react";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import {AppContext} from "../../../AppContext";
+import {AppContext, AUTH_TYPE_RECRUITER} from "../../../AppContext";
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import PhoneIcon from '@material-ui/icons/Phone';
 import RoomIcon from '@material-ui/icons/Room';
@@ -26,22 +26,32 @@ class ContactInfo extends Component {
         super(props);
         this.state = {
             user: null,
-            onChangeContactInfo: false
+            onChangeContactInfo: false,
+            isMyProfile: true
 
         };
     }
 
     componentDidMount() {
 
-        const user =  this.context.context.currentUser;
-        const url = `/users/${user._id}`;
-        http.get(url).then(response => {
-            console.log("user: ", response.data);
-            this.setState({user: response.data});
 
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
+        let user =  this.context.context.currentUser;
+        if(this.context.context.userType === AUTH_TYPE_RECRUITER){
+            console.log("je suis un recruiter");
+            this.setState({user: this.props.user, isMyProfile: false});
+        }
+
+        else{
+            const url = `/users/${user._id}`;
+            http.get(url).then(response => {
+                console.log("user: ", response.data);
+                this.setState({user: response.data});
+
+            }).catch(error => {
+                console.log(error?.response?.data);
+            });
+        }
+
     }
 
     onChangeContactInfo = async () => {
@@ -63,7 +73,7 @@ class ContactInfo extends Component {
 
     render() {
 
-        const {user, onChangeContactInfo} = this.state;
+        const {user, onChangeContactInfo, isMyProfile} = this.state;
         if(!user)
             return null;
 
@@ -73,10 +83,10 @@ class ContactInfo extends Component {
                 <DialogTitle id="form-dialog-title" className="pb-3">
                     <h4>{user.firstname} {user.lastname}</h4>
                     <hr/>
-                    <IconButton className="edit-contact-info pt-0">
+                    {isMyProfile && <IconButton className="edit-contact-info pt-0">
                         <EditIcon color="action"
                                   onClick={this.onChangeContactInfo}/>
-                    </IconButton>
+                    </IconButton>}
                     <h5>Contact Info</h5>
 
                 </DialogTitle>
@@ -90,7 +100,7 @@ class ContactInfo extends Component {
                     {user.websites.map((url) => {
                         return (
                             <div key={uuid()} className="row pl-4">
-                                <a className="ml-1" href={`${url}`}>{url}</a>
+                                <a className="ml-1" href={`${url}`} target="_blank">{url}</a>
                             </div>
                         )
                     })}

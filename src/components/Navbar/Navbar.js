@@ -3,12 +3,13 @@ import {withRouter} from "react-router";
 import {MenuItems} from "./MenuItems";
 import './Navbar.css';
 import logo from './../../images/logo.png';
-import {AppContext} from "../../AppContext";
+import {AppContext, AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
 import {Link} from 'react-router-dom';
 import SearchBar from "../SearchBar/SearchBar";
 
 
 class Navbar extends Component {
+    static contextType = AppContext;
 
     state = {
         clicked: false,
@@ -17,8 +18,10 @@ class Navbar extends Component {
     }
 
     componentDidMount() {
-        console.log("is job seeker est: ", this.props.isJobSeeker);
-        this.setState({isJobSeeker: this.props.isJobSeeker});
+        if(this.context.context.userType === AUTH_TYPE_JOB_SEEKER){
+            this.setState({isjobSeeker: true});
+
+        }
     }
 
     handleClick = () => {
@@ -26,11 +29,13 @@ class Navbar extends Component {
     }
 
 
-    handleSearchProfiles = (inputSearch) => {
-        console.log("ds navbar", inputSearch);
+    handleSearch = (inputSearch) => {
+        console.log("ds navbar", inputSearch, this.state.isjobSeeker);
+
         this.state.isjobSeeker ?
-            this.props.history.push(`/home/?job=${inputSearch}`) :
-            this.props.history.push(`/jobs/?job=${inputSearch}`);
+            this.props.history.push(`/jobs/?job=${inputSearch}`)
+            :
+            this.props.history.push(`/home/?job=${inputSearch}`);
 
 
     }
@@ -48,7 +53,7 @@ class Navbar extends Component {
 
 
                         <div className="search-navbar">
-                            <SearchBar searchProfiles={this.handleSearchProfiles}/>
+                            <SearchBar search={this.handleSearch}/>
                         </div>
 
                         <div className="menu-icon" onClick={this.handleClick}>

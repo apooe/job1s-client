@@ -332,7 +332,7 @@ class ProfileUser extends Component {
                                      onClick={() => this.state.onChangeInfo && this.uploadImg.current.click()}>
                                     <img className="profile-pic" src={profilePictureImg} alt="profile picture"/>
                                     {this.state.onChangeInfo &&
-                                    <i className="icon fa fa-edit"></i>}
+                                    <div className="change-img"></div>}
                                 </div>
 
                                 <div className="infos m-1 text-center">
@@ -371,7 +371,7 @@ class ProfileUser extends Component {
 
                     <div className="row mt-5">
                         <div className="col-12">
-                            <section className="bg-light rounded p-5 border">
+                            <section className="bg-light rounded p-5 border description-user ">
                                 <Avatar className="bg-info mx-auto">
                                     <ImportContactsIcon/>
                                 </Avatar>
@@ -509,7 +509,9 @@ class ProfileUser extends Component {
                     <div className="row mt-5 mb-2">
                         <div className="col-12">
                             <section className="bg-light rounded p-5 border contact-form">
-                                <ContactForm emailDest={user?.email}></ContactForm>
+                                <ContactForm profileFirstName={user?.firstname}
+                                             profileLastName={user?.lastname}
+                                             emailDest={user?.email}></ContactForm>
 
 
                             </section>
@@ -575,7 +577,7 @@ class ProfileUser extends Component {
                                     onClick={this.onCloseWindow}>
                                 <span aria-hidden="true">&times;</span>
                             </button>
-                            <ContactInfo onSubmit={this.onSaveInfo}/>
+                            <ContactInfo onSubmit={this.onSaveInfo} user={user}/>
                         </DialogContent>
                     </Dialog>
 

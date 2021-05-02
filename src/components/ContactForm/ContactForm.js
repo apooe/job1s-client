@@ -8,7 +8,7 @@ const http = getInstance();
 class ContactForm extends Component {
 
     constructor(props) {
-        super();
+        super(props);
         this.state = {
             firstname: "",
             lastname: "",
@@ -18,6 +18,9 @@ class ContactForm extends Component {
             status: "Submit",
         };
     }
+
+
+
 
     handleChange(value) {
         const emailDest = this.props.emailDest;
@@ -47,11 +50,13 @@ class ContactForm extends Component {
 
     render() {
         let buttonText = this.state.status;
+        const {profileFirstName, profileLastName} = this.props;
+
         return (
 
             <div className="row">
                 <div className="col-12">
-                    <h2 className="contact-title">Contact</h2>
+                    <h2 className="contact-title">Contact {profileFirstName} {profileLastName}</h2>
                     <div className="divider"></div>
                 </div>
 
