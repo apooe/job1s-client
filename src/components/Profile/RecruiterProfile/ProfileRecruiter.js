@@ -123,7 +123,6 @@ class ProfileRecruiter extends Component {
     getProfile = (id) => {
         const url = `/recruiters/${id}`;
         http.get(url).then(response => {
-            console.log("data from getprofile: ", response.data);
             this.setState({recruiter: response.data});
 
 
@@ -187,7 +186,6 @@ class ProfileRecruiter extends Component {
         const url = '/recruiters';
         const {recruiter} = this.state;
         await http.put(url, recruiter).then(response => {
-            console.log("data dans update arr: ", response.data);
         }).catch(error => {
             console.log(error?.response?.data);
         });

@@ -44,7 +44,6 @@ class Home extends Component {
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.location !== prevProps.location) {
-            console.log("URL CHANGED");
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('job')) {
                 const job = urlParams.get('job');
@@ -108,7 +107,7 @@ class Home extends Component {
         //recruiter
         else {
             //le recruiter n'a aucun jobpost
-            if (currentUser.jobPosts?.length === 0) {
+            if (currentUser && currentUser.jobPosts?.length === 0) {
                 await this.getAllJobSeekers();
             }
 
@@ -129,7 +128,6 @@ class Home extends Component {
 
         http.get(url).then(({data}) => {
             this.setState({searchResults: data})
-            console.log("searchJob", data);
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -160,7 +158,6 @@ class Home extends Component {
             const url = '/users';
             const response = await http.get(url);
             this.setState({searchResults: response?.data});
-            console.log("get all job seekers profiles", response?.data);
 
         } catch (e) {
             console.log(e?.response?.data);
@@ -186,7 +183,7 @@ class Home extends Component {
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
                     <div className="row justify-content-center">
 
-                        {searchResults?.length === 0 && <h5> We didn't find profiles according to your search...</h5>}
+                        {searchResults?.length === 0 && <h5> We didn't find profiles...</h5>}
                         {searchResults?.length && searchResults?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">

@@ -31,6 +31,16 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
+
+}
+
+.profile-pic-edit {
+    width: 200px;
+    height: 200px;
+    border-radius: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     cursor: pointer;
 
 }

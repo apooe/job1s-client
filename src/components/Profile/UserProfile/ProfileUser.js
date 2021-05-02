@@ -85,7 +85,6 @@ class ProfileUser extends Component {
     getProfile = (userId) => {
         const url = `/profiles/${userId}`;
         http.get(url).then(response => {
-            console.log("data profile: ", response.data);
             this.setState({profile: response.data});
 
         }).catch(error => {
@@ -106,7 +105,6 @@ class ProfileUser extends Component {
         const url = '/profiles';
         const {profile} = this.state;
         http.put(url, profile).then(response => {
-            console.log("data profile: ", response.data);
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -293,15 +291,12 @@ class ProfileUser extends Component {
 
         const url = '/users';
         await http.put(url, user).then(response => {
-            console.log("data user: ", response.data);
             this.setState({user: response.data});
         }).catch(error => {
             console.log(error?.response?.data);
         });
 
-        console.log("user est:", this.state.user);
         await this.context.setContext({currentUser: this.state.user});
-        console.log("curreent user est:", this.context.context.currentUser);
         this.setState({onChangeInfo: false});
 
     }
@@ -330,7 +325,10 @@ class ProfileUser extends Component {
                             <section className="presentation-section border rounded p-2">
                                 <div className="picture"
                                      onClick={() => this.state.onChangeInfo && this.uploadImg.current.click()}>
-                                    <img className="profile-pic" src={profilePictureImg} alt="profile picture"/>
+                                    {this.state.onChangeInfo ?
+                                    <img className="profile-pic-edit" src={profilePictureImg} alt="profile picture"/>:
+                                        <img className="profile-pic" src={profilePictureImg} alt="profile picture"/>
+                                    }
                                     {this.state.onChangeInfo &&
                                     <div className="change-img"></div>}
                                 </div>
@@ -353,14 +351,21 @@ class ProfileUser extends Component {
                                     <div className="col-12">
 
 
-                                        <IconButton aria-label="edit" className="float-right p-2 text-info"
-                                                    onClick={this.onClickUpdateInfos}>
+                                        {this.state.onChangeInfo ?<div className=" float-right p-2 text-info">
+                                            <button className="btn btn-info" onClick={this.onSubmitUpdate}>
+                                                update
+                                            </button>
+                                        </div> :
 
-                                            <EditIcon>
-                                                fontSize="small"
-                                                Update profile
-                                            </EditIcon>
-                                        </IconButton>
+                                            <IconButton aria-label="edit" className="float-right p-2 text-info"
+                                                        onClick={this.onClickUpdateInfos}>
+
+                                                <EditIcon>
+                                                    fontSize="small"
+                                                    Update profile
+                                                </EditIcon>
+                                            </IconButton>
+                                        }
                                     </div>
                                 </div>}
 
