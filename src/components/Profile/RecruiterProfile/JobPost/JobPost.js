@@ -42,7 +42,7 @@ class JobPost extends Component {
         }
 
         const jobPost = this.props.jobPost || {companyName: ''};
-        this.setState({jobPost, jobs: [{suggestion: jobPost.title}]});
+        this.setState({jobPost});
 
     }
 
@@ -115,7 +115,6 @@ class JobPost extends Component {
 
     render() {
         const {jobPost} = this.state;
-        console.log(jobPost)
 
         if (!jobPost) {
             return null;
@@ -148,7 +147,7 @@ class JobPost extends Component {
                         freeSolo
                         value={jobPost.title}
                         onInputChange={debounce((event, value) => this.searchJob(value), 100)}
-                        onChange={(e, value) => this.handleJobPostChange({title: value.suggestion})}
+                        onChange={(e, value) => this.handleJobPostChange({title: value?.suggestion})}
                         renderInput={(params) => (
                             <TextField  {...params}  className="location-title"
                                         variant="outlined" required />

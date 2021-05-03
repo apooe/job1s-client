@@ -25,6 +25,8 @@ class Home extends Component {
 
     async componentDidMount() {
 
+        const {currentUser, userType } = await this.context.context;
+        console.log("user est:", currentUser,userType );
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('job')) {
@@ -88,7 +90,6 @@ class Home extends Component {
             const url = '/recruiters';
             const response = await http.get(url);
             this.setState({searchResults: response?.data})
-            console.log("get all recruiters", response?.data);
 
         } catch (e) {
             console.log(e?.response?.data);
