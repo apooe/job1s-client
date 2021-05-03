@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {AuthServiceFactory} from "../../services/authService";
 import {getInstance} from "../../helpers/httpInstance";
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import picImage from '../../images/Unknown_person.jpg';
 
 import {withStyles} from '@material-ui/core/styles';
 import Stepper from '@material-ui/core/Stepper';
@@ -33,14 +34,14 @@ class Apply extends Component {
             currentRecruiter: null,
             applyForm: {
                 email: '',
-                phone: 0,
+                phone: '',
                 resume: null
             },
             fileToUpload: null,
             uploadedFile: null,
             nextStep: false,
             steps: null,
-            changeResume:false
+            changeResume: false
         }
         this.uploadImg = React.createRef();
     }
@@ -151,7 +152,7 @@ class Apply extends Component {
 
         await http.post(url, data).then((response) => {
             if (response.data.status === "sent") {
-                this.setState({fileToUpload: null, changeResume:false});
+                this.setState({fileToUpload: null, changeResume: false});
             } else if (response.data.status === "failed") {
                 console.log(response.data.status);
             }
@@ -174,13 +175,10 @@ class Apply extends Component {
     render() {
         const {classes} = this.props;
         const {user, applyForm, fileToUpload, nextStep, steps, changeResume} = this.state;
-        const imgSrc = `${process.env.REACT_APP_API_BASE_URL}${user?.picture}`;
-
-
-
         if (!user) {
             return null;
         }
+        const imgSrc = user?.picture ? `${process.env.REACT_APP_API_BASE_URL}${user?.picture}` : picImage;
 
         return (
             <div className="container">
@@ -216,7 +214,8 @@ class Apply extends Component {
                                     <div className="form-group">
                                         <label>Email address*</label>
                                         <input type="email" className="form-control form-control-sm input-apply"
-                                               required value={applyForm.email}
+                                               required
+                                               value={applyForm.email}
                                                onChange={e => this.handleFormChange({email: e.target.value})}/>
                                         <small className="form-text text-muted">We'll never share your email with
                                             anyone else.</small>
@@ -228,7 +227,8 @@ class Apply extends Component {
                                 <div className="col">
                                     <label>Phone number</label>
                                     <input type="text"
-                                           required value={applyForm.phone}
+                                           required
+                                           value={applyForm.phone}
                                            className="form-control input-apply "
                                            onChange={e => this.handleFormChange({phone: e.target.value})}/>
                                 </div>
@@ -258,7 +258,8 @@ class Apply extends Component {
 
 
                                     {fileToUpload && <span>{fileToUpload.name}</span>}
-                                    {user?.resume  && !changeResume && <t className="pdf_icon"><PictureAsPdfIcon color="action"/> my resume</t>
+                                    {user?.resume && !changeResume && <div className="pdf_icon">
+                                        <PictureAsPdfIcon className="mr-1" color="action"/>my resume</div>
                                     }
 
                                     <small className="form-text text-muted ">DOC, DOCX, PDF</small>

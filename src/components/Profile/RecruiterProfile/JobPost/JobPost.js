@@ -29,10 +29,6 @@ class JobPost extends Component {
 
 
 
-    handleChange = async () => {
-        await this.setState({checked: !this.state.checked})
-        this.handleJobPostChange({companyImg: !this.state.companyImg})
-    };
 
 
     componentDidMount() {
@@ -46,9 +42,15 @@ class JobPost extends Component {
         }
 
         const jobPost = this.props.jobPost || {companyName: ''};
-        this.setState({jobPost});
+        this.setState({jobPost, jobs: [{suggestion: jobPost.title}]});
 
     }
+
+    handleChange = async () => {
+        await this.setState({checked: !this.state.checked})
+        this.handleJobPostChange({companyImg: !this.state.companyImg})
+    };
+
 
     loadPlaceOptions = async (newValue) => {
         const url = '/place';
@@ -106,8 +108,14 @@ class JobPost extends Component {
         });
     }
 
+    handleJobChange = (event, value) => {
+        this.handleJobPostChange({title: value});
+
+    }
+
     render() {
         const {jobPost} = this.state;
+        console.log(jobPost)
 
         if (!jobPost) {
             return null;
@@ -133,15 +141,16 @@ class JobPost extends Component {
                     <label className="label-jp">Job <span className="mandatory">*</span></label>
                     <Autocomplete
                         id="combo-box-demo"
-                        inputValue={jobPost.title}
                         className="location-autocomplete"
                         options={this.state.jobs}
-                        getOptionLabel={j => j.suggestion}
-                        fullwidth
+                        getOptionLabel={option => option.suggestion || option}
+                        fullWidth
+                        freeSolo
+                        value={jobPost.title}
                         onInputChange={debounce((event, value) => this.searchJob(value), 100)}
-                        onChange={(event, value) => this.handleJobPostChange({title: value.suggestion})}
+                        onChange={(e, value) => this.handleJobPostChange({title: value.suggestion})}
                         renderInput={(params) => (
-                            <TextField   {...params}  className="location-title"
+                            <TextField  {...params}  className="location-title"
                                         variant="outlined" required />
                         )}
 
@@ -161,10 +170,11 @@ class JobPost extends Component {
                     <label className="label-jp">Location <span className="mandatory">*</span></label>
                     <Autocomplete
                         id="combo-box-demo"
-                        inputValue={jobPost.location}
                         className="location-autocomplete"
                         options={this.state.places}
                         fullWidth
+                        freeSolo
+                        value={jobPost.location}
                         onInputChange={(event, value) => this.loadPlaceOptions(value)}
                         onChange={(event, value) => this.handleJobPostChange({location: value})}
                         renderInput={(params) => (

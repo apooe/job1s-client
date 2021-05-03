@@ -78,7 +78,7 @@ function SearchBar(props) {
                 renderInput={(params) => (
                     <div className={'search-bar'}>
                         <TextField   placeholder="Search by title"
-                                   type="text" {...params} className={'APOOE'} />
+                                   type="text" {...params}  />
                     </div>
                 )}
             />

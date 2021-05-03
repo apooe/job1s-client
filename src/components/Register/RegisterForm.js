@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import picImage from '../../images/Unknown_person.jpg';
 import {Grid, Paper, Avatar, TextField, Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {getInstance} from "../../helpers/httpInstance";
@@ -14,6 +15,7 @@ import {AuthServiceFactory} from "../../services/authService";
 import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
 import {debounce} from "lodash";
 import axios from "axios";
+
 const authService = AuthServiceFactory.getInstance();
 
 
@@ -39,10 +41,13 @@ const RegisterForm = (props) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
+
+    const [fileToUpload, setFileToUpload] = useState(null);
+
     const [currentStep, setCurrentStep] = useState(1);
     const [places, setPlace] = useState([]);
     const [jobs, setJob] = useState([]);
-    const [checked, setChecked] = useState( false);
+    const [checked, setChecked] = useState(false);
 
     const handleChange = () => {
         setChecked(!checked);
@@ -66,7 +71,7 @@ const RegisterForm = (props) => {
     }
 
     const onSubmit = () => {
-        isJobseeker === AUTH_TYPE_JOB_SEEKER ? userSubmit(): recruiterSubmit();
+        isJobseeker === AUTH_TYPE_JOB_SEEKER ? userSubmit() : recruiterSubmit();
 
     }
 
@@ -79,7 +84,7 @@ const RegisterForm = (props) => {
             http.post(url, user).then(response => {
                 setIsSubmitting(false);
                 const {email, password} = user;
-                authService.logIn(email, password ).then(() => {
+                authService.logIn(email, password).then(() => {
                     history.push('/home');
 
                 }).catch(error => {
@@ -100,14 +105,18 @@ const RegisterForm = (props) => {
         });
     }
 
-    const userSubmit = () => {
+    const userSubmit = async () => {
+
+        // await setUser({...user, ...{picture: picImage}});
+        // console.log("ici", user);
+
         const url = '/users';
         setIsSubmitting(true);
 
 
-        userValidator.validate(user).then(() => {
+        await userValidator.validate(user).then(() => {
 
-            if(!checked) {
+            if (!checked) {
                 setError("Are you over 18 years old ?");
                 return;
             }
@@ -145,14 +154,15 @@ const RegisterForm = (props) => {
         });
     }
 
-    const createProfile = (userId) => {
+
+    const createProfile = async (userId) => {
         const url = '/profiles';
-        http.post(url, userId).then(response => {
-;
+        await http.post(url, userId).then(response => {
         }).catch(error => {
             console.log(error?.response?.data);
         });
     }
+
 
     const searchJob = async (newValue) => {
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
@@ -174,7 +184,7 @@ const RegisterForm = (props) => {
                 <Paper elevation={10} id="paper">
                     <Grid align="center">
                         <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                        {currentStep === 1 ? <h2>register </h2>:
+                        {currentStep === 1 ? <h2>register </h2> :
                             <h2 className="job-search">Search for a job</h2>
                         }
 
@@ -240,7 +250,7 @@ const RegisterForm = (props) => {
                             required
                         />
 
-                        {isJobseeker ==="job_seeker" &&
+                        {isJobseeker === "job_seeker" &&
                         <FormControlLabel
                             className="checkbox"
                             control={
@@ -249,13 +259,13 @@ const RegisterForm = (props) => {
                                     color="primary"
                                 />
                             }
-                            label={<span style={{ fontSize: '13px' }}>I am over 18 years old.</span>}
+                            label={<span style={{fontSize: '13px'}}>I am over 18 years old.</span>}
 
                         />}
 
                     </div>}
 
-                    {currentStep === 2  && isJobseeker=== "job_seeker" && <div>
+                    {currentStep === 2 && isJobseeker === "job_seeker" && <div>
 
                         <Autocomplete
                             id="combo-box-demo"
@@ -286,7 +296,6 @@ const RegisterForm = (props) => {
                         />
 
                     </div>}
-
 
 
                     <Button
