@@ -46,6 +46,7 @@ class Navbar extends Component {
 
         return (
             <AppContext.Consumer>
+
                 {(globalContext) => (
                     <nav className="NavbarItems">
 
