@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom';
 import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER} from "../../AppContext";
 import axios from "axios";
 import userEvent from "@testing-library/user-event";
+import Loader from "../Loader";
 
 const http = getInstance();
 
@@ -171,6 +172,9 @@ class Home extends Component {
         const {searchResults} = this.state;
         const type = this.context.context.userType;
 
+        if(!searchResults) {
+            return <Loader />;
+        }
 
         return (
             <div>
@@ -184,8 +188,8 @@ class Home extends Component {
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
                     <div className="row justify-content-center">
 
-                        {searchResults?.length === 0 && <h5> We didn't find profiles...</h5>}
-                        {searchResults?.length && searchResults?.map((profile, index) =>
+                        {searchResults.length === 0 && <h5> We didn't find profiles...</h5>}
+                        {searchResults.length && searchResults?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">
                                     {profile.picture ?

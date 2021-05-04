@@ -125,7 +125,7 @@ class JobPostsList extends Component {
                     <div className="row">
                         {currentRecruiter ?
                             <div className="col-5 jobPost-list">
-                            {recruiters && recruiters.map((recruiter, index) =>
+                            {recruiters.map((recruiter, index) =>
                                 <div key={uuid()} className="row">
                                     <div className="col-12 ">
 

@@ -27,6 +27,7 @@ import ChangeNameAndJob from "./ChangeNameAndJob/ChangeNameAndJob";
 import CallIcon from '@material-ui/icons/Call';
 import ContactInfo from "../ContactInfos/ContactInfo";
 import {AppContext} from "../../../AppContext";
+import Loader from "../../Loader";
 
 const http = getInstance();
 
@@ -587,7 +588,7 @@ class ProfileUser extends Component {
                     </Dialog>
 
 
-                </div> : <p>No data to display</p>}
+                </div> : <Loader />}
 
 
             </div>

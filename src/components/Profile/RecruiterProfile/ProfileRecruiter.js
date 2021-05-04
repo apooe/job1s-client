@@ -17,6 +17,7 @@ import defaultPic from "../../../images/unknown-company.PNG";
 import DeleteIcon from '@material-ui/icons/Delete';
 import LaunchIcon from '@material-ui/icons/Launch';
 import {AppContext, defaultContextValue} from "../../../AppContext";
+import Loader from "../../Loader";
 
 
 const http = getInstance();
@@ -216,7 +217,11 @@ class ProfileRecruiter extends Component {
         const profilePictureImg = recruiter?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}` : defaultPic;
         const newImg = onEditImg ? `${process.env.REACT_APP_API_BASE_URL}${this.state.newImgSource}` : "";
 
-            return (
+        if(!recruiter) {
+            return <Loader />;
+        }
+
+        return (
             <div>
                 <div className="container mt-5">
                     <div className="row">
