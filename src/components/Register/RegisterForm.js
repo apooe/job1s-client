@@ -1,18 +1,18 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import picImage from '../../images/Unknown_person.jpg';
 import {Grid, Paper, Avatar, TextField, Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {getInstance} from "../../helpers/httpInstance";
 import * as Yup from "yup";
 import Alert from "@material-ui/lab/Alert";
-import {withRouter} from "react-router"
+import {useHistory, withRouter} from "react-router"
 import {Link} from "react-router-dom";
 import "../Login/LoginManager.css";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {AuthServiceFactory} from "../../services/authService";
-import {AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
+import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER} from "../../AppContext";
 import {debounce} from "lodash";
 import axios from "axios";
 
@@ -37,12 +37,16 @@ const http = getInstance();
 
 const RegisterForm = (props) => {
 
-    const {history, isJobseeker} = props;
+
+    const { isJobseeker} = props;
+    const history = useHistory();
+
+    const {context, setContext} = useContext(AppContext);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
 
-    const [fileToUpload, setFileToUpload] = useState(null);
+
 
     const [currentStep, setCurrentStep] = useState(1);
     const [places, setPlace] = useState([]);
@@ -85,7 +89,10 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 const {email, password} = user;
                 authService.logIn(email, password).then(() => {
+                    setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_RECRUITER })
+                    console.log("le context :", context)
                     history.push('/home');
+
 
                 }).catch(error => {
                     console.log(error.response.data);
@@ -133,6 +140,8 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 const {email, password} = user;
                 authService.logIn(email, password, USER).then(() => {
+                    setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_JOB_SEEKER })
+                    console.log(" context :", context)
                     history.push('/home');
 
                 }).catch(error => {
@@ -322,4 +331,4 @@ const RegisterForm = (props) => {
     )
 }
 
-export default withRouter(RegisterForm);
+export default RegisterForm;
