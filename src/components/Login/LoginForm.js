@@ -95,7 +95,7 @@ const LoginForm = (props) => {
                                     <button onClick={() => {
 
                                             setContext({userType: AUTH_TYPE_JOB_SEEKER});
-                                            history.push('/register')
+                                            history.push('/status-definition')
 
 
                                     }} className="btn p-0 " type="button">

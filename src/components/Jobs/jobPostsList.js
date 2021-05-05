@@ -10,6 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Apply from "../Apply/Apply";
 import {AppContext, AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
+import Loader from "../Loader";
 
 const http = getInstance();
 
@@ -118,13 +119,17 @@ class JobPostsList extends Component {
         const {recruiters, currentJobPost, currentRecruiter, onApply} = this.state;
         const imgSource = currentJobPost && currentJobPost.companyImg ? defaultPic : defaultPic; //pb a checker
 
+        if(!recruiters) {
+            return <Loader />;
+        }
+
         return (
 
             <div>
                 <div className="container">
-                    <div className="row">
-                        {currentRecruiter ?
-                            <div className="col-5 jobPost-list">
+                    <div className="row  flex-row-reverse flex-md-row">
+
+                            <div className="col-12 col-md-5 jobPost-list ">
                             {recruiters.map((recruiter, index) =>
                                 <div key={uuid()} className="row">
                                     <div className="col-12 ">
@@ -151,12 +156,12 @@ class JobPostsList extends Component {
 
                             }
 
-                        </div> : <div>No job posts to display !</div>
-
-                        }
+                        </div>
 
 
-                        <div className="col-6 current-jp">
+
+
+                        <div className="col-12 col-md-6 current-jp">
                             {currentJobPost &&
                             <div className="row">
                                 <div className="col-12">

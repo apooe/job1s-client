@@ -11,6 +11,7 @@ import Jobs from "./components/Jobs/jobPostsList";
 import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER, defaultContextValue} from "./AppContext";
 import ProtectedRoute from "./ProtectedRoute";
 import ProtectedCondRoute from "./ProtectedCondRoute";
+import SetUserRole from "./components/Register/SetUserRole";
 
 
 function App() {
@@ -18,24 +19,29 @@ function App() {
     const [context, setCtx] = useState(defaultContextValue);
     const setContext = (object) => setCtx({...context, ...object});
     return (
-        <div >
+        <div>
             <AppContext.Provider value={{context, setContext}}>
                 <BrowserRouter>
                     {/*{context.isAuth || context.currentUser?._id && <Navbar></Navbar>}*/}
                     {context.isAuth && <Navbar></Navbar>}
 
                     <Switch>
-                        <Route exact path="/"><MainPage/></Route>
-                        <Route exact path="/register"><RegisterForm isJobseeker={context.userType}></RegisterForm></Route>
+                        <Route exact path="/">{!context.isAuth ? <MainPage/> :
+                            <Home />
+                        }</Route>
+                        <Route exact path="/register">
+                            <RegisterForm isJobseeker={context.userType}></RegisterForm></Route>
                         <Route exact path="/login"><LoginForm></LoginForm></Route>
-                        <ProtectedRoute exact path="/home" component={Home} />
-                        <ProtectedCondRoute exact path="/my-profile" condition={context.userType === AUTH_TYPE_RECRUITER } componentTrue={ProfileRecruiter} componentFalse={ProfileUser} />
-                        <ProtectedRoute exact path="/my-profile-user" component={ProfileUser} />
-                        <ProtectedRoute exact path="/my-profile-recruiter" component={ProfileRecruiter} />
-                        <ProtectedRoute exact path="/jobs" component={Jobs} />
-                        <ProtectedCondRoute exact path="/profiles/:id" component={ProfileUser} />
-                        <ProtectedCondRoute exact path="/recruiters/:id" component={ProfileRecruiter} />
-
+                        <Route exact path="/status-definition"><SetUserRole></SetUserRole></Route>
+                        <ProtectedRoute exact path="/home" component={Home}/>
+                        <ProtectedCondRoute exact path="/my-profile"
+                                            condition={context.userType === AUTH_TYPE_RECRUITER}
+                                            componentTrue={ProfileRecruiter} componentFalse={ProfileUser}/>
+                        <ProtectedRoute exact path="/my-profile-user" component={ProfileUser}/>
+                        <ProtectedRoute exact path="/my-profile-recruiter" component={ProfileRecruiter}/>
+                        <ProtectedRoute exact path="/jobs" component={Jobs}/>
+                        <ProtectedCondRoute exact path="/profiles/:id" component={ProfileUser}/>
+                        <ProtectedCondRoute exact path="/recruiters/:id" component={ProfileRecruiter}/>
 
 
                     </Switch>

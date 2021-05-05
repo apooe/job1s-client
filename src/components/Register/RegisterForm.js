@@ -16,6 +16,7 @@ import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER} from "../../AppCo
 import {debounce} from "lodash";
 import axios from "axios";
 
+
 const authService = AuthServiceFactory.getInstance();
 
 
@@ -38,14 +39,14 @@ const http = getInstance();
 const RegisterForm = (props) => {
 
 
-    const { isJobseeker} = props;
+
     const history = useHistory();
 
     const {context, setContext} = useContext(AppContext);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [user, setUser] = useState({});
     const [error, setError] = useState(null);
-
 
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -75,7 +76,7 @@ const RegisterForm = (props) => {
     }
 
     const onSubmit = () => {
-        isJobseeker === AUTH_TYPE_JOB_SEEKER ? userSubmit() : recruiterSubmit();
+        context.userType === AUTH_TYPE_JOB_SEEKER ? userSubmit() : recruiterSubmit();
 
     }
 
@@ -89,7 +90,7 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 const {email, password} = user;
                 authService.logIn(email, password).then(() => {
-                    setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_RECRUITER })
+                    setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_RECRUITER})
                     console.log("le context :", context)
                     history.push('/home');
 
@@ -140,7 +141,11 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 const {email, password} = user;
                 authService.logIn(email, password, USER).then(() => {
-                    setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_JOB_SEEKER })
+                    setContext({
+                        isAuth: true,
+                        currentUser: authService.getCurrentUser(),
+                        userType: AUTH_TYPE_JOB_SEEKER
+                    })
                     console.log(" context :", context)
                     history.push('/home');
 
@@ -185,9 +190,13 @@ const RegisterForm = (props) => {
         });
     }
 
+    console.log(context.userType)
+
+
     return (
 
         <div className="form-container">
+
 
             <Grid>
                 <Paper elevation={10} id="paper">
@@ -198,6 +207,7 @@ const RegisterForm = (props) => {
                         }
 
                     </Grid>
+
 
                     {error && <Alert
                         severity="error"
@@ -259,7 +269,7 @@ const RegisterForm = (props) => {
                             required
                         />
 
-                        {isJobseeker === "job_seeker" &&
+                        {context?.userType === "job_seeker" &&
                         <FormControlLabel
                             className="checkbox"
                             control={
@@ -274,7 +284,7 @@ const RegisterForm = (props) => {
 
                     </div>}
 
-                    {currentStep === 2 && isJobseeker === "job_seeker" && <div>
+                    {currentStep === 2 && context.userType === "job_seeker" && <div>
 
                         <Autocomplete
                             id="combo-box-demo"

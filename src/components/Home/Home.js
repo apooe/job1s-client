@@ -188,8 +188,8 @@ class Home extends Component {
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
                     <div className="row justify-content-center">
 
-                        {searchResults.length === 0 && <h5> We didn't find profiles...</h5>}
-                        {searchResults.length && searchResults?.map((profile, index) =>
+                        {/*{searchResults.length === 0 && <h5> We didn't find profiles...</h5>}*/}
+                        {searchResults?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">
                                     {profile.picture ?
@@ -201,6 +201,7 @@ class Home extends Component {
 
                                     <p className="py-1 font-weight-bold">{profile.firstname} {profile.lastname}</p>
                                     <p className="pb-1">{profile.job}</p>
+
                                     <Link
                                         to={this.context.context.userType === AUTH_TYPE_RECRUITER ? `/profiles/${profile._id}` : `/recruiters/${profile._id}`}>
                                         <button type="button" className="btn btn-primary">

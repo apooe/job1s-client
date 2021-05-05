@@ -13,7 +13,7 @@ const menuItemsJobSeeker = ctx => [
     },
     {
         title: "Logout",
-        url: "/login",
+        url: "/",
         cName: "nav-links",
         command: () => {
             AuthServiceFactory.getInstance().logOut();

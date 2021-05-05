@@ -1,22 +1,31 @@
-#paper{
-    padding:30px;
-    min-height:50vh;
+#paper {
+    padding: 30px;
+    min-height: 50vh;
     max-height: 100vh;
     width: 370px;
     margin: 20px auto;
 }
 
-#avatar{
+#paper-status {
+
+    padding: 30px;
+    min-height: 30vh;
+    max-height: 50vh;
+    width: 320px;
+    margin: 20px auto;
+}
+
+#avatar {
     background-color: #f55448;
 }
 
-#btn{
+#btn {
     margin: 10px 0;
 
 }
 
 .input-control {
-    margin-bottom: 10px!important;
+    margin-bottom: 10px !important;
 }
 
 .form-container {
@@ -26,24 +35,34 @@
     padding: 50px;
 }
 
-.label-field{
+.label-field {
     font-size: 5px;
 }
 
-.MuiFormControlLabel-label{
+.MuiFormControlLabel-label {
     font-size: 5px;
 }
 
-.job-autocomplete-register{
-    margin:  40px auto 20px auto;
+.job-autocomplete-register {
+    margin: 40px auto 20px auto;
 }
 
-.city-autocomplete-register{
-    margin:  0 auto 20px auto;
+.city-autocomplete-register {
+    margin: 0 auto 20px auto;
 
 }
 
-.job-search{
+.job-search {
     text-align: center;
 
+}
+
+.btn-setRole {
+
+    margin-top: 5px !important;
+
+}
+
+.helper-text{
+    color: red!important;
 }
