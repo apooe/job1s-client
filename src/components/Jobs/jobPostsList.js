@@ -117,7 +117,12 @@ class JobPostsList extends Component {
 
         const {userType} = this.context.context;
         const {recruiters, currentJobPost, currentRecruiter, onApply} = this.state;
-        const imgSource = currentJobPost && currentJobPost.companyImg ? defaultPic : defaultPic; //pb a checker
+        console.log("recruiters = ", recruiters);
+        console.log(" currentJobPost  = ", currentJobPost);
+        console.log(" currentRecruiter  = ", currentRecruiter);
+
+
+
 
         if(!recruiters) {
             return <Loader />;
@@ -138,17 +143,15 @@ class JobPostsList extends Component {
                                             <div key={uuid()} className="one-jp border pl-3"
                                                  onClick={() => this.onClickJobPost(jp, recruiter)}>
 
-                                                {jp.companyImg ?
+                                                {jp.companyImg && recruiter.profileImg ?
                                                     <img className="jp-pic"
                                                          src={`${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}`}
                                                          alt="company logo"/> :
-                                                    <img className="jp-pic" src={imgSource} alt="company logo"/>}
+                                                    <img className="jp-pic" src={defaultPic} alt="company logo"/>}
                                                 <h5 className="jp-title">{jp.title}</h5>
                                                 <a className="jp-company" href={jp.url}
                                                    target="_blank">{jp.companyName}</a>
                                                 <p className="jp-loc">{jp.location}</p>
-
-
                                             </div>)
                                         }
                                     </div>
@@ -167,11 +170,11 @@ class JobPostsList extends Component {
                                 <div className="col-12">
                                     <div className="row">
                                         <div className="col-3">
-                                            {currentJobPost.companyImg ?
+                                            {currentJobPost.companyImg && currentRecruiter.profileImg ?
                                                 <img className="jp-pic-current"
                                                      src={`${process.env.REACT_APP_API_BASE_URL}${currentRecruiter?.profileImg}`}
                                                      alt="company logo"/> :
-                                                <img className="jp-pic" src={imgSource} alt="company logo"/>}
+                                                <img className="jp-pic" src={defaultPic} alt="company logo"/>}
 
                                         </div>
                                         <div className="col-9">
