@@ -63,8 +63,8 @@ export default function SetUserRole() {
 
 
                             <RadioGroup aria-label="quiz" name="quiz" value={value} onChange={handleRadioChange}>
-                                <FormControlLabel value="job seeker" control={<Radio/>} label="job seeker"/>
-                                <FormControlLabel value="recruiter" control={<Radio/>} label="recruiter"/>
+                                <FormControlLabel value="job seeker" control={<Radio/>} label="Job seeker"/>
+                                <FormControlLabel value="recruiter" control={<Radio/>} label="Recruiter"/>
                             </RadioGroup>
 
 
