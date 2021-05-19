@@ -165,3 +165,19 @@
     padding: 0;
 
 }
+.jobposts-recruiter-list {
+    height: 105vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding: 0 5px;
+}
+
+
+.jobposts-recruiter-list::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+.jobposts-recruiter-list::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background: #c2c9d2;
+}

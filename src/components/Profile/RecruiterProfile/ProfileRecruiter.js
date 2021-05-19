@@ -38,7 +38,7 @@ class ProfileRecruiter extends Component {
             uploadedFile: null,
             onViewJob: false,
             onEditInfos: false,
-            originalSelectedJp:null,
+            originalSelectedJp: null,
             isMyProfile: true,
 
         };
@@ -143,9 +143,14 @@ class ProfileRecruiter extends Component {
 
     onCloseWindow = () => {
 
-        this.setState({onChangeJobPost: false, selectedJobPost: null, onViewJob: false, onEditInfos: false, originalSelectedJp: null});
+        this.setState({
+            onChangeJobPost: false,
+            selectedJobPost: null,
+            onViewJob: false,
+            onEditInfos: false,
+            originalSelectedJp: null
+        });
     };
-
 
 
     handleJobSubmit = async (newPostJob) => {
@@ -160,11 +165,10 @@ class ProfileRecruiter extends Component {
         } else {
             newRecruiter.jobPosts = newRecruiter?.jobPosts.map(jp => (
                 jp.companyName === this.state.originalSelectedJp.companyName &&
-                jp.title === this.state.originalSelectedJp.title ) ? newPostJob : jp);
+                jp.title === this.state.originalSelectedJp.title) ? newPostJob : jp);
         }
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
         await this.updateJobPost();
-
 
 
     }
@@ -217,100 +221,103 @@ class ProfileRecruiter extends Component {
         const profilePictureImg = recruiter?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}` : defaultPic;
         const newImg = onEditImg ? `${process.env.REACT_APP_API_BASE_URL}${this.state.newImgSource}` : "";
 
-        if(!recruiter) {
-            return <Loader />;
+        if (!recruiter) {
+            return <Loader/>;
         }
 
         return (
             <div>
                 <div className="container mt-5">
                     <div className="row">
-                        {/*profile picture + name + infos + visit website*/}
-                        <div className="col-4 presentation-profile">
+                        <div className="float-left col-4 ">
+                            {/*profile picture + name + infos + visit website*/}
+                            <div className="presentation-profile">
 
-                            {isMyProfile && <div>
-                                <IconButton aria-label="edit" className="text-info edit-icon"
-                                            onClick={() => this.handleChangeInfos()}>
-                                    <EditIcon
-                                        fontSize="small">
-                                    </EditIcon>
-                                </IconButton>
-                            </div>}
-
-                            <section className="border rounded p-5">
-                                <div className="picture pb-4">
-                                    {<a href={recruiter?.companyLink} target="_blank">
-                                        <img className="pic-recruiter" src={profilePictureImg} alt="profile picture"/>
-                                    </a>}
-                                </div>
-
-                                <div className="infos m-1">
-                                    <p className="name text-center font-weight-bold">{recruiter?.firstname} {recruiter?.lastname}</p>
-                                </div>
-
-                                <button className="visit-website btn border bg-light">
-                                    <a href={recruiter?.companyLink} target="_blank">Visit website
-                                        <LaunchIcon
+                                {isMyProfile && <div>
+                                    <IconButton aria-label="edit" className="text-info edit-icon"
+                                                onClick={() => this.handleChangeInfos()}>
+                                        <EditIcon
                                             fontSize="small">
-                                        </LaunchIcon></a>
-                                </button>
+                                        </EditIcon>
+                                    </IconButton>
+                                </div>}
+
+                                <section className="border rounded p-5">
+                                    <div className="picture pb-4">
+                                        {<a href={recruiter?.companyLink} target="_blank">
+                                            <img className="pic-recruiter" src={profilePictureImg}
+                                                 alt="profile picture"/>
+                                        </a>}
+                                    </div>
+
+                                    <div className="infos m-1">
+                                        <p className="name text-center font-weight-bold">{recruiter?.firstname} {recruiter?.lastname}</p>
+                                    </div>
+
+                                    <button className="visit-website btn border bg-light">
+                                        <a href={recruiter?.companyLink} target="_blank">Visit website
+                                            <LaunchIcon
+                                                fontSize="small">
+                                            </LaunchIcon></a>
+                                    </button>
 
 
-                            </section>
+                                </section>
+                            </div>
                         </div>
+                        <div className=" float-right col-8 jobposts-recruiter-list ">
 
-                        {/*jobposts of recruiter*/}
-                        <div className="col-8">
-                            <section className="bg-light rounded  border">
-                                <h1 className="category-profile ml-3 "> JobPosts
-                                    {isMyProfile && <IconButton aria-label="add" className="text-info"
-                                                onClick={() => this.addJobPost()}>
-                                        <AddCircleOutlineIcon
-                                            fontSize="large">
-                                        </AddCircleOutlineIcon>
-                                    </IconButton>}
-                                </h1>
-                                {recruiter?.jobPosts && recruiter?.jobPosts.length ?
-                                    <div>
-                                        {
-                                            recruiter?.jobPosts && recruiter.jobPosts.map((jp, index) =>
+                            {/*jobposts of recruiter*/}
+                                <section className="bg-light rounded  border">
+                                    <h1 className="category-profile ml-3 "> JobPosts
+                                        {isMyProfile && <IconButton aria-label="add" className="text-info"
+                                                                    onClick={() => this.addJobPost()}>
+                                            <AddCircleOutlineIcon
+                                                fontSize="large">
+                                            </AddCircleOutlineIcon>
+                                        </IconButton>}
+                                    </h1>
+                                    {recruiter?.jobPosts && recruiter?.jobPosts.length ?
+                                        <div className="">
+                                            {
+                                                recruiter?.jobPosts && recruiter.jobPosts.map((jp, index) =>
 
-                                                <div key={uuid()} className="each-one-jobpost border">
+                                                    <div key={uuid()} className="each-one-jobpost border">
 
-                                                    <div className="row" onClick={() => this.showJobPost(jp)}>
-                                                        <div className="col ml-3">
+                                                        <div className="row" onClick={() => this.showJobPost(jp)}>
+                                                            <div className="col ml-3">
 
-                                                            {jp.companyImg ?
-                                                            <img className="company-pic" src={profilePictureImg}
-                                                                 alt="company picture"/> :
-                                                                <img className="company-pic" src={defaultPic}
-                                                                     alt="company picture"/>}
+                                                                {jp.companyImg ?
+                                                                    <img className="company-pic" src={profilePictureImg}
+                                                                         alt="company picture"/> :
+                                                                    <img className="company-pic" src={defaultPic}
+                                                                         alt="company picture"/>}
 
-                                                            <h5 className="r-company-name pt-2">{jp.companyName}</h5>
-                                                            <p className="r-title p-0 m-0">{jp.title}</p>
-                                                            <p className="r-location p-0 m-0">{jp.location}</p>
-
-
-                                                            {isMyProfile && <IconButton aria-label="show"
-                                                                        className="text-info show-icon"
-                                                                        onClick={() => this.updateJobPostsList(jp)}>
-                                                                <EditIcon
-                                                                    fontSize="small">
-                                                                </EditIcon>
-                                                            </IconButton>}
+                                                                <h5 className="r-company-name pt-2">{jp.companyName}</h5>
+                                                                <p className="r-title p-0 m-0">{jp.title}</p>
+                                                                <p className="r-location p-0 m-0">{jp.location}</p>
 
 
+                                                                {isMyProfile && <IconButton aria-label="show"
+                                                                                            className="text-info show-icon"
+                                                                                            onClick={() => this.updateJobPostsList(jp)}>
+                                                                    <EditIcon
+                                                                        fontSize="small">
+                                                                    </EditIcon>
+                                                                </IconButton>}
+
+
+                                                            </div>
                                                         </div>
-                                                    </div>
 
-                                                </div>)
-                                        }
-                                    </div> :
+                                                    </div>)
+                                            }
+                                        </div> :
 
-                                    <p className="p-3">there is no job post !</p>
-                                }
+                                        <p className="p-3">there is no job post !</p>
+                                    }
 
-                            </section>
+                                </section>
                         </div>
                     </div>
 
@@ -356,7 +363,7 @@ class ProfileRecruiter extends Component {
                         <DialogTitle id="form-dialog-title">
 
                             {selectedJobPost.companyImg ? <img className="company-pic-view"
-                                 src={profilePictureImg} alt="company picture"/> :
+                                                               src={profilePictureImg} alt="company picture"/> :
                                 <img className="company-pic-view"
                                      src={defaultPic} alt="company picture"/>
                             }
@@ -436,12 +443,6 @@ class ProfileRecruiter extends Component {
                                 </label>
                                 <span id="file-chosen">No file chosen</span>
 
-                                {/*<IconButton aria-label="delete" className=""*/}
-                                {/*            onClick={() => {}}>*/}
-                                {/*    <DeleteIcon*/}
-                                {/*        fontSize="small">*/}
-                                {/*    </DeleteIcon>*/}
-                                {/*</IconButton>*/}
                             </div>
 
 

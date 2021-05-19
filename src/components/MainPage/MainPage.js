@@ -38,7 +38,7 @@ const MainPage = ({history}) => {
                                 setContext({userType: AUTH_TYPE_RECRUITER});
                                 history.push('/register')
                             }} className="btn btn-mainpage border mt-5" type="button">
-                                Are you a recruiter
+                                Post a job
                                 <ArrowForwardIosIcon className="arrow-icon"
                                                      style={{fontSize: 30}}>
                                     Post a job

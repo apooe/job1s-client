@@ -18,7 +18,7 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchResults: null,
+            profilesToDisplay: null,
             relatedJobs: [],
             allProfiles: null,
         }
@@ -27,7 +27,6 @@ class Home extends Component {
     async componentDidMount() {
 
         const {currentUser, userType } = await this.context.context;
-        console.log("user est:", currentUser,userType );
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('job')) {
@@ -90,7 +89,7 @@ class Home extends Component {
         try {
             const url = '/recruiters';
             const response = await http.get(url);
-            this.setState({searchResults: response?.data})
+            this.setState({profilesToDisplay: response?.data})
 
         } catch (e) {
             console.log(e?.response?.data);
@@ -104,6 +103,7 @@ class Home extends Component {
         //job seeker
         if (userType === AUTH_TYPE_JOB_SEEKER) {
            await this.getAllRecruiters();
+           console.log(this.state.profilesToDisplay)
         }
 
         //recruiter
@@ -129,7 +129,7 @@ class Home extends Component {
             `/users/search/?job=${job}` : `/recruiters/search/?job=${job}`;
 
         http.get(url).then(({data}) => {
-            this.setState({searchResults: data})
+            this.setState({profilesToDisplay: data})
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -142,7 +142,7 @@ class Home extends Component {
     //     const relatedJobs = this.state.relatedJobs;
     //
     //     await http.post(url, relatedJobs).then(({data}) => {
-    //         this.setState({searchResults: data})
+    //         this.setState({profilesToDisplay: data})
     //         console.log("find corresponding profiles", data);
     //
     //         if (data.length === 0) {
@@ -159,7 +159,7 @@ class Home extends Component {
         try {
             const url = '/users';
             const response = await http.get(url);
-            this.setState({searchResults: response?.data});
+            this.setState({profilesToDisplay: response?.data});
 
         } catch (e) {
             console.log(e?.response?.data);
@@ -169,10 +169,10 @@ class Home extends Component {
 
     render() {
 
-        const {searchResults} = this.state;
+        const {profilesToDisplay} = this.state;
         const type = this.context.context.userType;
 
-        if(!searchResults) {
+        if(!profilesToDisplay) {
             return <Loader />;
         }
 
@@ -188,13 +188,12 @@ class Home extends Component {
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
                     <div className="row justify-content-center">
 
-                        {/*{searchResults.length === 0 && <h5> We didn't find profiles...</h5>}*/}
-                        {searchResults?.map((profile, index) =>
+                        {profilesToDisplay?.map((profile, index) =>
                             <div className="col-3 p-2" key={uuid()}>
                                 <div className="profile-user text-center rounded p-2">
-                                    {profile.picture ?
+                                    {profile.picture || profile.profileImg ?
                                         <img className="pic-profile-home"
-                                             src={`${process.env.REACT_APP_API_BASE_URL}${profile.picture}`}
+                                             src={`${process.env.REACT_APP_API_BASE_URL}${profile.picture || profile.profileImg}`}
                                              alt="profile picture"/> :
                                         <img className="pic-profile-home" src={defaultPic} alt="profile picture"/>
                                     }
