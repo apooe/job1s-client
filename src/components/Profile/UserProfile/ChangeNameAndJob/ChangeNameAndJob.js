@@ -126,6 +126,7 @@ class ChangeNameAndJob extends Component {
                 </DialogTitle>
 
                 <form action="" onSubmit={this.onSubmit}>
+                    <label className="label-contact">First name</label>
                     <input
                         type="text"
                         onChange={e => this.handleUserChange({firstname: e.target.value})}
@@ -134,7 +135,7 @@ class ChangeNameAndJob extends Component {
                         value={user.firstname}
                         required
                     />
-
+                    <label className="label-contact">Last name</label>
                     <input
                         type="text"
                         onChange={e => this.handleUserChange({lastname: e.target.value})}
@@ -144,6 +145,7 @@ class ChangeNameAndJob extends Component {
                         required
                     />
 
+                    <label className="label-contact">Email</label>
                     <input
                         type="email"
                         onChange={e => this.handleUserChange({email: e.target.value})}
@@ -151,7 +153,7 @@ class ChangeNameAndJob extends Component {
                         placeholder="Email"
                         value={user.email}
                     />
-
+                    <label className="label-contact">Phone number</label>
                     <input
                         type="text"
                         onChange={e => this.handleUserChange({phone: e.target.value})}
@@ -160,6 +162,7 @@ class ChangeNameAndJob extends Component {
                         value={user.phone}
                     />
 
+                    <label className="label-contact">Address</label>
                     <input
                         type="text"
                         onChange={e => this.handleUserChange({address: e.target.value})}
@@ -168,34 +171,55 @@ class ChangeNameAndJob extends Component {
                         value={user.address}
 
                     />
-
+                    <label className="label-contact">Job</label>
                     <Autocomplete
                         id="combo-box-demo"
-                        className="pb-3"
+                        className="location-autocomplete"
                         options={this.state.jobs}
-                        getOptionLabel={j => j.suggestion}
+                        getOptionLabel={option => option.suggestion || option}
                         fullWidth
+                        freeSolo
+                        value={user.job}
                         onInputChange={debounce((event, value) => this.searchJob(value), 300)}
-                        onChange={(event, value) => this.handleUserChange({job: value.suggestion})}
+                        onChange={(e, value) => this.handleUserChange({job: value.suggestion})}
                         renderInput={(params) => (
-                            <TextField  {...params} label="Jobs" className="location-title"
-                                        variant="outlined"/>
+                            <TextField  {...params} className="location-title"
+                                        variant="outlined" />
                         )}
-                    />
 
+                    />
+                    {/*<label className="label-contact">Job</label>*/}
+                    {/*<Autocomplete*/}
+                    {/*    id="combo-box-demo"*/}
+                    {/*    className="pb-3"*/}
+                    {/*    options={this.state.jobs}*/}
+                    {/*    getOptionLabel={j => j.suggestion}*/}
+                    {/*    fullWidth*/}
+                    {/*    onInputChange={debounce((event, value) => this.searchJob(value), 300)}*/}
+                    {/*    onChange={(event, value) => this.handleUserChange({job: value.suggestion})}*/}
+                    {/*    renderInput={(params) => (*/}
+                    {/*        <TextField  {...params} label="Jobs" className="location-title"*/}
+                    {/*                    variant="outlined"/>*/}
+                    {/*    )}*/}
+                    {/*/>*/}
+
+                    <label className="label-contact">City</label>
                     <Autocomplete
                         id="combo-box-demo"
-                        className="mb-3"
+                        className="location-autocomplete"
                         options={this.state.places}
                         fullWidth
+                        freeSolo
+                        value={user.city}
                         onInputChange={(event, value) => this.loadPlaceOptions(value)}
                         onChange={(event, value) => this.handleUserChange({city: value})}
                         renderInput={(params) => (
-                            <TextField  {...params} label="City"
-                                        placeholder="City"
+                            <TextField  {...params} className="location-title"
                                         variant="outlined"/>
                         )}
+
                     />
+
 
                     <h5>Websites</h5>
                     {websites && websites.map((url) => {

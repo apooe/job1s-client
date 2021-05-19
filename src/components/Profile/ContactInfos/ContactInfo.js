@@ -34,7 +34,6 @@ class ContactInfo extends Component {
 
     componentDidMount() {
 
-
         let user =  this.context.context.currentUser;
         if(this.context.context.userType === AUTH_TYPE_RECRUITER){
             console.log("je suis un recruiter");
@@ -76,6 +75,8 @@ class ContactInfo extends Component {
         const {user, onChangeContactInfo, isMyProfile} = this.state;
         if(!user)
             return null;
+
+        console.log(user)
 
         return (
             <div className="container ">
