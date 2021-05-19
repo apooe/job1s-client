@@ -8,6 +8,7 @@ import axios from "axios";
 import {debounce} from "lodash";
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
+
 const http = getInstance();
 
 class JobPost extends Component {
@@ -23,26 +24,23 @@ class JobPost extends Component {
             jobs: [],
             checked: false,
             removeJobPost: false,
+            originalJobPost: null,
+
 
         };
     }
 
-
-
-
-
     componentDidMount() {
 
         if (this.props.jobPost) {// if exist
-            this.setState({checked: this.props.jobPost.companyImg });
+            this.setState({checked: this.props.jobPost.companyImg});
 
-        }
-        else{
+        } else {
             this.setState({newJobPost: true});
         }
 
         const jobPost = this.props.jobPost || {companyName: ''};
-        this.setState({jobPost});
+        this.setState({jobPost, originalJobPost: {...jobPost}});
 
     }
 
@@ -63,9 +61,25 @@ class JobPost extends Component {
         });
     }
 
+    handleJobTitleChange = (job) => {
+
+        const id = job.title?.uuid;
+
+        this.handleJobPostChange({jobPostId: id}).then(res => {
+            this.handleJobPostChange({title: job.title?.suggestion}).then(res => {
+            }).catch(error => {
+                console.log(error?.response?.data);
+
+            }).catch(error => {
+                console.log(error?.response?.data);
+
+            })
+        })
+
+    }
 
 
-    handleJobPostChange =  (newValue) => {
+    handleJobPostChange = async (newValue) => {
 
         const oldJobPost = {...this.state.jobPost}; // Deep Copy of the profile field
         const newJobPost = {...oldJobPost, ...newValue};
@@ -76,16 +90,44 @@ class JobPost extends Component {
     onSubmit = async (e) => {
 
         e.preventDefault();
-        if(!this.state.checked){
+        const {checked, removeJobPost, jobPost, originalJobPost, newJobPost} =this.state;
+        if (!checked) {
             await this.handleJobPostChange({companyImg: false})
         }
 
-        if (this.state.removeJobPost) {
-            this.props.onPostDelete(this.state.jobPost);
+        if (removeJobPost) {
+            this.props.onPostDelete(jobPost);
 
         } else {
-            this.props.onFormSubmit(this.state.jobPost);
+            const isChangedJob = originalJobPost && originalJobPost.title !== jobPost.title;
+            if(newJobPost || isChangedJob){
+                await this.getRelatedJobs();
+            }
+
+            this.props.onFormSubmit(jobPost);
         }
+    }
+
+    getRelatedJobs = async () => {
+
+        const id = this.state.jobPost.jobPostId;
+        let relatedJobsTitles = [];
+
+        const url = `http://api.dataatwork.org/v1/jobs/${id}/related_jobs`;
+
+        await axios.get(url).then(response => {
+            response?.data.related_job_titles.map(j => {
+                relatedJobsTitles.push(j.title);
+            })
+            this.setState({relatedJobs: response?.data.related_job_titles});
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+
+        await this.handleJobPostChange({relatedJobs: relatedJobsTitles});
+        console.log(this.state.relatedJobs);
+
+
     }
 
     onClose = () => {
@@ -106,12 +148,9 @@ class JobPost extends Component {
             console.log(error?.response?.data);
 
         });
-    }
-
-    handleJobChange = (event, value) => {
-        this.handleJobPostChange({title: value});
 
     }
+
 
     render() {
         const {jobPost} = this.state;
@@ -147,10 +186,10 @@ class JobPost extends Component {
                         freeSolo
                         value={jobPost.title}
                         onInputChange={debounce((event, value) => this.searchJob(value), 100)}
-                        onChange={(e, value) => this.handleJobPostChange({title: value?.suggestion})}
+                        onChange={(e, value) => this.handleJobTitleChange({title: value})}
                         renderInput={(params) => (
-                            <TextField  {...params}  className="location-title"
-                                        variant="outlined" required />
+                            <TextField  {...params} className="location-title"
+                                        variant="outlined" required/>
                         )}
 
                     />
@@ -209,24 +248,12 @@ class JobPost extends Component {
                             <Checkbox
                                 checked={this.state.checked}
                                 onChange={this.handleChange}
-                                inputProps={{ 'aria-label': 'primary checkbox' }}
+                                inputProps={{'aria-label': 'primary checkbox'}}
                             />
                         } label="Add your company logo for this job post."/>
 
                     </div>
 
-                    {/*<div>*/}
-                    {/*    <input type="file"*/}
-                    {/*           className="form-control input-file"*/}
-                    {/*           id="actual-btn"*/}
-                    {/*           hidden*/}
-                    {/*           onChange={e => this.handleJobPostChange({companyImg: e.target.value})}*/}
-                    {/*           name="profile-picture"/>*/}
-                    {/*    <label className="label-upload" for="actual-btn">Choose File*/}
-                    {/*        <i className="pl-2 fa fa-upload" aria-hidden="true"></i>*/}
-                    {/*    </label>*/}
-                    {/*    <span id="file-chosen">No file chosen</span>*/}
-                    {/*</div>*/}
 
                     <p><span className="mandatory">*Required fields</span></p>
 
