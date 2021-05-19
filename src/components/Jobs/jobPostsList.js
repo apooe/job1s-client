@@ -11,7 +11,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import Apply from "../Apply/Apply";
 import {AppContext, AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
 import Loader from "../Loader";
-import axios from "axios";
 
 const http = getInstance();
 
@@ -57,7 +56,7 @@ class JobPostsList extends Component {
 
         const urlParams = new URLSearchParams(window.location.search);
         const jobSearch = urlParams.get('job');
-        this.getJobPosts(jobSearch);
+        await this.getJobPosts(jobSearch);
         //await this.getJobsTitle(jobSearch);
     }
 
