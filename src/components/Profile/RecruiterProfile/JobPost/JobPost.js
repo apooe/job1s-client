@@ -88,20 +88,18 @@ class JobPost extends Component {
     }
 
     onSubmit = async (e) => {
-
         e.preventDefault();
-        const {checked, removeJobPost, jobPost, originalJobPost, newJobPost} =this.state;
+        const {checked, removeJobPost, jobPost, originalJobPost, newJobPost} = this.state;
         if (!checked) {
-            await this.handleJobPostChange({companyImg: false})
+            await this.handleJobPostChange({companyImg: false});
         }
 
         if (removeJobPost) {
             this.props.onPostDelete(jobPost);
-
         } else {
             const isChangedJob = originalJobPost && originalJobPost.title !== jobPost.title;
-            if(newJobPost || isChangedJob){
-                await this.getRelatedJobs();
+            if (newJobPost || isChangedJob) {
+                jobPost.relatedJobs = await this.getRelatedJobs();
             }
 
             this.props.onFormSubmit(jobPost);
@@ -111,22 +109,14 @@ class JobPost extends Component {
     getRelatedJobs = async () => {
 
         const id = this.state.jobPost.jobPostId;
-        let relatedJobsTitles = [];
+        try {
+            const url = `http://api.dataatwork.org/v1/jobs/${id}/related_jobs`;
 
-        const url = `http://api.dataatwork.org/v1/jobs/${id}/related_jobs`;
-
-        await axios.get(url).then(response => {
-            response?.data.related_job_titles.map(j => {
-                relatedJobsTitles.push(j.title);
-            })
-            this.setState({relatedJobs: response?.data.related_job_titles});
-        }).catch(error => {
-            console.log(error?.response?.data);
-        });
-
-        await this.handleJobPostChange({relatedJobs: relatedJobsTitles});
-        console.log(this.state.relatedJobs);
-
+            const response = await axios.get(url);
+            return response?.data?.related_job_titles.map(j => j.title);
+        } catch (e) {
+            console.error(e)
+        }
 
     }
 
