@@ -52,7 +52,7 @@ export default function SetUserRole() {
                     <Grid align="center">
                         <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
                         <h2>register </h2>
-                        <h5 className="mb-3">I am a...</h5>
+                        <h5 className="mb-1">I am a...</h5>
                         {error && <FormHelperText className="text-center helper-text">{helperText}</FormHelperText>}
 
 

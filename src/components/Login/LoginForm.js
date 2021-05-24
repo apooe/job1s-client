@@ -67,7 +67,7 @@ const LoginForm = (props) => {
                             <TextField
                                 label="Password"
                                 onChange={e => onUserChange({password: e.target.value})}
-                                className="input-control label-field"
+                                className="input-control label-field mt-3"
                                 placeholder="enter your password"
                                 type="password"
                                 fullWidth
@@ -79,6 +79,7 @@ const LoginForm = (props) => {
                                 type="submit"
                                 color="primary"
                                 fullWidth
+                                className="mt-3"
                                 variant="contained"
                                 id="btn"
                                 onClick={() => onSubmit(() => setContext({
@@ -90,17 +91,24 @@ const LoginForm = (props) => {
                             </Button>
 
 
-                            <Grid container justify="flex-end">
-                                <Grid item>Already have an account? {" "}
-                                    <button onClick={() => {
-
+                            <Grid className="mb-4">
+                                <Grid item className="float-left">
+                                    <small>Already have an account? </small>
+                                    <a onClick={() => {
                                             setContext({userType: AUTH_TYPE_JOB_SEEKER});
                                             history.push('/status-definition')
 
+                                    }} className="forget-password">
+                                        <small>Sign up</small>
+                                    </a>
+                                </Grid>
+                                <Grid item className="float-right">
+                                    <a onClick={() => {
+                                        history.push('/change-password')
 
-                                    }} className="btn p-0 " type="button">
-                                        Sign up
-                                    </button>
+                                    }} className="forget-password" >
+                                       <small>I forgot my password</small>
+                                    </a>
                                 </Grid>
                             </Grid>
                         </Paper>
