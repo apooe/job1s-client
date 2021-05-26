@@ -178,7 +178,7 @@ class Apply extends Component {
         if (!user) {
             return null;
         }
-        const imgSrc = user?.picture ? `${process.env.REACT_APP_API_BASE_URL}${user?.picture}` : picImage;
+        const imgSrc = user?.picture ? `${user?.picture}` : picImage;
 
         return (
             <div className="container">

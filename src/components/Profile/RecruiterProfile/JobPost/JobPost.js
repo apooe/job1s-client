@@ -45,8 +45,11 @@ class JobPost extends Component {
     }
 
     handleChange = async () => {
-        await this.setState({checked: !this.state.checked})
-        this.handleJobPostChange({companyImg: !this.state.companyImg})
+       await this.setState({checked: !this.state.checked});
+        console.log(this.state.checked)
+        await this.handleJobPostChange({companyImg: this.state.checked})
+        console.log()
+
     };
 
 
@@ -81,9 +84,11 @@ class JobPost extends Component {
 
     handleJobPostChange = async (newValue) => {
 
+        console.log(newValue)
         const oldJobPost = {...this.state.jobPost}; // Deep Copy of the profile field
         const newJobPost = {...oldJobPost, ...newValue};
         this.setState({jobPost: newJobPost})
+        console.log(this.state.jobPost)
 
     }
 

@@ -20,7 +20,7 @@ class JobPostsList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            recruiters: [],
+            recruiters: null,
             onclickJobPost: false,
             currentJobPost: null,
             currentRecruiter: null,
@@ -235,7 +235,7 @@ class JobPostsList extends Component {
 
                                                 {jp.companyImg && recruiter.profileImg ?
                                                     <img className="jp-pic"
-                                                         src={`${process.env.REACT_APP_API_BASE_URL}${recruiter?.profileImg}`}
+                                                         src={`${recruiter?.profileImg}`}
                                                          alt="company logo"/> :
                                                     <img className="jp-pic" src={defaultPic} alt="company logo"/>}
                                                 <h5 className="jp-title">{jp.title}</h5>
@@ -260,7 +260,7 @@ class JobPostsList extends Component {
                                         <div className="col-3">
                                             {currentJobPost.companyImg && currentRecruiter.profileImg ?
                                                 <img className="jp-pic-current"
-                                                     src={`${process.env.REACT_APP_API_BASE_URL}${currentRecruiter?.profileImg}`}
+                                                     src={`${currentRecruiter?.profileImg}`}
                                                      alt="company logo"/> :
                                                 <img className="jp-pic" src={defaultPic} alt="company logo"/>}
 

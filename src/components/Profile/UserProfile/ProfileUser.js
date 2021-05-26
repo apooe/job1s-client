@@ -315,7 +315,7 @@ class ProfileUser extends Component {
 
 
         // TODO a changer avec env variable
-        const profilePictureImg = profile?.profileImg ? `${process.env.REACT_APP_API_BASE_URL}${profile?.profileImg}` : picImage;
+        const profilePictureImg = profile?.profileImg ? `${profile?.profileImg}` : picImage;
         return (
             <div>
 

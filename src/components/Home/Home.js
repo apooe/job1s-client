@@ -193,7 +193,7 @@ class Home extends Component {
                                 <div className="profile-user text-center rounded p-2">
                                     {profile.picture || profile.profileImg ?
                                         <img className="pic-profile-home"
-                                             src={`${process.env.REACT_APP_API_BASE_URL}${profile.picture || profile.profileImg}`}
+                                             src={`${profile.picture || profile.profileImg}`}
                                              alt="profile picture"/> :
                                         <img className="pic-profile-home" src={defaultPic} alt="profile picture"/>
                                     }
