@@ -10,7 +10,7 @@ import {v4 as uuid} from "uuid";
 import EditIcon from '@material-ui/icons/Edit';
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import ChangeNameAndJob from "../UserProfile/ChangeNameAndJob/ChangeNameAndJob";
+import ChangePersonalInfos from "../UserProfile/ChangePersonalInfos/ChangePersonalInfos";
 import IconButton from "@material-ui/core/IconButton";
 import {getInstance} from "../../../helpers/httpInstance";
 const http = getInstance();
@@ -36,14 +36,12 @@ class ContactInfo extends Component {
 
         let user =  this.context.context.currentUser;
         if(this.context.context.userType === AUTH_TYPE_RECRUITER){
-            console.log("je suis un recruiter");
             this.setState({user: this.props.user, isMyProfile: false});
         }
 
         else{
             const url = `/users/${user._id}`;
             http.get(url).then(response => {
-                console.log("user: ", response.data);
                 this.setState({user: response.data});
 
             }).catch(error => {
@@ -76,7 +74,6 @@ class ContactInfo extends Component {
         if(!user)
             return null;
 
-        console.log(user)
 
         return (
             <div className="container ">
@@ -147,8 +144,8 @@ class ContactInfo extends Component {
                                 onClick={this.onCloseWindow}>
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <ChangeNameAndJob user={user}
-                                          onEdit={this.onSubmitInfo}
+                        <ChangePersonalInfos user={user}
+                                             onEdit={this.onSubmitInfo}
                         />
                     </DialogContent>
                 </Dialog>

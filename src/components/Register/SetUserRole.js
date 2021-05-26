@@ -31,11 +31,9 @@ export default function SetUserRole() {
 
         if (value === 'job seeker') {
             setContext({userType: AUTH_TYPE_JOB_SEEKER})
-            console.log("le context :", context)
             history.push('/register');
         } else if (value === 'recruiter') {
             setContext({userType: AUTH_TYPE_RECRUITER})
-            console.log("le context :", context)
             history.push('/register');
         } else {
             setError(true);

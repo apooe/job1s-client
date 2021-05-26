@@ -21,14 +21,30 @@
 }
 
 .profiles-users{
-    margin-top: 50px;
+    margin: 0 100px;
+    background-color: white ;
+    border: 0.01em solid #e0dfdc;
+    border-radius: 4px;
+    padding: 15px 150px; ;
 }
 
-.profile-user{
-    height:300px;
-    border: 1px solid #eeeeee;
-    max-width: 250px;
+.home-page{
+    background-color: #f3f2ef;
 }
+.profile-user{
+    height:280px;
+    width: 260px;
+}
+
+.border-profile{
+    border: 1px solid #eeeeee;
+    text-align: center;
+    padding: 10px;
+    margin-left: 20px;
+    max-height:320px;
+    max-width: 260px;
+}
+
 
 .profile-user:hover {
     background-color: #eeeeee;

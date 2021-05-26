@@ -23,12 +23,9 @@ class ContactForm extends Component {
 
 
     handleChange(value) {
-        const emailDest = this.props.emailDest;
-        console.log("lemailDest", emailDest);
         const oldForm = {...this.state}; // Deep Copy of the profile field
         const newForm = {...oldForm, ...value}; // Merge two profile
         this.setState(newForm);
-        console.log(this.state, "newForm:", newForm);
     }
 
     handleSubmit(event) {

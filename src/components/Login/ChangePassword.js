@@ -53,9 +53,6 @@ export default function ChangePassword() {
                 break;
 
             default:
-                console.log("ds etape 4");
-
-
         }
     }
     const getUser = async () => {
@@ -89,7 +86,6 @@ export default function ChangePassword() {
     }
 
     const changePassword = async () => {
-        console.log(password, userId);
         try {
             const url = `users/changePassword/${userId}`;
             await http.post(url, password);

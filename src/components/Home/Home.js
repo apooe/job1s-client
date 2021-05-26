@@ -26,14 +26,13 @@ class Home extends Component {
 
     async componentDidMount() {
 
-        const {currentUser, userType } = await this.context.context;
+        const {currentUser, userType} = await this.context.context;
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('job')) {
             const job = urlParams.get('job');
             this.searchJob(job);
-        }
-        else{
+        } else {
             await this.getAllUsersProfiles();
         }
 
@@ -51,10 +50,9 @@ class Home extends Component {
                 const job = urlParams.get('job');
                 this.searchJob(job);
             } else {
-                if(this.context.context.userType === AUTH_TYPE_RECRUITER){
+                if (this.context.context.userType === AUTH_TYPE_RECRUITER) {
                     this.getAllJobSeekers();
-                }
-                else{
+                } else {
                     //this.getAllRecruiters();
 
                 }
@@ -98,12 +96,11 @@ class Home extends Component {
 
     getAllUsersProfiles = async () => {
 
-        const {currentUser, userType } = await this.context.context;
+        const {currentUser, userType} = await this.context.context;
 
         //job seeker
         if (userType === AUTH_TYPE_JOB_SEEKER) {
-           await this.getAllRecruiters();
-           console.log(this.state.profilesToDisplay)
+            await this.getAllRecruiters();
         }
 
         //recruiter
@@ -111,9 +108,7 @@ class Home extends Component {
             //le recruiter n'a aucun jobpost
             if (currentUser && currentUser.jobPosts?.length === 0) {
                 await this.getAllJobSeekers();
-            }
-
-            else { //pour le match plus tard
+            } else { //pour le match plus tard
                 await this.getAllJobSeekers();
                 // await currentUser.jobPosts.map(jp => {
                 //     this.searchRelatedJobs(jp.title);
@@ -172,12 +167,12 @@ class Home extends Component {
         const {profilesToDisplay} = this.state;
         const type = this.context.context.userType;
 
-        if(!profilesToDisplay) {
-            return <Loader />;
+        if (!profilesToDisplay) {
+            return <Loader/>;
         }
 
         return (
-            <div>
+            <div className=" home-page">
                 <div className="container-background">
                     <h1 id="slogan">Find Your Ideal Job</h1>
                     <hr className="separator"/>
@@ -186,11 +181,11 @@ class Home extends Component {
 
                 <div className="container profiles-users">
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
-                    <div className="row justify-content-center">
+                    <div className="row ">
 
                         {profilesToDisplay?.map((profile, index) =>
-                            <div className="col-3 p-2" key={uuid()}>
-                                <div className="profile-user text-center rounded p-2">
+                            <div className="border-profile col-4 rounded profile-user ">
+                                <div className="  " key={uuid()}>
                                     {profile.picture || profile.profileImg ?
                                         <img className="pic-profile-home"
                                              src={`${profile.picture || profile.profileImg}`}
@@ -198,8 +193,8 @@ class Home extends Component {
                                         <img className="pic-profile-home" src={defaultPic} alt="profile picture"/>
                                     }
 
-                                    <p className="py-1 font-weight-bold">{profile.firstname} {profile.lastname}</p>
-                                    <p className="pb-1">{profile.job}</p>
+                                    <p className="font-weight-bold mb-1">{profile.firstname} {profile.lastname}</p>
+                                    <p className="">{profile.job}</p>
 
                                     <Link
                                         to={this.context.context.userType === AUTH_TYPE_RECRUITER ? `/profiles/${profile._id}` : `/recruiters/${profile._id}`}>
@@ -212,6 +207,7 @@ class Home extends Component {
                             </div>
                         )}
                     </div>
+
                 </div>
             </div>
 

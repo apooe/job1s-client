@@ -26,7 +26,6 @@ class Education extends Component {
     }
     onSubmit = () => {
 
-        console.log(this.state.education);
         this.props.onEducationSubmit(this.state.education);
     }
 

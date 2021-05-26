@@ -6,14 +6,14 @@ import {IconButton, TextField} from "@material-ui/core";
 import {debounce} from "lodash";
 import axios from "axios";
 import {getInstance} from "../../../../helpers/httpInstance";
-import "./ChangeNameAndJob.css"
+import "./ChangePersonalInfos.css"
 import {v4 as uuid} from "uuid";
 import LinkIcon from '@material-ui/icons/Link';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const http = getInstance();
 
-class ChangeNameAndJob extends Component {
+class ChangePersonalInfos extends Component {
 
 
     constructor(props) {
@@ -181,27 +181,14 @@ class ChangeNameAndJob extends Component {
                         freeSolo
                         value={user.job}
                         onInputChange={debounce((event, value) => this.searchJob(value), 300)}
-                        onChange={(e, value) => this.handleUserChange({job: value.suggestion})}
+                        onChange={(e, value) => this.handleUserChange({job: value?.suggestion})}
                         renderInput={(params) => (
                             <TextField  {...params} className="location-title"
                                         variant="outlined" />
                         )}
 
                     />
-                    {/*<label className="label-contact">Job</label>*/}
-                    {/*<Autocomplete*/}
-                    {/*    id="combo-box-demo"*/}
-                    {/*    className="pb-3"*/}
-                    {/*    options={this.state.jobs}*/}
-                    {/*    getOptionLabel={j => j.suggestion}*/}
-                    {/*    fullWidth*/}
-                    {/*    onInputChange={debounce((event, value) => this.searchJob(value), 300)}*/}
-                    {/*    onChange={(event, value) => this.handleUserChange({job: value.suggestion})}*/}
-                    {/*    renderInput={(params) => (*/}
-                    {/*        <TextField  {...params} label="Jobs" className="location-title"*/}
-                    {/*                    variant="outlined"/>*/}
-                    {/*    )}*/}
-                    {/*/>*/}
+
 
                     <label className="label-contact">City</label>
                     <Autocomplete
@@ -306,5 +293,5 @@ class ChangeNameAndJob extends Component {
 
 }
 
-export default ChangeNameAndJob;
+export default ChangePersonalInfos;
 

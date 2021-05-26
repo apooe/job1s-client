@@ -12,9 +12,7 @@ import Dialog from "@material-ui/core/Dialog";
 import {getInstance} from "../../../helpers/httpInstance";
 import {v4 as uuid} from "uuid";
 import EditIcon from "@material-ui/icons/Edit";
-import picImage from "../../../images/Unknown_person.jpg";
 import defaultPic from "../../../images/unknown-company.PNG";
-import DeleteIcon from '@material-ui/icons/Delete';
 import LaunchIcon from '@material-ui/icons/Launch';
 import {AppContext, defaultContextValue} from "../../../AppContext";
 import Loader from "../../Loader";
@@ -46,6 +44,7 @@ class ProfileRecruiter extends Component {
     }
 
     componentDidMount() {
+
         const recruiter = AuthServiceFactory.getInstance().getCurrentUser();
         this.setState({recruiter});
         this.getProfile(recruiter._id);
@@ -53,6 +52,7 @@ class ProfileRecruiter extends Component {
         this.props.match.params.id ? // if user visit other profiles or his profile
             this.isVisitedProfile(false, `/recruiters/${this.props.match.params.id}`) :
             this.isVisitedProfile(true, `/recruiters/${recruiter._id}`)
+
 
     }
 
@@ -77,16 +77,17 @@ class ProfileRecruiter extends Component {
     editInfos = async () => {
 
         const {recruiter} = this.state;
-
         if (this.state.onEditImg) {
             recruiter.profileImg = this.state.newImgSource;
         }
 
+        if (recruiter.firstname === '' || recruiter.lastname === '') {
+            return;
+        }
+
         const url = '/recruiters';
 
-        console.log("ds le put recruiter", recruiter);
         http.put(url, recruiter).then(response => {
-            console.log("data: ", response.data);
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -143,6 +144,7 @@ class ProfileRecruiter extends Component {
 
     onCloseWindow = () => {
 
+
         this.setState({
             onChangeJobPost: false,
             selectedJobPost: null,
@@ -174,14 +176,12 @@ class ProfileRecruiter extends Component {
     }
 
     handleDelete = async (jobpost) => {
-        console.log(jobpost)
         const {recruiter} = this.state;
         const newRecruiter = {...recruiter};
         newRecruiter.jobPosts = newRecruiter.jobPosts.filter(
             jp => (jp.companyName !== this.state.originalSelectedJp.companyName ||
                 jp.title !== this.state.originalSelectedJp.title ||
                 jp.description !== this.state.originalSelectedJp.description));
-        console.log("delete", newRecruiter)
         await this.setState({recruiter: newRecruiter, selectedJobPost: null, onChangeJobPost: false});
         await this.updateJobPost();
 
@@ -209,10 +209,10 @@ class ProfileRecruiter extends Component {
 
     }
 
-    handleCompanyLinkChange = (link) => {
+    changeInfos = async (newValue) => {
         const oldRecruiter = {...this.state.recruiter}; // Deep Copy of the profile field
-        const newRecruiter = {...oldRecruiter, companyLink: link};
-        this.setState({recruiter: newRecruiter})
+        const newRecruiter = {...oldRecruiter, ...newValue};
+        this.setState({recruiter: newRecruiter});
     }
 
     render() {
@@ -251,15 +251,17 @@ class ProfileRecruiter extends Component {
                                     </div>
 
                                     <div className="infos m-1">
-                                        <p className="name text-center font-weight-bold">{recruiter?.firstname} {recruiter?.lastname}</p>
+
+                                            <p className="name text-center font-weight-bold">{recruiter?.firstname} {recruiter?.lastname}</p>
+
                                     </div>
 
-                                    <button className="visit-website btn border bg-light">
+                                    {recruiter?.companyLink && <button className="visit-website btn border bg-light">
                                         <a href={recruiter?.companyLink} target="_blank">Visit website
                                             <LaunchIcon
                                                 fontSize="small">
                                             </LaunchIcon></a>
-                                    </button>
+                                    </button>}
 
 
                                 </section>
@@ -268,56 +270,56 @@ class ProfileRecruiter extends Component {
                         <div className=" float-right col-8 jobposts-recruiter-list ">
 
                             {/*jobposts of recruiter*/}
-                                <section className="bg-light rounded  border">
-                                    <h1 className="category-profile ml-3 "> JobPosts
-                                        {isMyProfile && <IconButton aria-label="add" className="text-info"
-                                                                    onClick={() => this.addJobPost()}>
-                                            <AddCircleOutlineIcon
-                                                fontSize="large">
-                                            </AddCircleOutlineIcon>
-                                        </IconButton>}
-                                    </h1>
-                                    {recruiter?.jobPosts && recruiter?.jobPosts.length ?
-                                        <div className="">
-                                            {
-                                                recruiter?.jobPosts && recruiter.jobPosts.map((jp, index) =>
+                            <section className="bg-light rounded  border">
+                                <h1 className="category-profile ml-3 "> JobPosts
+                                    {isMyProfile && <IconButton aria-label="add" className="text-info"
+                                                                onClick={() => this.addJobPost()}>
+                                        <AddCircleOutlineIcon
+                                            fontSize="large">
+                                        </AddCircleOutlineIcon>
+                                    </IconButton>}
+                                </h1>
+                                {recruiter?.jobPosts && recruiter?.jobPosts.length ?
+                                    <div className="">
+                                        {
+                                            recruiter?.jobPosts && recruiter.jobPosts.map((jp, index) =>
 
-                                                    <div key={uuid()} className="each-one-jobpost border">
+                                                <div key={uuid()} className="each-one-jobpost border">
 
-                                                        <div className="row" onClick={() => this.showJobPost(jp)}>
-                                                            <div className="col ml-3">
+                                                    <div className="row" onClick={() => this.showJobPost(jp)}>
+                                                        <div className="col ml-3">
 
-                                                                {jp.companyImg ?
-                                                                    <img className="company-pic" src={profilePictureImg}
-                                                                         alt="company picture"/> :
-                                                                    <img className="company-pic" src={defaultPic}
-                                                                         alt="company picture"/>}
+                                                            {jp.companyImg ?
+                                                                <img className="company-pic" src={profilePictureImg}
+                                                                     alt="company picture"/> :
+                                                                <img className="company-pic" src={defaultPic}
+                                                                     alt="company picture"/>}
 
-                                                                <h5 className="r-company-name pt-2">{jp.companyName}</h5>
-                                                                <p className="r-title p-0 m-0">{jp.title}</p>
-                                                                <p className="r-location p-0 m-0">{jp.location}</p>
-
-
-                                                                {isMyProfile && <IconButton aria-label="show"
-                                                                                            className="text-info show-icon"
-                                                                                            onClick={() => this.updateJobPostsList(jp)}>
-                                                                    <EditIcon
-                                                                        fontSize="small">
-                                                                    </EditIcon>
-                                                                </IconButton>}
+                                                            <h5 className="r-company-name pt-2">{jp.companyName}</h5>
+                                                            <p className="r-title p-0 m-0">{jp.title}</p>
+                                                            <p className="r-location p-0 m-0">{jp.location}</p>
 
 
-                                                            </div>
+                                                            {isMyProfile && <IconButton aria-label="show"
+                                                                                        className="text-info show-icon"
+                                                                                        onClick={() => this.updateJobPostsList(jp)}>
+                                                                <EditIcon
+                                                                    fontSize="small">
+                                                                </EditIcon>
+                                                            </IconButton>}
+
+
                                                         </div>
+                                                    </div>
 
-                                                    </div>)
-                                            }
-                                        </div> :
+                                                </div>)
+                                        }
+                                    </div> :
 
-                                        <p className="p-3">there is no job post !</p>
-                                    }
+                                    <p className="p-3">there is no job post !</p>
+                                }
 
-                                </section>
+                            </section>
                         </div>
                     </div>
 
@@ -445,11 +447,43 @@ class ProfileRecruiter extends Component {
 
                             </div>
 
-
-                            <label className="add-website "> Website URL
+                            <label className="perso-info-recruiter mt-3"> First name
                                 <input
                                     type="TEXT"
-                                    onChange={e => this.handleCompanyLinkChange(e.target.value)}
+                                    className="form-control mt-2"
+                                    onChange={e => this.changeInfos({firstname: e.target.value})}
+                                    placeholder="first name"
+                                    value={recruiter.firstname}
+
+                                />
+                            </label>
+
+                            <label className="perso-info-recruiter "> Last name
+                                <input
+                                    type="TEXT"
+                                    className="form-control mt-2"
+                                    placeholder="last name"
+                                    value={recruiter.lastname}
+                                    onChange={e => this.changeInfos({lastname: e.target.value})}
+
+                                />
+                            </label>
+
+                            <label className="perso-info-recruiter "> Email
+                                <input
+                                    type="email"
+                                    className="form-control mt-2"
+                                    placeholder="Email"
+                                    value={recruiter.email}
+                                    onChange={e => this.changeInfos({email: e.target.value})}
+
+                                />
+                            </label>
+
+                            <label className="perso-info-recruiter "> Website URL
+                                <input
+                                    type="TEXT"
+                                    onChange={e => this.changeInfos({companyLink: e.target.value})}
                                     className="form-control mt-2"
                                     placeholder="URL"
                                     value={recruiter.companyLink}
@@ -457,11 +491,10 @@ class ProfileRecruiter extends Component {
                                 />
                                 <button
                                     className="btn btn-link remove-link"
-                                    onClick={() => this.handleCompanyLinkChange("")}>
+                                    onClick={() => this.changeInfos({companyLink: ""})}>
                                     Remove URL
                                 </button>
                             </label>
-
 
                             <button
                                 className="btn btn-primary btn-save"

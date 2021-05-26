@@ -91,7 +91,6 @@ const RegisterForm = (props) => {
                 const {email, password} = user;
                 authService.logIn(email, password).then(() => {
                     setContext({isAuth: true, currentUser: authService.getCurrentUser(), userType: AUTH_TYPE_RECRUITER})
-                    console.log("le context :", context)
                     history.push('/home');
 
 
@@ -115,8 +114,7 @@ const RegisterForm = (props) => {
 
     const userSubmit = async () => {
 
-        // await setUser({...user, ...{picture: picImage}});
-        // console.log("ici", user);
+
 
         const url = '/users';
         setIsSubmitting(true);
@@ -146,7 +144,6 @@ const RegisterForm = (props) => {
                         currentUser: authService.getCurrentUser(),
                         userType: AUTH_TYPE_JOB_SEEKER
                     })
-                    console.log(" context :", context)
                     history.push('/home');
 
                 }).catch(error => {
@@ -190,7 +187,6 @@ const RegisterForm = (props) => {
         });
     }
 
-    console.log(context.userType)
 
 
     return (

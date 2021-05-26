@@ -65,7 +65,6 @@ class JobPostsList extends Component {
         const url = `/recruiters/search/?job=${jobSearch}`;
         await http.get(url).then(({data}) => {
 
-            console.log("ds getjobpost selon la recherche  = ", jobSearch, " et recruiters recus: ", data);
 
             this.handleChangeRecruiters(data);
             const recruiters = this.state.recruiters;

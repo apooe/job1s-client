@@ -30,7 +30,6 @@ class Navbar extends Component {
 
 
     handleSearch = (inputSearch) => {
-        console.log("ds navbar", inputSearch, this.state.isjobSeeker);
 
         this.state.isjobSeeker ?
             this.props.history.push(`/jobs/?job=${inputSearch}`)

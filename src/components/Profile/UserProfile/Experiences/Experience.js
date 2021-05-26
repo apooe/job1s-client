@@ -27,7 +27,6 @@ class Experience extends Component {
     }
     onSubmit = () => {
 
-        console.log(this.state.experience);
         this.props.onExperienceSubmit(this.state.experience);
 
     }

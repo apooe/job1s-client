@@ -23,14 +23,12 @@ import Avatar from "@material-ui/core/Avatar";
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import {Divider} from "@material-ui/core";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import ChangeNameAndJob from "./ChangeNameAndJob/ChangeNameAndJob";
 import CallIcon from '@material-ui/icons/Call';
 import ContactInfo from "../ContactInfos/ContactInfo";
 import {AppContext} from "../../../AppContext";
 import Loader from "../../Loader";
 
 const http = getInstance();
-
 const EDUCATION_ARRAY = "EDUCATION_ARRAY";
 const EXPERIENCE_ARRAY = "EXPERIENCE_ARRAY";
 
@@ -173,17 +171,13 @@ class ProfileUser extends Component {
         const isNewExperience = !selectedExperience;
 
         if (isNewExperience) {
-            console.log("NEW experience")
             newProfile.experience = newProfile?.experience ? [...newProfile.experience, newExperience] : [newExperience];
 
         } else {
-            console.log("UPDATE experience")
-            console.log(newExperience);
-            console.log(newProfile)
+
             newProfile.experience = newProfile?.experience.map(
                 exp => exp.companyName === this.state.originalSelectedExperience.companyName &&
                 exp.startDate === this.state.originalSelectedExperience.startDate ? newExperience : exp);
-            console.log("le nv profile est :", newProfile);
         }
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedExperience: null, onChangeExperiences: false});
@@ -192,21 +186,17 @@ class ProfileUser extends Component {
 
     handleEducationSubmit = (newEducation) => {
         const {profile, selectedEducation} = this.state;
-        console.log(newEducation)
         const newProfile = {...profile};
         const isNewEducation = !selectedEducation;
 
         if (isNewEducation) {
-            console.log("NEW educatiom")
             newProfile.education = newProfile?.education ? [...newProfile.education, newEducation] : [newEducation];
 
         } else {
-            console.log("UPDATE education ")
             newProfile.education = newProfile?.education.map(
                 educ => educ.collegeName === this.state.originalSelectedEducation.collegeName ? newEducation : educ);
         }
 
-        console.log("newprofile", newProfile);
 
         // On modifie le profile mais on attend quil click sur le button valide pour faire le PUT dans le serveur
         this.setState({profile: newProfile, selectedEducation: null, onChangeEducations: false});
@@ -225,7 +215,6 @@ class ProfileUser extends Component {
             this.setState({profile: newProfile, selectedEducation: null, onDeleteEducations: false});
         }
 
-        console.log("le profile apres delete est:", this.state.profile);
     }
 
     handleProfilePictureChange = (event) => {
