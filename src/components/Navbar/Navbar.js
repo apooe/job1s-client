@@ -41,7 +41,6 @@ class Navbar extends Component {
 
     render() {
 
-        const {isJobSeeker} = this.state;
 
         return (
             <AppContext.Consumer>

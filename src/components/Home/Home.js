@@ -6,8 +6,6 @@ import {v4 as uuid} from "uuid";
 import defaultPic from '../../images/Unknown_person.jpg';
 import {Link} from 'react-router-dom';
 import {AppContext, AUTH_TYPE_JOB_SEEKER, AUTH_TYPE_RECRUITER} from "../../AppContext";
-import axios from "axios";
-import userEvent from "@testing-library/user-event";
 import Loader from "../Loader";
 
 const http = getInstance();
@@ -21,13 +19,13 @@ class Home extends Component {
             profilesToDisplay: null,
             relatedJobs: [],
             allProfiles: null,
+            user: null
         }
     }
 
     async componentDidMount() {
 
-        const {currentUser, userType} = await this.context.context;
-
+        const {currentUser, userType} = await this.context.context; //important
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('job')) {
             const job = urlParams.get('job');
@@ -35,11 +33,6 @@ class Home extends Component {
         } else {
             await this.getAllUsersProfiles();
         }
-
-
-        // const job = new URLSearchParams(window.location.search).get('job');
-        // if (job && this.context.context.userType === AUTH_TYPE_RECRUITER)
-        //     this.searchJob(job);
 
     }
 
@@ -60,28 +53,6 @@ class Home extends Component {
         }
     }
 
-    // searchRelatedJobs = async (job) => {
-    //     let relatedJobsArray = this.state.relatedJobs;
-    //     let url = 'http://api.dataatwork.org/v1/jobs/autocomplete';
-    //
-    //     await axios.get(url, {params: {begins_with: job, ends_with: job}}).then(res => {
-    //         const job_id = res.data[0].uuid;//we need it to search for all related jobs to this job
-    //         url = `http://api.dataatwork.org/v1/jobs/${job_id}/related_jobs`;
-    //         axios.get(url).then(res => {
-    //             res.data.related_job_titles.map(job => {
-    //                 relatedJobsArray.push(job.title);
-    //             })
-    //             this.setState({relatedJobs: relatedJobsArray});
-    //             this.findCorrespondingProfiles();
-    //
-    //         }).catch(error => {
-    //             console.log(error?.response?.data);
-    //         });
-    //
-    //     }).catch(error => {
-    //         console.log(error?.response?.data);
-    //     });
-    // }
 
     getAllRecruiters = async () => {
         try {
@@ -94,26 +65,35 @@ class Home extends Component {
         }
     }
 
+    recruitersMatch = async () => {
+
+        const {job} = this.state.user;
+
+        try {
+            const url = `/recruiters/recruitersMatch/?job=${job}`;
+            const response = await http.get(url);
+            this.setState({profilesToDisplay: response?.data})
+
+        } catch (e) {
+            console.log(e?.response?.data);
+        }
+    }
+
     getAllUsersProfiles = async () => {
 
         const {currentUser, userType} = await this.context.context;
+        this.setState({user: currentUser});
 
         //job seeker
         if (userType === AUTH_TYPE_JOB_SEEKER) {
-            await this.getAllRecruiters();
+            await this.recruitersMatch();
         }
 
         //recruiter
         else {
-            //le recruiter n'a aucun jobpost
-            if (currentUser && currentUser.jobPosts?.length === 0) {
-                await this.getAllJobSeekers();
-            } else { //pour le match plus tard
-                await this.getAllJobSeekers();
-                // await currentUser.jobPosts.map(jp => {
-                //     this.searchRelatedJobs(jp.title);
-                // })
-            }
+            //si le recruiter n'a aucun jobpost rajouter fonction ?
+            await this.findRelatedJobSeekers();
+
 
         }
     }
@@ -130,30 +110,26 @@ class Home extends Component {
         });
     }
 
-    // //search interesting profiles/users for the recruiter
-    // findCorrespondingProfiles = async () => {
-    //
-    //     const url = `/users/findCorrespondingUsers`;
-    //     const relatedJobs = this.state.relatedJobs;
-    //
-    //     await http.post(url, relatedJobs).then(({data}) => {
-    //         this.setState({profilesToDisplay: data})
-    //         console.log("find corresponding profiles", data);
-    //
-    //         if (data.length === 0) {
-    //             this.getAllJobSeekers();
-    //         }
-    //
-    //     }).catch(error => {
-    //         console.log(error?.response?.data);
-    //     });
-    // }
 
     getAllJobSeekers = async () => {
 
         try {
             const url = '/users';
             const response = await http.get(url);
+            this.setState({profilesToDisplay: response?.data});
+
+        } catch (e) {
+            console.log(e?.response?.data);
+        }
+    }
+
+    findRelatedJobSeekers = async () => {
+        const {user} = this.state;
+
+        try {
+            const url = `/recruiters/findRelatedJobSeeker/?id=${user._id}`;
+            const response = await http.get(url);
+            console.log(response);
             this.setState({profilesToDisplay: response?.data});
 
         } catch (e) {

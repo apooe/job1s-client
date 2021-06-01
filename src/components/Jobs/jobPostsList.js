@@ -9,7 +9,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
 import Apply from "../Apply/Apply";
-import {AppContext, AUTH_TYPE_JOB_SEEKER, defaultContextValue} from "../../AppContext";
+import {AppContext, AUTH_TYPE_JOB_SEEKER} from "../../AppContext";
 import Loader from "../Loader";
 
 const http = getInstance();
@@ -27,11 +27,13 @@ class JobPostsList extends Component {
             onApply: false,
             jobposts: null,
             onSearch: false,
+            user:null
         };
 
     }
 
-    componentDidMount() {
+    async componentDidMount() {
+        const {currentUser, userType} = await this.context.context;//important
         this.getRecruitersJobPosts();
 
     }
@@ -43,12 +45,18 @@ class JobPostsList extends Component {
         }
     }
 
-    getRecruitersJobPosts = () => {
+    getRecruitersJobPosts = async () => {
+
+        const {currentUser} =  await this.context.context;
         const urlParams = new URLSearchParams(window.location.search);
+
         if (urlParams.has('job')) {
             this.getJobParam();
         } else {
-            this.getAllRecruiters();
+            this.setState({user: currentUser});
+            const {job} = this.state.user;
+            console.log(job);
+            this.getJobPosts(job || ""); // or just put recruitersMatch(); and "" if recruiter
         }
 
     }
@@ -65,6 +73,7 @@ class JobPostsList extends Component {
         const url = `/recruiters/search/?job=${jobSearch}`;
         await http.get(url).then(({data}) => {
 
+            console.log(data)
 
             this.handleChangeRecruiters(data);
             const recruiters = this.state.recruiters;
@@ -83,96 +92,8 @@ class JobPostsList extends Component {
 
     handleChangeRecruiters = async (newRecruiters) => {
 
-        //const oldArrayRecruiters = this.state.recruiters;
-        //const newArrayRecruiters = [oldArrayRecruiters, ...newRecruiters];
         await this.setState({recruiters: newRecruiters});
     }
-
-    // getJobsTitle = async (searchJob) => {
-    //
-    //     const allJobs = await this.jobAutocomplete(searchJob); //autocomplete give all titles jobs
-    //     allJobs.map(j => { //related jobs of all jobs
-    //         this.getRelatedJobsTitle(j);
-    //     })
-    //
-    //     const relatedJob = this.state.relatedJobs;
-    //
-    //     if(relatedJob) {
-    //         await this.setState({recruiters: []});
-    //         console.log("related jobs = ",relatedJob);
-    //
-    //         await this.searchJobPosts(searchJob); //find according jobposts
-    //
-    //
-    //
-    //         // relatedJob.map( j =>{
-    //         //     this.searchJobPosts(j); //find according jobposts
-    //         //
-    //         // })
-    //     }
-    // }
-
-    // searchJobPosts = async (job) => {
-    //
-    //     const url = `/recruiters/search/?job=${job}`;
-    //     await http.get(url).then(({data}) => {
-    //
-    //         console.log("dedans job = ", job, " et recruiters: ", data);
-    //         this.handleChangeRecruiters(data);
-    //         const recruiters = this.state.recruiters;
-    //
-    //         if (recruiters.length !== 0) {
-    //             const firstJp = recruiters[0]?.jobPosts[0];
-    //             this.setState({currentJobPost: firstJp, currentRecruiter: recruiters[0]});
-    //         } else {
-    //             this.setState({currentJobPost: null, currentRecruiter: null});
-    //         }
-    //
-    //     }).catch(error => {
-    //         console.log(error?.response?.data);
-    //     });
-    // }
-
-
-
-
-    // getRelatedJobsTitle = async (job) => {
-    //
-    //     let relatedJobsTitles = [];
-    //     const url = `http://api.dataatwork.org/v1/jobs/${job}/related_jobs`;
-    //
-    //     await axios.get(url).then(response => {
-    //         response?.data.related_job_titles.map(j => {
-    //             relatedJobsTitles.push(j.title);
-    //         })
-    //         this.changeRelatedJobs(relatedJobsTitles);
-    //
-    //     }).catch(error => {
-    //         console.log(error?.response?.data);
-    //     });
-    // }
-
-    // changeRelatedJobs = async (newValue) => {
-    //     const oldArrayJobs = this.state.relatedJobs;
-    //     const newArrayJobs = [...oldArrayJobs, ...newValue];
-    //     await this.setState({relatedJobs: newArrayJobs});
-    // }
-
-
-    // jobAutocomplete = async (search) => {
-    //
-    //     let allJobs = []; //array of jobs uuid that contains 'job' title
-    //     const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
-    //     await axios.get(url, {params: {contains: search}}).then(response => {
-    //         allJobs = response?.data?.map(j => j.uuid) || [];
-    //
-    //     }).catch(error => {
-    //         console.log(error?.response?.data);
-    //
-    //     });
-    //     return allJobs;
-    // }
-
 
     getAllRecruiters = async () => {
         const url = `/recruiters`;
@@ -188,9 +109,27 @@ class JobPostsList extends Component {
         });
     }
 
+    recruitersMatch = async () => {
+
+        const {currentUser, userType} =  await this.context.context;
+        this.setState({user: currentUser});
+        const {job} = this.state.user;
+
+        try {
+            const url = `/recruiters/search/?job=${job}`;
+            const response = await http.get(url);
+            this.setState({
+                recruiters: response.data,
+                currentJobPost: response.data[0].jobPosts[0],
+                currentRecruiter: response.data[0]
+            });
+
+        } catch (e) {
+            console.log(e?.response?.data);
+        }
+    }
 
     onClickJobPost = (jobPost, recruiter) => {
-
         this.setState({currentJobPost: jobPost, currentRecruiter: recruiter})
     }
 
@@ -268,17 +207,19 @@ class JobPostsList extends Component {
                                             <h5 className="jp-title-current">{currentJobPost.title}</h5>
                                             <a className="jp-company-current" href={currentJobPost.url}
                                                target="_blank">{currentJobPost.companyName}</a>
-                                            <p className="jp-loc-current">{currentJobPost.location}</p>
+                                            {<p className="jp-loc-current">{currentJobPost.location}</p>}
                                         </div>
                                     </div>
 
                                     <div className="row">
 
                                         <div className="col-6 mt-3 ml-1">
-                                            {currentJobPost.url && <a href={currentJobPost.url} target="_blank"><button  className="btn btn-jp-visit ">
-                                                Visit Website
+                                            {currentJobPost.url && <a href={currentJobPost.url} target="_blank">
+                                                <button className="btn btn-jp-visit ">
+                                                    Visit Website
 
-                                            </button> </a>}
+                                                </button>
+                                            </a>}
                                             {userType === AUTH_TYPE_JOB_SEEKER &&
                                             <button className="btn btn-jp-apply font-weight-bolder"
                                                     onClick={() => this.onApply()}>

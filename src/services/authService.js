@@ -9,9 +9,7 @@ class AuthService {
 
     constructor() {
         this._currentToken = this.getToken();
-        console.log("premiere entree:", this._currentToken);
         this._currentUser = this.getCurrentUser();
-        console.log(this._currentUser);
     }
 
     getToken() {

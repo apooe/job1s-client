@@ -56,10 +56,13 @@ class JobPost extends Component {
         await http.get(url, {params: {city: newValue}}).then(response => {
             this.setState({places: response?.data || []})
 
+
         }).catch(error => {
             console.log(error?.response?.data);
 
         });
+
+        console.log("places= ",this.state.places);
     }
 
     handleJobTitleChange = (job) => {
@@ -84,7 +87,10 @@ class JobPost extends Component {
 
         const oldJobPost = {...this.state.jobPost}; // Deep Copy of the profile field
         const newJobPost = {...oldJobPost, ...newValue};
-        this.setState({jobPost: newJobPost})
+        this.setState({jobPost: newJobPost});
+
+        console.log("state: ",this.state.jobPost);
+
 
     }
 
@@ -204,7 +210,7 @@ class JobPost extends Component {
                         fullWidth
                         freeSolo
                         value={jobPost.location}
-                        onInputChange={(event, value) => this.loadPlaceOptions(value)}
+                        onInputChange={(event, value) => {this.loadPlaceOptions(value);  this.handleJobPostChange({location: value})} }
                         onChange={(event, value) => this.handleJobPostChange({location: value})}
                         renderInput={(params) => (
                             <TextField  {...params} className="location-title"
