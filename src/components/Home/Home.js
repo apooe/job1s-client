@@ -115,6 +115,7 @@ class Home extends Component {
     getAllJobSeekers = async () => {
 
         try {
+            console.log("ds  get alljobseeker")
             const url = '/users';
             const response = await http.get(url);
             this.setState({profilesToDisplay: response?.data});
@@ -134,7 +135,7 @@ class Home extends Component {
             console.log("je suis ds home")
             console.log(response?.data);
             response?.data.length === 0 ? await this.getAllJobSeekers() :
-            this.setState({profilesToDisplay: response?.data});
+                this.setState({profilesToDisplay: response?.data});
 
         } catch (e) {
             console.log(e?.response?.data);
