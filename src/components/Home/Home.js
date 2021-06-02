@@ -130,6 +130,8 @@ class Home extends Component {
         try {
             const url = `/recruiters/findRelatedJobSeeker/?id=${user._id}`;
             const response = await http.get(url);
+
+            console.log("je suis ds home")
             console.log(response?.data);
             response?.data.length === 0 ? await this.getAllJobSeekers() :
             this.setState({profilesToDisplay: response?.data});
