@@ -65,14 +65,14 @@ class Home extends Component {
         }
     }
 
-    recruitersMatch = async () => {
-
-        const {job} = this.state.user;
+    recruitersMatch = async (job) => {
 
         try {
-            const url = `/recruiters/recruitersMatch/?job=${job}`;
+            const url = `/recruiters/findRelatedRecruiters/?job=${job}`;
             const response = await http.get(url);
-            this.setState({profilesToDisplay: response?.data})
+            response?.data.length === 0 ?
+                await this.getAllRecruiters() :
+                this.setState({profilesToDisplay: response?.data});
 
         } catch (e) {
             console.log(e?.response?.data);
@@ -86,7 +86,8 @@ class Home extends Component {
 
         //job seeker
         if (userType === AUTH_TYPE_JOB_SEEKER) {
-            await this.recruitersMatch();
+            const {job} = this.state.user;
+            await this.recruitersMatch(job);
         }
 
         //recruiter

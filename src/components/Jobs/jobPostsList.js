@@ -27,7 +27,7 @@ class JobPostsList extends Component {
             onApply: false,
             jobposts: null,
             onSearch: false,
-            user:null
+            user: null
         };
 
     }
@@ -47,7 +47,7 @@ class JobPostsList extends Component {
 
     getRecruitersJobPosts = async () => {
 
-        const {currentUser} =  await this.context.context;
+        const {currentUser} = await this.context.context;
         const urlParams = new URLSearchParams(window.location.search);
 
         if (urlParams.has('job')) {
@@ -55,7 +55,6 @@ class JobPostsList extends Component {
         } else {
             this.setState({user: currentUser});
             const {job} = this.state.user;
-            console.log(job);
             this.getJobPosts(job || ""); // or just put recruitersMatch(); and "" if recruiter
         }
 
@@ -72,9 +71,6 @@ class JobPostsList extends Component {
 
         const url = `/recruiters/search/?job=${jobSearch}`;
         await http.get(url).then(({data}) => {
-
-            console.log(data)
-
             this.handleChangeRecruiters(data);
             const recruiters = this.state.recruiters;
 
@@ -82,7 +78,8 @@ class JobPostsList extends Component {
                 const firstJp = recruiters[0]?.jobPosts[0];
                 this.setState({currentJobPost: firstJp, currentRecruiter: recruiters[0]});
             } else {
-                this.setState({currentJobPost: null, currentRecruiter: null});
+                //if array of recruiters empty => fill with all recruiters
+                this.getJobPosts("");
             }
 
         }).catch(error => {
@@ -111,7 +108,7 @@ class JobPostsList extends Component {
 
     recruitersMatch = async () => {
 
-        const {currentUser, userType} =  await this.context.context;
+        const {currentUser, userType} = await this.context.context;
         this.setState({user: currentUser});
         const {job} = this.state.user;
 
