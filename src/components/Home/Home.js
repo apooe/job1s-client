@@ -19,7 +19,8 @@ class Home extends Component {
             profilesToDisplay: null,
             relatedJobs: [],
             allProfiles: null,
-            user: null
+            user: null,
+            noData: false
         }
     }
 
@@ -37,16 +38,18 @@ class Home extends Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         if (this.props.location !== prevProps.location) {
+
+            this.setState({noData:false});
+
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('job')) {
                 const job = urlParams.get('job');
                 this.searchJob(job);
             } else {
                 if (this.context.context.userType === AUTH_TYPE_RECRUITER) {
-                    this.getAllJobSeekers();
-                } else {
-                    //this.getAllRecruiters();
+                    this.findRelatedJobSeekers();
 
                 }
             }
@@ -83,16 +86,13 @@ class Home extends Component {
 
         const {currentUser, userType} = await this.context.context;
         this.setState({user: currentUser});
-
         //job seeker
         if (userType === AUTH_TYPE_JOB_SEEKER) {
             const {job} = this.state.user;
             await this.recruitersMatch(job);
         }
-
         //recruiter
         else {
-            //si le recruiter n'a aucun jobpost rajouter fonction ?
             await this.findRelatedJobSeekers();
 
 
@@ -106,6 +106,9 @@ class Home extends Component {
 
         http.get(url).then(({data}) => {
             this.setState({profilesToDisplay: data})
+            if(data.length === 0){
+                this.setState({noData : true});
+            }
         }).catch(error => {
             console.log(error?.response?.data);
         });
@@ -132,7 +135,6 @@ class Home extends Component {
             const url = `/recruiters/findRelatedJobSeeker/?id=${user._id}`;
             const response = await http.get(url);
 
-            console.log("je suis ds home")
             console.log(response?.data);
             response?.data.length === 0 ? await this.getAllJobSeekers() :
                 this.setState({profilesToDisplay: response?.data});
@@ -145,7 +147,7 @@ class Home extends Component {
 
     render() {
 
-        const {profilesToDisplay} = this.state;
+        const {profilesToDisplay, noData} = this.state;
         const type = this.context.context.userType;
 
         if (!profilesToDisplay) {
@@ -163,6 +165,8 @@ class Home extends Component {
                 <div className="container profiles-users">
                     {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
                     <div className="row ">
+
+                        {noData &&  <div>Sorry we didn't find profiles of job seekers according to your search !</div>}
 
                         {profilesToDisplay?.map((profile, index) =>
                             <div className="border-profile col-4 rounded profile-user ">

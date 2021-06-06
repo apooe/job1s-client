@@ -74,6 +74,27 @@ class ChangePersonalInfos extends Component {
 
     }
 
+    handleJobChange = (job) => {
+
+        const oldInfos = {...this.state.user};
+        const infos = {...oldInfos, ...{job: job?.suggestion}};
+        this.setState({user: infos});
+
+        this.getRelatedJobs(job?.uuid);
+
+    }
+
+    getRelatedJobs = async (jobId) =>{
+
+        const url = `http://api.dataatwork.org/v1/jobs/${jobId}/related_jobs`;
+        await axios.get(url).then(res => {
+            this.handleUserChange({relatedJobs: res?.data?.related_job_titles.map(j => j.title)});
+
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+    }
+
     onAddWebsite = () => {
 
         this.setState({onAddWebsite: true})
@@ -181,7 +202,7 @@ class ChangePersonalInfos extends Component {
                         freeSolo
                         value={user.job}
                         onInputChange={debounce((event, value) => this.searchJob(value), 300)}
-                        onChange={(e, value) => this.handleUserChange({job: value?.suggestion})}
+                        onChange={(e, value) => this.handleJobChange(value)}
                         renderInput={(params) => (
                             <TextField  {...params} className="location-title"
                                         variant="outlined" />

@@ -39,7 +39,6 @@ const http = getInstance();
 const RegisterForm = (props) => {
 
 
-
     const history = useHistory();
 
     const {context, setContext} = useContext(AppContext);
@@ -70,10 +69,11 @@ const RegisterForm = (props) => {
         });
     }
 
-    const handleUserChange = (newValue) => {
+    const handleUserChange = async  (newValue) => {
 
         setUser({...user, ...newValue})
     }
+
 
     const onSubmit = () => {
         context.userType === AUTH_TYPE_JOB_SEEKER ? userSubmit() : recruiterSubmit();
@@ -114,8 +114,6 @@ const RegisterForm = (props) => {
 
     const userSubmit = async () => {
 
-
-
         const url = '/users';
         setIsSubmitting(true);
 
@@ -133,6 +131,7 @@ const RegisterForm = (props) => {
                 setIsSubmitting(false);
                 return;
             }
+
 
             http.post(url, user).then(response => {
                 createProfile({userId: response.data._id});
@@ -174,6 +173,25 @@ const RegisterForm = (props) => {
         });
     }
 
+    const createRelatedJobs = async (jobId) => {
+
+        const url = `http://api.dataatwork.org/v1/jobs/${jobId}/related_jobs`;
+        await axios.get(url).then(res => {
+            handleUserChange({relatedJobs: res?.data?.related_job_titles.map(j => j.title)});
+
+        }).catch(error => {
+            console.log(error?.response?.data);
+        });
+
+    }
+
+    const handleJobChange = async (job) => {
+
+        console.log(job);
+        setUser({...user, ...{job: job?.suggestion}})
+
+        await createRelatedJobs(job?.uuid);
+    }
 
     const searchJob = async (newValue) => {
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;
@@ -186,7 +204,6 @@ const RegisterForm = (props) => {
 
         });
     }
-
 
 
     return (
@@ -289,7 +306,7 @@ const RegisterForm = (props) => {
                             getOptionLabel={j => j.suggestion}
                             fullWidth
                             onInputChange={debounce((event, value) => searchJob(value), 300)}
-                            onChange={(event, value) => handleUserChange({job: value.suggestion})}
+                            onChange={(event, value) => handleJobChange(value)}
                             renderInput={(params) => (
                                 <TextField  {...params} label="Jobs" className="location-title"
                                             variant="outlined"/>

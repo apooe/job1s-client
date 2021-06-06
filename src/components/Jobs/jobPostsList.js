@@ -154,10 +154,11 @@ class JobPostsList extends Component {
         return (
 
             <div>
-                <div className="container">
+                <div className="container  ">
+
                     {recruiters.length === 0 && <div>there is no job Post</div>}
 
-                    <div className="row  flex-row-reverse flex-md-row">
+                    <div className="row  flex-row-reverse flex-md-row mt-4 contain-jpList  ">
 
                         <div className="col-12 col-md-5 jobPost-list ">
                             {recruiters.map((recruiter, index) =>
