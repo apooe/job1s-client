@@ -215,8 +215,8 @@ const RegisterForm = (props) => {
                 <Paper elevation={10} id="paper">
                     <Grid align="center">
                         <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                        {currentStep === 1 ? <h2>register </h2> :
-                            <h2 className="job-search">Search for a job</h2>
+                        {currentStep === 1 ? <h2 className="mt-1">Register </h2> :
+                            <h2 className="job-search mt-1">Search for a job</h2>
                         }
 
                     </Grid>

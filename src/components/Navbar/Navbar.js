@@ -18,7 +18,7 @@ class Navbar extends Component {
     }
 
     componentDidMount() {
-        if(this.context.context.userType === AUTH_TYPE_JOB_SEEKER){
+        if (this.context.context.userType === AUTH_TYPE_JOB_SEEKER) {
             this.setState({isjobSeeker: true});
 
         }
@@ -50,15 +50,17 @@ class Navbar extends Component {
 
                         <Link to='/home' className="navbar-logo"><img src={logo}/></Link>
 
-
-                        <div className="search-navbar">
+                        <div className="search-navbar d-none d-lg-block">
                             <SearchBar search={this.handleSearch}/>
                         </div>
 
                         <div className="menu-icon" onClick={this.handleClick}>
                             <i className={this.state.clicked ? 'fas fa-times' : 'fas fa-bars'}></i>
                         </div>
-                        <ul className={this.state.clicked ? 'nav-menu active' : 'nav-menu'}>
+                        <ul className={this.state.clicked ? 'nav-menu active' : 'nav-menu'}>                             {this.state.clicked &&
+                        <li className="d-inline d-md-none search-navbar-hid">
+                            <SearchBar search={this.handleSearch}/></li>}
+
                             {MenuItems(globalContext).map((item, index) => {
                                 return (
                                     <li key={index}>

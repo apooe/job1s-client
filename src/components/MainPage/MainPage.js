@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, Fragment} from 'react';
 import {Redirect, withRouter} from "react-router";
 import {Link} from "react-router-dom";
 import logo from "../../images/logo.png";
@@ -13,70 +13,76 @@ const MainPage = ({history}) => {
 
     return (
         <AppContext.Consumer>
-            {({context, setContext}) => (<div>
+            {({context, setContext}) => (<Fragment>
+                <header>
+                    <div>
+                        <div className="navbar-home">
+                            <div>
+                                <Link to='/'>
+                                    <img src={logo}/>
+                                </Link>
+                            </div>
 
-                <header className="site-header">
-                    <div className="wrapper site-header__wrapper">
-                        <nav className="navbar-home">
-                            <Link to='/' className=" navbar-logo"><img src={logo}/></Link>
-                            <ul className="nav-menu">
-                                <li>
-                                    <Link to='/login' className='btn login-btn'>Sign in</Link>
-                                </li>
-                            </ul>
-                        </nav>
+                            <div >
+                                <Link to='/login' className='btn login-btn'>Sign in</Link>
+                            </div>
+                        </div>
 
                     </div>
                 </header>
 
                 <div className='container-fluid'>
-                    <div className='row'>
-                        <div className='col headline'>
-                            <h1>Welcome in our <br/> community !</h1>
+                    <div className='row p-5'>
+                        <div className='col-12 col-md'>
+                            <h1 className="header-title text-center text-md-left">Welcome in our community !</h1>
 
-                            <button onClick={() => {
-                                setContext({userType: AUTH_TYPE_RECRUITER});
-                                history.push('/register')
-                            }} className="btn btn-mainpage border mt-5" type="button">
-                                Post a job
-                                <ArrowForwardIosIcon className="arrow-icon"
-                                                     style={{fontSize: 30}}>
+                            <div className="center-sm">
+
+                                <button onClick={() => {
+                                    setContext({userType: AUTH_TYPE_RECRUITER});
+                                    history.push('/register')
+                                }} className="btn btn-mainpage border mt-5" type="button">
                                     Post a job
-                                </ArrowForwardIosIcon>
-                            </button>
+                                    <ArrowForwardIosIcon className="arrow-icon"
+                                                         style={{fontSize: 30}}>
+                                        Post a job
+                                    </ArrowForwardIosIcon>
+                                </button>
 
-                            <button onClick={() => {
-                                setContext({userType: AUTH_TYPE_JOB_SEEKER});
-                                history.push('/register')
-                            }} className="btn btn-mainpage border" type="button">
-                                Search for a job
-                                <ArrowForwardIosIcon className="arrow-icon"
-                                                     style={{fontSize: 30}}>
+                                <button onClick={() => {
+                                    setContext({userType: AUTH_TYPE_JOB_SEEKER});
+                                    history.push('/register')
+                                }} className="btn btn-mainpage border" type="button">
+                                    Search for a job
+                                    <ArrowForwardIosIcon className="arrow-icon"
+                                                         style={{fontSize: 30}}>
 
-                                </ArrowForwardIosIcon>
-                            </button>
+                                    </ArrowForwardIosIcon>
+                                </button>
 
-                            <button onClick={() => {
-                                setContext({userType: AUTH_TYPE_RECRUITER});
-                                history.push('/register')
-                            }} className="btn btn-mainpage border" type="button">
-                                Search profiles
-                                <ArrowForwardIosIcon className="arrow-icon"
-                                                     style={{fontSize: 30}}>
+                                <button onClick={() => {
+                                    setContext({userType: AUTH_TYPE_RECRUITER});
+                                    history.push('/register')
+                                }} className="btn btn-mainpage border" type="button">
+                                    Search profiles
+                                    <ArrowForwardIosIcon className="arrow-icon"
+                                                         style={{fontSize: 30}}>
 
-                                </ArrowForwardIosIcon>
-                            </button>
+                                    </ArrowForwardIosIcon>
+                                </button>
+                            </div>
+
 
                         </div>
 
-                        <div className='col img-home'>
+                        <div className='col-12 col-md img-home d-none d-lg-block'>
                             <img src={homePageImg} className='homepage-img' alt='homepage image'/>
                         </div>
                     </div>
                 </div>
 
 
-            </div>)}
+            </Fragment>)}
         </AppContext.Consumer>
 
     )

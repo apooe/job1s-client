@@ -41,7 +41,7 @@ class Home extends Component {
 
         if (this.props.location !== prevProps.location) {
 
-            this.setState({noData:false});
+            this.setState({noData: false});
 
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.has('job')) {
@@ -106,8 +106,8 @@ class Home extends Component {
 
         http.get(url).then(({data}) => {
             this.setState({profilesToDisplay: data})
-            if(data.length === 0){
-                this.setState({noData : true});
+            if (data.length === 0) {
+                this.setState({noData: true});
             }
         }).catch(error => {
             console.log(error?.response?.data);
@@ -162,37 +162,40 @@ class Home extends Component {
                 </div>
 
 
-                <div className="container profiles-users">
-                    {type === AUTH_TYPE_RECRUITER ? <h2 className="mb-5">Job Seekers</h2> : <h2>Recruiters</h2>}
-                    <div className="row ">
+                <div className="bg-light p-3">
+                    <div className="container profiles-users-wrapper px-3 pb-4 shadow">
 
-                        {noData &&  <div>Sorry we didn't find profiles of job seekers according to your search !</div>}
+                        <div className="row   justify-content-md-start">
+                                <h1 className="mb-5 mt-2  col-12 text-center"> <span>{type === AUTH_TYPE_RECRUITER ?   'JOB SEEKERS' : 'Recruiters' }</span></h1>
+                            {noData && <div>
+                                Sorry we didn't find profiles of job seekers according to your search !
+                            </div>}
 
-                        {profilesToDisplay?.map((profile, index) =>
-                            <div className="border-profile col-4 rounded profile-user ">
-                                <div className="  " key={uuid()}>
-                                    {profile.picture || profile.profileImg ?
-                                        <img className="pic-profile-home"
-                                             src={`${profile.picture || profile.profileImg}`}
-                                             alt="profile picture"/> :
-                                        <img className="pic-profile-home" src={defaultPic} alt="profile picture"/>
-                                    }
+                            {profilesToDisplay?.map((profile, index) =>
+                                <div className="border-profile shadow col-5 col-md-4 rounded profile-user my-2">
+                                    <div className="  " key={uuid()}>
+                                        {profile.picture || profile.profileImg ?
+                                            <img className="pic-profile-home"
+                                                 src={`${profile.picture || profile.profileImg}`}
+                                                 alt="profile picture"/> :
+                                            <img className="pic-profile-home" src={defaultPic} alt="profile picture"/>
+                                        }
 
-                                    <p className="font-weight-bold mb-1">{profile.firstname} {profile.lastname}</p>
-                                    <p className="">{profile.job}</p>
+                                        <p className="font-weight-bold mb-1">{profile.firstname} {profile.lastname}</p>
+                                        <p className="job-title">{profile.job}</p>
 
-                                    <Link
-                                        to={this.context.context.userType === AUTH_TYPE_RECRUITER ? `/profiles/${profile._id}` : `/recruiters/${profile._id}`}>
-                                        <button type="button" className="btn btn-primary">
-                                            View profile
-                                        </button>
-                                    </Link>
+                                        <Link
+                                            to={this.context.context.userType === AUTH_TYPE_RECRUITER ? `/profiles/${profile._id}` : `/recruiters/${profile._id}`}>
+                                            <button type="button" className="btn btn-primary">
+                                                View profile
+                                            </button>
+                                        </Link>
 
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            )}
+                        </div>
                     </div>
-
                 </div>
             </div>
 

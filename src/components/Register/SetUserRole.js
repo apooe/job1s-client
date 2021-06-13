@@ -49,13 +49,13 @@ export default function SetUserRole() {
                 <Paper elevation={10} id="paper-status">
                     <Grid align="center">
                         <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                        <h2>register </h2>
+                        <h2 className="b-mt-1">Register </h2>
                         <h5 className="mb-1">I am a...</h5>
                         {error && <FormHelperText className="text-center helper-text">{helperText}</FormHelperText>}
 
 
                     </Grid>
-                    <form onSubmit={handleSubmit} className="">
+                    <form onSubmit={handleSubmit} >
 
                         <FormControl component="fieldset">
 
@@ -66,13 +66,15 @@ export default function SetUserRole() {
                             </RadioGroup>
 
 
-                            <Button className="btn-setRole" type="submit"  variant="contained"
-                                    color="primary">
-                                Next
-                            </Button>
 
 
                         </FormControl>
+
+                        <div className="text-center w-100">
+                            <Button className="btn-setRole" type="submit" variant="contained" color="primary">
+                                Next
+                            </Button>
+                        </div>
                     </form>
                 </Paper>
             </Grid>

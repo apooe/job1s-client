@@ -32,7 +32,16 @@
     background-image: url("../../images/background.png");
     background-repeat: repeat;
     height: 100vh;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 50px;
+    flex-direction: column;  /* make main axis vertical */
+
 }
 
 .label-field {
@@ -77,3 +86,15 @@
     cursor: pointer;
     text-decoration-line: none;
 }
+
+
+/*
+    Only small device and down
+ */
+@media (max-width: 576px) {
+    #paper {
+        width: auto;
+    }
+
+}
+
