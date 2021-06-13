@@ -343,7 +343,7 @@ class ProfileUser extends Component {
 
                                         {this.state.onChangeInfo ?<div className=" float-right p-2 text-info">
                                             <button className="btn btn-info" onClick={this.onSubmitUpdate}>
-                                                update
+                                                Update
                                             </button>
                                         </div> :
 

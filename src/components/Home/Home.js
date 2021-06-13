@@ -167,8 +167,8 @@ class Home extends Component {
 
                         <div className="row   justify-content-md-start">
                                 <h1 className="mb-5 mt-2  col-12 text-center"> <span>{type === AUTH_TYPE_RECRUITER ?   'JOB SEEKERS' : 'Recruiters' }</span></h1>
-                            {noData && <div>
-                                Sorry we didn't find profiles of job seekers according to your search !
+                            {noData && <div className="p-3">
+                                Sorry we didn't find profiles of job seekers/jobPost according to your search !
                             </div>}
 
                             {profilesToDisplay?.map((profile, index) =>

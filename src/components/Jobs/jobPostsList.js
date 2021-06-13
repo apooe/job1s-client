@@ -153,10 +153,14 @@ class JobPostsList extends Component {
 
         return (
 
-            <div>
-                <div className="container  ">
+            <div className="py-md-3">
+                <div className="container  bg-light border rounded p-md-3">
 
                     {recruiters.length === 0 && <div>there is no job Post</div>}
+
+                    <div className="row">
+                        <h1 className="job-title-head d-md-none"><span>JOB POSTS</span></h1>
+                    </div>
 
                     <div className="row  flex-row-reverse flex-md-row mt-4 contain-jpList  ">
 
@@ -187,31 +191,34 @@ class JobPostsList extends Component {
 
                         </div>
 
+                        <hr className="line-separator d-md-none"></hr>
+
+
 
                         <div className="col-12 col-md-6 current-jp">
                             {currentJobPost &&
                             <div className="row">
                                 <div className="col-12">
-                                    <div className="row">
-                                        <div className="col-3">
+                                    <div className="row px-2">
+                                        <div className="col-12 col-md-3 job-img-description">
                                             {currentJobPost.companyImg && currentRecruiter.profileImg ?
-                                                <img className="jp-pic-current"
+                                                <img className="jp-pic-current img-fluid"
                                                      src={`${currentRecruiter?.profileImg}`}
                                                      alt="company logo"/> :
-                                                <img className="jp-pic" src={defaultPic} alt="company logo"/>}
+                                                <img className="jp-pic img-fluid" src={defaultPic} alt="company logo"/>}
 
                                         </div>
-                                        <div className="col-9">
+                                        <div className="col-12 col-md-9 job-summary-description">
                                             <h5 className="jp-title-current">{currentJobPost.title}</h5>
                                             <a className="jp-company-current" href={currentJobPost.url}
                                                target="_blank">{currentJobPost.companyName}</a>
-                                            {<p className="jp-loc-current">{currentJobPost.location}</p>}
+                                            <p className="jp-loc-current">{currentJobPost.location}</p>
                                         </div>
                                     </div>
 
                                     <div className="row">
 
-                                        <div className="col-6 mt-3 ml-1">
+                                        <div className="col-12 col-md-6 mt-3 ml-1 text-center text-md-left">
                                             {currentJobPost.url && <a href={currentJobPost.url} target="_blank">
                                                 <button className="btn btn-jp-visit ">
                                                     Visit Website
@@ -238,11 +245,6 @@ class JobPostsList extends Component {
                                     <hr className="line-separator"></hr>
 
                                     <div className="row">
-                                        {/*<div className="col-6">*/}
-                                        {/*    <p className="font-weight-bolder m-0"><u>Industry</u></p>*/}
-                                        {/*    <p className="">{currentJobPost.job}</p>*/}
-                                        {/*</div>*/}
-
                                         <div className="col-5 jp-empl-current">
                                             <p className="font-weight-bolder m-0"><u>Employment Type</u></p>
                                             <p> {currentJobPost.employment}</p>

@@ -15,12 +15,13 @@
 
 /*elements jobpost*/
 
-.jp-pic{
+.jp-pic {
     width: 75px;
     height: 75px;
-    float:left;
+    float: left;
     margin: 10px 20px 10px 0px;
 }
+
 .jp-title {
 
     color: #17a2b8;
@@ -88,10 +89,10 @@
 
 }
 
-.jp-pic-current{
+.jp-pic-current {
     width: 110px;
     height: 110px;
-    float:left;
+    float: left;
     margin: 0;
     padding: 0px;
 }
@@ -102,13 +103,13 @@
     color: #5a5757;
 }
 
-.jp-descr-current{
+.jp-descr-current {
 
     font-size: 14px;
 
 }
 
-.jp-empl-current{
+.jp-empl-current {
     font-size: 14px;
 }
 
@@ -130,7 +131,7 @@
 }
 
 .btn-jp-visit a {
-    color:#0a66c2;
+    color: #0a66c2;
 }
 
 .btn-jp-visit {
@@ -157,12 +158,12 @@
     width: 100%;
 }
 
-#form-dialog-title{
+#form-dialog-title {
     padding-bottom: 0;
 }
 
 .jobPost-list {
-    height: 80vh;
+    max-height: 80vh;
     overflow-y: scroll;
     margin: 10px;
 }
@@ -171,13 +172,64 @@
     width: 8px;
     height: 10px;
 }
+
 .jobPost-list::-webkit-scrollbar-thumb {
     border-radius: 8px;
     background: #c2c9d2;
 }
 
-.contain-jpList{
-    background-color: white;
+.contain-jpList {
 }
 
 
+/*
+    Only small device and down
+ */
+@media (max-width: 576px) {
+    .jobPost-list {
+        height: auto;
+        max-height: 40vh;
+        margin: 0;
+    }
+
+    h1.job-title-head {
+        font-size: large;
+        text-align: center;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    h1.job-title-head {
+        font-size: 1.5em;
+        padding-top: 20px;
+        color: var(--nav-color);;
+    }
+
+    h1.job-title-head span {
+        font-weight: bold;
+        text-decoration: underline;
+        padding: 10px;
+        border-radius: 10px;
+        letter-spacing: 10px;
+
+    }
+
+    .job-img-description {
+        text-align: center;
+        float: none;
+    }
+
+    .jp-pic-current {
+        float: none;
+
+    }
+
+    .job-summary-description {
+        margin-top: 30px;
+    }
+
+    .job-summary-description h5, .job-summary-description, .job-summary-description p {
+        text-align: center !important;
+    }
+
+}
