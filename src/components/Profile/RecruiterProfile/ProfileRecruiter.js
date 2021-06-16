@@ -330,7 +330,7 @@ class ProfileRecruiter extends Component {
                                 <ContactForm
                                     profileFirstName={recruiter?.firstname}
                                     profileLastName={recruiter?.lastname}
-                                    emailDt={recruiter?.email}></ContactForm>
+                                    emailDest={recruiter?.email}></ContactForm>
                             </section>
                         </div>
                     </div>

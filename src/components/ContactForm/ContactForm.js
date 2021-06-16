@@ -28,14 +28,16 @@ class ContactForm extends Component {
         this.setState(newForm);
     }
 
-    handleSubmit(event) {
+    handleSubmit = async (event) => {
 
         event.preventDefault();
         this.setState({status: "Sending"});
+        const data = {...this.state, emailDest: this.props.emailDest};
 
         const url = "/users/sendFormToUser";
-        const data = {...this.state, emailDest: this.props.emailDest};
-        http.post(url, data).then((response) => {
+        console.log( this.props.emailDest)
+
+        await http.post(url, data).then((response) => {
             if (response.data.status === "sent") {
                 alert("Message Sent");
                 this.setState({firstname: "", lastname: "", email: "", phone: "", message: "", status: "Submit"});
