@@ -40,79 +40,82 @@ const LoginForm = (props) => {
         <AppContext.Consumer>
             {({context, setContext}) => (
                 <div className="form-container">
-                    <Grid>
-                        <Paper elevation={10} id="paper">
-                            <Grid align="center">
-                                <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
-                                <h2>Sign in</h2>
-                            </Grid>
+                    <div>
+                        <Grid>
+                            <Paper elevation={10} id="paper">
+                                <Grid align="center">
+                                    <Avatar id="avatar"><LockOutlinedIcon/></Avatar>
+                                    <h2>Sign in</h2>
+                                </Grid>
 
 
-                            {error && <Alert
-                                severity="error"
-                                style={{margin: '15px'}}
-                                onClose={() => setError(null)}>
-                                <strong>{error}</strong>
-                            </Alert>}
+                                {error && <Alert
+                                    severity="error"
+                                    style={{margin: '15px'}}
+                                    onClose={() => setError(null)}>
+                                    <strong>{error}</strong>
+                                </Alert>}
 
-                            <TextField
-                                label="Email"
-                                onChange={e => onUserChange({email: e.target.value})}
-                                className="input-control label-field"
-                                placeholder="enter your email"
-                                fullWidth
-                                required
-                            />
+                                <TextField
+                                    label="Email"
+                                    onChange={e => onUserChange({email: e.target.value})}
+                                    className="input-control label-field"
+                                    placeholder="enter your email"
+                                    fullWidth
+                                    required
+                                />
 
-                            <TextField
-                                label="Password"
-                                onChange={e => onUserChange({password: e.target.value})}
-                                className="input-control label-field mt-3"
-                                placeholder="enter your password"
-                                type="password"
-                                fullWidth
-                                required
-                            />
-
-
-                            <Button
-                                type="submit"
-                                color="primary"
-                                fullWidth
-                                className="mt-3"
-                                variant="contained"
-                                id="btn"
-                                onClick={() => onSubmit(() => setContext({
-                                    currentUser: authService.getCurrentUser(),
-                                    isAuth: authService.isAuth(),
-                                    userType: authService.getCurrentUser()?.userType
-                                }))}>
-                                Sign in
-                            </Button>
+                                <TextField
+                                    label="Password"
+                                    onChange={e => onUserChange({password: e.target.value})}
+                                    className="input-control label-field mt-3"
+                                    placeholder="enter your password"
+                                    type="password"
+                                    fullWidth
+                                    required
+                                />
 
 
-                            <Grid className="mb-4">
-                                <Grid item className="float-left">
-                                    <small>Already have an account? </small>
-                                    <a onClick={() => {
+                                <Button
+                                    type="submit"
+                                    color="primary"
+                                    fullWidth
+                                    className="mt-3"
+                                    variant="contained"
+                                    id="btn"
+                                    onClick={() => onSubmit(() => setContext({
+                                        currentUser: authService.getCurrentUser(),
+                                        isAuth: authService.isAuth(),
+                                        userType: authService.getCurrentUser()?.userType
+                                    }))}>
+                                    Sign in
+                                </Button>
+
+
+                                <div className="row mb-4">
+                                    <div className="col-12 col-md-7" >
+                                        <small>Already have an account? </small>
+                                        <a onClick={() => {
                                             setContext({userType: AUTH_TYPE_JOB_SEEKER});
                                             history.push('/status-definition')
 
-                                    }} className="forget-password">
-                                        <small>Sign up</small>
-                                    </a>
-                                </Grid>
-                                <Grid item className="float-right">
-                                    <a onClick={() => {
-                                        history.push('/change-password')
+                                        }} className="forget-password">
+                                            <small>Sign up</small>
+                                        </a>
+                                    </div>
+                                    <div className="col-12 col-md-5 text-md-right" >
+                                        <a onClick={() => {
+                                            history.push('/change-password')
 
-                                    }} className="forget-password" >
-                                       <small>I forgot my password</small>
-                                    </a>
-                                </Grid>
-                            </Grid>
-                        </Paper>
-                    </Grid>
+                                        }} className="forget-password" >
+                                            <small>I forgot my password</small>
+                                        </a>
+                                    </div>
+                                </div>
+                            </Paper>
+                        </Grid>
+                    </div>
+
                 </div>
             )}
 

@@ -232,10 +232,10 @@ class ChangePersonalInfos extends Component {
                     <h5>Websites</h5>
                     {websites && websites.map((url) => {
                         return (
-                            <div key={uuid()} className="py-1">
-                                <LinkIcon color="primary" fontSize="small"/><a className="ml-1"
+                            <div key={uuid()} className="p-0 m-0">
+                                <LinkIcon color="primary" fontSize="small"/><a className="m-0 p-0 ml-1"
                                                                               href={`${url}`}>{url}</a>
-                                <IconButton className="ml-3 "  onClick={() => this.onDeleteWebsite(url)}>
+                                <IconButton className="ml-2 "  onClick={() => this.onDeleteWebsite(url)}>
                                     <DeleteIcon  fontSize="small" color="action"
                                     />
                                 </IconButton>
@@ -263,49 +263,6 @@ class ChangePersonalInfos extends Component {
                     </button>
 
                 </form>
-
-
-                {/*<Dialog open={onAddWebsite}*/}
-                {/*        onClose={this.closeAddWebsite}*/}
-                {/*        aria-labelledby="form-dialog-title">*/}
-                {/*    <DialogContent>*/}
-                {/*        <button type="button" className="close" aria-label="Close"*/}
-                {/*                onClick={this.closeAddWebsite}>*/}
-                {/*            <span aria-hidden="true">&times;</span>*/}
-                {/*        </button>*/}
-
-
-                {/*        {websites && websites.map((url) => {*/}
-
-                {/*            return (*/}
-                {/*                <div key={uuid()} className="pb-3">*/}
-                {/*                    <LinkIcon color="action" fontSize="small"/><a className="ml-1"*/}
-                {/*                                                                  href={`${url}`}>{url}</a>*/}
-                {/*                    <DeleteIcon className="ml-3" fontSize="small" color="action"*/}
-                {/*                                onClick={() => this.onDeleteWebsite(url)}/>*/}
-                {/*                </div>*/}
-                {/*            )*/}
-                {/*        })}*/}
-
-                {/*        <p><strong><AddIcon*/}
-                {/*        onClick={this.onAddWebsite}/>Add website</strong></p>*/}
-
-                {/*        <input*/}
-                {/*            type="text"*/}
-                {/*            onChange={e => this.handleAddWebsite(e.target.value)}*/}
-                {/*            className="form-control"*/}
-                {/*            placeholder="url"*/}
-                {/*        />*/}
-
-                {/*        <button*/}
-                {/*            type="button"*/}
-                {/*            className="btn btn-primary mt-2 mb-4 float-right"*/}
-                {/*            onClick={() => this.AddWebsite()}>*/}
-                {/*            Save*/}
-                {/*        </button>*/}
-
-                {/*    </DialogContent>*/}
-                {/*</Dialog>*/}
 
             </div>
 

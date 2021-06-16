@@ -229,7 +229,7 @@ class ProfileRecruiter extends Component {
             <div>
                 <div className="container mt-5">
                     <div className="row">
-                        <div className="float-left col-4 ">
+                        <div className=" col-12 col-md-4 p-2">
                             {/*profile picture + name + infos + visit website*/}
                             <div className="presentation-profile">
 
@@ -267,7 +267,7 @@ class ProfileRecruiter extends Component {
                                 </section>
                             </div>
                         </div>
-                        <div className=" float-right col-8 jobposts-recruiter-list ">
+                        <div className=" col-12 col-md-8 mt-5 mt-md-0 p-2 jobposts-recruiter-list ">
 
                             {/*jobposts of recruiter*/}
                             <section className="bg-light rounded  border">
@@ -341,7 +341,7 @@ class ProfileRecruiter extends Component {
                             onClose={this.onCloseWindow}
                             aria-labelledby="form-dialog-title">
                         <DialogTitle id="form-dialog-title">
-                            <p className="text-center font-weight-bold">
+                            <p className="text-center font-weight-bold ">
                                 Post a Job
                                 <button type="button" className="close" aria-label="Close"
                                         onClick={this.onCloseWindow}>
@@ -401,7 +401,7 @@ class ProfileRecruiter extends Component {
                                 <div className="col btn">
                                     <button
                                         type="button"
-                                        className="btn btn-primary"
+                                        className="btn btn-primary "
                                         onClick={() => this.showJobPost(null)}>
                                         Close
                                     </button>
@@ -496,11 +496,15 @@ class ProfileRecruiter extends Component {
                                 </button>
                             </label>
 
-                            <button
-                                className="btn btn-primary btn-save"
-                                onClick={() => this.editInfos()}>
-                                Save
-                            </button>
+
+                            <div className="my-2 text-center">
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => this.editInfos()}>
+                                    Save
+                                </button>
+                            </div>
+
 
 
                         </DialogContent>

@@ -74,11 +74,11 @@
 }
 
 .btn-save {
-    float:right;
     font-size:20px;
     border-radius: 40px;
     margin-top: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
+    width: 100px;
 }
 
 .edit-info, .name {
@@ -165,7 +165,7 @@
 
 }
 .jobposts-recruiter-list {
-    height: 105vh;
+    height: 100vh;
     overflow-y: scroll;
     overflow-x: hidden;
     padding: 0 5px;
@@ -179,4 +179,17 @@
 .jobposts-recruiter-list::-webkit-scrollbar-thumb {
     border-radius: 8px;
     background: #c2c9d2;
+}
+
+
+/*
+    Only small device and down
+ */
+@media (max-width: 576px) {
+    .jobposts-recruiter-list {
+        height: auto;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
 }
