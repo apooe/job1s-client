@@ -60,7 +60,7 @@ class Apply extends Component {
                 phone: data.phone,
                 firstname: data.firstname,
                 lastname: data.lastname,
-                resume: data.resume
+                resume: data.resume || null
             });
 
         }).catch(error => {
@@ -77,12 +77,12 @@ class Apply extends Component {
     }
 
 
-    handleResumeChange = (event) => {
+    handleResumeChange = async (event) => {
 
         // Get File Infos
         const fileToUpload = event.target.files[0];
         this.setState({fileToUpload, changeResume: true});
-        this.uploadFile(fileToUpload);
+        await this.uploadFile(fileToUpload);
     }
 
     setResume = async () => {
@@ -92,6 +92,8 @@ class Apply extends Component {
         const userRecord = {...oldUser, resume: this.state.user.resume};
         await this.setState({user: userRecord});
         await this.onSaveInfo(this.state.user);
+        await this.uploadFile(this.state.fileToUpload);
+
 
     }
 
@@ -109,7 +111,7 @@ class Apply extends Component {
 
     }
 
-    uploadFile = (fileToUpload) => {
+    uploadFile = async (fileToUpload) => {
 
         if (!fileToUpload) {
             return null; // Not file to upload
@@ -123,7 +125,7 @@ class Apply extends Component {
         );
 
         const url = '/uploadResume';
-        http.post(url, formData).then(({data}) => {
+        await http.post(url, formData).then(({data}) => {
 
             this.handleFormChange({resume: data.link});
 
