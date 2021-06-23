@@ -91,7 +91,6 @@ class JobPost extends Component {
 
         console.log("state: ",this.state.jobPost);
 
-
     }
 
     onSubmit = async (e) => {

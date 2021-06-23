@@ -1,5 +1,4 @@
 import React, {useContext, useState} from 'react';
-import picImage from '../../images/Unknown_person.jpg';
 import {Grid, Paper, Avatar, TextField, Button} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {getInstance} from "../../helpers/httpInstance";
@@ -53,6 +52,7 @@ const RegisterForm = (props) => {
     const [jobs, setJob] = useState([]);
     const [checked, setChecked] = useState(false);
 
+
     const handleChange = () => {
         setChecked(!checked);
         setIsSubmitting(checked);
@@ -67,11 +67,12 @@ const RegisterForm = (props) => {
             console.log(error?.response?.data);
 
         });
+
     }
 
-    const handleUserChange = async  (newValue) => {
+    const handleUserChange = async (newValue) => {
 
-        setUser({...user, ...newValue})
+        await setUser({...user, ...newValue})
     }
 
 
@@ -134,6 +135,7 @@ const RegisterForm = (props) => {
 
 
             http.post(url, user).then(response => {
+
                 createProfile({userId: response.data._id});
                 setIsSubmitting(false);
                 const {email, password} = user;
@@ -173,25 +175,30 @@ const RegisterForm = (props) => {
         });
     }
 
-    const createRelatedJobs = async (jobId) => {
+    const createRelatedJobs = async (jobId, jobTitle) => {
 
         const url = `http://api.dataatwork.org/v1/jobs/${jobId}/related_jobs`;
         await axios.get(url).then(res => {
-            handleUserChange({relatedJobs: res?.data?.related_job_titles.map(j => j.title)});
+            handleUserChange({relatedJobs: res?.data?.related_job_titles.map(j => j.title), job: jobTitle});
+
+
 
         }).catch(error => {
             console.log(error?.response?.data);
         });
 
+
     }
 
     const handleJobChange = async (job) => {
+        if (job?.suggestion) {
+            await handleUserChange({job: job?.suggestion});
+        }
+        //await addJob(jobTitle);
+        await createRelatedJobs(job?.uuid, job?.suggestion);
 
-        console.log(job);
-        setUser({...user, ...{job: job?.suggestion}})
-
-        await createRelatedJobs(job?.uuid);
     }
+
 
     const searchJob = async (newValue) => {
         const url = `http://api.dataatwork.org/v1/jobs/autocomplete`;

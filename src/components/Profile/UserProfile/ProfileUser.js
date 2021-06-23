@@ -224,6 +224,8 @@ class ProfileUser extends Component {
         this.uploadFile(fileToUpload);
     }
 
+
+
     uploadFile = (fileToUpload) => {
         if (!fileToUpload) {
             return null; // Not file to upload
