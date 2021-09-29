@@ -1,50 +1,48 @@
-
-
 .submit-btn {
-    margin: 0 auto;
-    display: block;
+  margin: 0 auto;
+  display: block;
 }
 
 .location-autocomplete {
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
 
 .location-title {
-    font-style: initial;
+  font-style: initial;
 }
 
 .file-pic {
-    border-color: transparent;
+  border-color: transparent;
 }
 
 .label-upload {
-    margin: 5px auto;
-    background-color: white;
-    border: 1px solid #0b67c2 ;
-    color: #0b67c2;
-    padding: 0.5rem;
-    font-family: sans-serif;
-    border-radius: 50px;
-    cursor: pointer;
+  margin: 5px auto;
+  background-color: white;
+  border: 1px solid #0b67c2;
+  color: #0b67c2;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  border-radius: 50px;
+  cursor: pointer;
 }
 
-.label-upload:hover{
-    color: white;
-    padding: 0.5rem;
-    font-family: sans-serif;
-    background-color: #0b67c2;
-    border-radius: 50px;
-    cursor: pointer;
+.label-upload:hover {
+  color: white;
+  padding: 0.5rem;
+  font-family: sans-serif;
+  background-color: #0b67c2;
+  border-radius: 50px;
+  cursor: pointer;
 }
 
-#file-chosen{
-    margin-left: 0.3rem;
-    font-family: sans-serif;
+#file-chosen {
+  margin-left: 0.3rem;
+  font-family: sans-serif;
 }
 
-.label-jp{
-    margin-bottom: 0;
+.label-jp {
+  margin-bottom: 0;
 }
-.mandatory{
-    color: #e00505;
+.mandatory {
+  color: #e00505;
 }

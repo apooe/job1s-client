@@ -1,8 +1,10 @@
-.MuiAutocomplete-input MuiAutocomplete-inputFocused{
-font-size: 100px;
+.MuiAutocomplete-input MuiAutocomplete-inputFocused {
+  font-size: 100px;
 }
 
-
-.search-bar .MuiInput-underline:before,.search-bar .MuiInput-underline:hover,.search-bar .MuiInput-underline:hover:not(.Mui-disabled):before,.search-bar .MuiInput-underline:after {
-    border: none !important;
+.search-bar .MuiInput-underline:before,
+.search-bar .MuiInput-underline:hover,
+.search-bar .MuiInput-underline:hover:not(.Mui-disabled):before,
+.search-bar .MuiInput-underline:after {
+  border: none !important;
 }

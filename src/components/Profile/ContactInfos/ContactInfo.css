@@ -1,13 +1,10 @@
-a{
-    color: #0a66c2;
-
+a {
+  color: #0a66c2;
 }
 
-.edit-contact-info{
-    float: right;
-
-
+.edit-contact-info {
+  float: right;
 }
-.edit-contact-info:hover{
-    cursor: pointer;
+.edit-contact-info:hover {
+  cursor: pointer;
 }

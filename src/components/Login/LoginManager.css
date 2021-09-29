@@ -1,100 +1,90 @@
 #paper {
-    padding: 30px;
-    min-height: 50vh;
-    max-height: 100vh;
-    width: 450px;
-    margin: 20px auto;
+  padding: 30px;
+  min-height: 50vh;
+  max-height: 100vh;
+  width: 450px;
+  margin: 20px auto;
 }
 
 #paper-status {
-
-    padding: 30px;
-    min-height: 30vh;
-    max-height: 50vh;
-    width: 320px;
-    margin: 20px auto;
+  padding: 30px;
+  min-height: 30vh;
+  max-height: 50vh;
+  width: 320px;
+  margin: 20px auto;
 }
 
 #avatar {
-    background-color: #f55448;
+  background-color: #f55448;
 }
 
 #btn {
-    margin: 10px 0;
-
+  margin: 10px 0;
 }
 
 .input-control {
-    margin-bottom: 10px !important;
+  margin-bottom: 10px !important;
 }
 
 .form-container {
-    background-image: url("../../images/background.png");
-    background-repeat: repeat;
-    height: 100vh;
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 50px;
-    flex-direction: column;  /* make main axis vertical */
-
+  background-image: url("../../images/background.png");
+  background-repeat: repeat;
+  height: 100vh;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 50px;
+  flex-direction: column; /* make main axis vertical */
 }
 
 .label-field {
-    font-size: 5px;
+  font-size: 5px;
 }
 
 .MuiFormControlLabel-label {
-    font-size: 5px;
+  font-size: 5px;
 }
 
 .job-autocomplete-register {
-    margin: 40px auto 20px auto;
+  margin: 40px auto 20px auto;
 }
 
 .city-autocomplete-register {
-    margin: 0 auto 20px auto;
-
+  margin: 0 auto 20px auto;
 }
 
 .job-search {
-    text-align: center;
-
+  text-align: center;
 }
 
 .btn-setRole {
-
-    margin-top: 2px !important;
-
+  margin-top: 2px !important;
 }
 
-.helper-text{
-    color: red!important;
-    font-size: 15px!important;
+.helper-text {
+  color: red !important;
+  font-size: 15px !important;
 }
 
-.forget-password{
-    color: black;
-    text-decoration-line: none;
+.forget-password {
+  color: black;
+  text-decoration-line: none;
 }
 
-.forget-password:hover{
-    cursor: pointer;
-    text-decoration-line: none;
+.forget-password:hover {
+  cursor: pointer;
+  text-decoration-line: none;
 }
-
 
 /*
     Only small device and down
  */
 @media (max-width: 576px) {
-    #paper {
-        width: auto;
-    }
-
+  #paper {
+    width: auto;
+  }
 }
-

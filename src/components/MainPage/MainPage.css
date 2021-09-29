@@ -1,100 +1,91 @@
 .wrapper {
-    display: grid;
-
+  display: grid;
 }
 
 .navbar-home {
-    background-color: #1384b5;
-    height: 100px;
-    display: flex;
-    padding: 0 100px;
-    justify-content: space-between;
-    align-items: center;
+  background-color: #1384b5;
+  height: 100px;
+  display: flex;
+  padding: 0 100px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .login-btn {
-    color: #fff;
-    font-size: 25px;
-
+  color: #fff;
+  font-size: 25px;
 }
 
 .headline {
-    padding: 100px 0 0 200px;
-    color: #1384b5;
+  padding: 100px 0 0 200px;
+  color: #1384b5;
 }
 
 h1 {
-    font-size: 60px;
-
+  font-size: 60px;
 }
 
 .homepage-img {
-    width: 620px;
-    height: 600px;
-
+  width: 620px;
+  height: 600px;
 }
 
 .img-home {
-    float: right;
-    padding-top: 50px;
-
+  float: right;
+  padding-top: 50px;
 }
 
 .btn-mainpage {
-
-    width: 75%;
-    margin-bottom: 20px;
-    padding: 15px 20px;
-    text-align: left;
-    font-size: 25px;
-    border-radius: 10px;
-    color: #5d5b5b;
+  width: 75%;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 25px;
+  border-radius: 10px;
+  color: #5d5b5b;
 }
 
 .btn-mainpage:hover {
-
-    width: 75%;
-    margin-bottom: 20px;
-    padding: 15px 20px;
-    text-align: left;
-    font-size: 25px;
-    border-radius: 10px;
-    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.24), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
+  width: 75%;
+  margin-bottom: 20px;
+  padding: 15px 20px;
+  text-align: left;
+  font-size: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.24), 0 3px 3px 0 rgba(0, 0, 0, 0.19);
 }
 
 .arrow-icon {
-    float: right;
-    color: #5d5b5b;
+  float: right;
+  color: #5d5b5b;
 }
 
 .header-title {
-    max-width: 650px;
+  max-width: 650px;
 }
 
 /*
     Only small device and down
  */
 @media (max-width: 576px) {
-    .btn-mainpage, .btn-mainpage:hover {
-        width: 100%;
-    }
-    .navbar-home {
-        padding: 0 20px;
-    }
+  .btn-mainpage,
+  .btn-mainpage:hover {
+    width: 100%;
+  }
+  .navbar-home {
+    padding: 0 20px;
+  }
 
-    .login-btn {
-        font-size: 1.2rem;
-    }
-
+  .login-btn {
+    font-size: 1.2rem;
+  }
 }
-
-
 
 /*
     Only MD device and down
  */
 @media (max-width: 768px) {
-    .center-sm {
-        text-align: center;
-    }
+  .center-sm {
+    text-align: center;
+  }
 }
