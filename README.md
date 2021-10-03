@@ -1,4 +1,4 @@
-#  Job1Second (Server)
+#  Job1Second (Client) <img align="right" width="80" src="./src/images/logo.png" style="background-color: #aaa">
 
 
 ---
