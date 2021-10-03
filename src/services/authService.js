@@ -77,7 +77,7 @@ export class AuthServiceFactory {
   static _instance = null;
 
   /**
-   * Create an insatnce of auth service
+   * Create an insatance of auth service
    * @returns {AuthService}
    */
   static getInstance() {
