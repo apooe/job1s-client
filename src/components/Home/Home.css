@@ -1,109 +1,97 @@
 .container-background {
-    background: url("../../images/conferencing.jpg") no-repeat center fixed;
-    height: 60vh;
-    padding: 50px;
-
+  background: url("../../images/conferencing.jpg") no-repeat center fixed;
+  height: 60vh;
+  padding: 50px;
 }
 
 #slogan {
-    text-align: center;
-    color: white;
-    padding-top: 150px;
-    font-size: 50px;
-    font-weight: lighter;
-
+  text-align: center;
+  color: white;
+  padding-top: 150px;
+  font-size: 50px;
+  font-weight: lighter;
 }
 
 .separator {
-    border: 1px ridge white;
-    border-radius: 5px;
-    width: 50%;
+  border: 1px ridge white;
+  border-radius: 5px;
+  width: 50%;
 }
 
 .profiles-users-wrapper {
-    background-color: white;
-    border: 0.01em solid #e0dfdc;
-    border-radius: 4px;
+  background-color: white;
+  border: 0.01em solid #e0dfdc;
+  border-radius: 4px;
 }
 
 .home-page {
-    background-color: #f3f2ef;
+  background-color: #f3f2ef;
 }
 
 .profile-user {
-    height: 280px;
-    width: 260px;
-
+  height: 280px;
+  width: 260px;
 }
 
 .profile-user p {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .border-profile {
-    border: 1px solid #eeeeee;
-    text-align: center;
-    padding: 10px;
-    margin-left: 20px;
-    max-height: 320px;
-    max-width: 260px;
-
+  border: 1px solid #eeeeee;
+  text-align: center;
+  padding: 10px;
+  margin-left: 20px;
+  max-height: 320px;
+  max-width: 260px;
 }
-
 
 .profile-user:hover {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
-
 .pic-profile-home {
-    height: 150px;
-    width: 150px;
-    border-radius: 50%;
-
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
 }
 
 .profiles-users-wrapper h1 {
-    font-size: 2em;
-    padding-top: 20px;
-    color: black;
+  font-size: 2em;
+  padding-top: 20px;
+  color: black;
 }
 
 .profiles-users-wrapper h1 span {
-    border: 1px dashed black;
-    font-weight: lighter;
-    padding: 10px;
-    border-radius: 10px;
-    letter-spacing: 10px;
-
+  border: 1px dashed black;
+  font-weight: lighter;
+  padding: 10px;
+  border-radius: 10px;
+  letter-spacing: 10px;
 }
-
 
 /*
     Only small device and down
  */
 @media (max-width: 576px) {
-    .container-background {
-        height: 30vh;
-    }
+  .container-background {
+    height: 30vh;
+  }
 
-    #slogan {
-        padding-top: 30px;
-    }
+  #slogan {
+    padding-top: 30px;
+  }
 
-    .profile-user {
-        height: auto;
-        width: 170px;
+  .profile-user {
+    height: auto;
+    width: 170px;
+  }
 
-    }
-
-    .profiles-users-wrapper h1 {
-        font-size: 1.2em;
-        letter-spacing: 5px;
-        padding-top: 20px;
-
-    }
-
+  .profiles-users-wrapper h1 {
+    font-size: 1.2em;
+    letter-spacing: 5px;
+    padding-top: 20px;
+  }
 }

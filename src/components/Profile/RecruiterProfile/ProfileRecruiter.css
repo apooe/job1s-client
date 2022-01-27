@@ -1,195 +1,171 @@
 .r-company-name {
-
-    font-size: 20px;
-    margin-top: 10px;
-
+  font-size: 20px;
+  margin-top: 10px;
 }
 
 .name {
-    font-size: 20px;
+  font-size: 20px;
 }
 
-
 .pic-recruiter {
-
-    width:225px;
-    height:225px;
-    border-radius: 150px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: pointer;
+  width: 225px;
+  height: 225px;
+  border-radius: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
 }
 
 .r-location {
-
-    font-size: 15px;
-    color: #5a5757;
-    font-style: italic;
+  font-size: 15px;
+  color: #5a5757;
+  font-style: italic;
 }
 
 .r-title {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .each-one-jobpost {
-    cursor: pointer;
-    padding: 0;
-
-
+  cursor: pointer;
+  padding: 0;
 }
 
 .each-one-jobpost:hover {
-
-    background-color: #e6f7ff;
-
+  background-color: #e6f7ff;
 }
 
 .show-icon {
-    float: right;
+  float: right;
 }
 
-
 .MuiDialogTitle-root {
-    flex: 0 0 auto;
-    margin: 0;
-    padding: 0px 24px;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0px 24px;
 }
 
 .MuiDialog-paperWidthSm {
-    width: 850px;
-    margin: 70px;
+  width: 850px;
+  margin: 70px;
 }
 
 .edit-icon {
-
-    float: right;
+  float: right;
 }
 
 .add-website input {
-    font-size: 20px;
-    margin-bottom: 0;
-
-
+  font-size: 20px;
+  margin-bottom: 0;
 }
 
 .btn-save {
-    font-size:20px;
-    border-radius: 40px;
-    margin-top: 10px;
-    margin-bottom: 5px;
-    width: 100px;
+  font-size: 20px;
+  border-radius: 40px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  width: 100px;
 }
 
-.edit-info, .name {
-    font-size: 30px;
+.edit-info,
+.name {
+  font-size: 30px;
 }
 
-.visit-website{
-
-    border-radius: 50px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px;
-    margin-top: 25px;
-    font-size: 15px;
-
+.visit-website {
+  border-radius: 50px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  margin-top: 25px;
+  font-size: 15px;
 }
 
 .MuiSvgIcon-fontSizeSmall {
-    font-size: 1.25rem;
-    margin-left: 6px;
+  font-size: 1.25rem;
+  margin-left: 6px;
 }
 
-.perso-info-recruiter
-{
-    font-size: 20px;
-    margin-bottom: 5px;
-    width: 100%;
-    font-style: italic;
-    font-weight: lighter;
-
+.perso-info-recruiter {
+  font-size: 20px;
+  margin-bottom: 5px;
+  width: 100%;
+  font-style: italic;
+  font-weight: lighter;
 }
 
-.remove-link{
-    color:black!important;
-    float:right;
-    font-size: 16px;
+.remove-link {
+  color: black !important;
+  float: right;
+  font-size: 16px;
 }
 
-.remove-link:hover{
-    color:#007bff!important;
-    text-decoration:none;
-    float:right;
-    font-size: 17px;
+.remove-link:hover {
+  color: #007bff !important;
+  text-decoration: none;
+  float: right;
+  font-size: 17px;
 }
 
-.update-pic{
-    font-size: 22px;
-    font-weight: lighter;
-    margin-bottom: 5px;
-
+.update-pic {
+  font-size: 22px;
+  font-weight: lighter;
+  margin-bottom: 5px;
 }
 
-.company-pic{
-
-    float:left;
-    width: 80px;
-    height: 80px;
-    margin: 20px 30px 20px 0px;
+.company-pic {
+  float: left;
+  width: 80px;
+  height: 80px;
+  margin: 20px 30px 20px 0px;
 }
 
-.jp-descr-current{
-    white-space: pre-line;
+.jp-descr-current {
+  white-space: pre-line;
 }
 
-.jp-title-view{
-    padding-top: 8px;
-    margin-bottom: 4px;
-    font-weight: bold;
-
+.jp-title-view {
+  padding-top: 8px;
+  margin-bottom: 4px;
+  font-weight: bold;
 }
-.company-pic-view{
-    width: 90px;
-    height: 90px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-
+.company-pic-view {
+  width: 90px;
+  height: 90px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.presentation-profile{
-    background-image: url("../../../images/bg-profile.jpg");
-    padding: 0;
-
+.presentation-profile {
+  background-image: url("../../../images/bg-profile.jpg");
+  padding: 0;
 }
 .jobposts-recruiter-list {
-    height: 100vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    padding: 0 5px;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0 5px;
 }
-
 
 .jobposts-recruiter-list::-webkit-scrollbar {
-    width: 8px;
-    height: 10px;
+  width: 8px;
+  height: 10px;
 }
 .jobposts-recruiter-list::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background: #c2c9d2;
+  border-radius: 8px;
+  background: #c2c9d2;
 }
-
 
 /*
     Only small device and down
  */
 @media (max-width: 576px) {
-    .jobposts-recruiter-list {
-        height: auto;
-        max-height: 50vh;
-        overflow-y: auto;
-    }
-
+  .jobposts-recruiter-list {
+    height: auto;
+    max-height: 50vh;
+    overflow-y: auto;
+  }
 }
