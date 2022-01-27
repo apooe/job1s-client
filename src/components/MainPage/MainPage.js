@@ -31,10 +31,10 @@ const MainPage = ({history}) => {
                     </div>
                 </header>
 
-                <div className='container-fluid'>
+                <div >
                     <div className='row p-5'>
                         <div className='col-12 col-md'>
-                            <h1 className="header-title text-center text-md-left">Welcome in our community !</h1>
+                            <h1 className="header-title text-center text-md-left my-md-3">Welcome in our community !</h1>
 
                             <div className="center-sm">
 
@@ -52,7 +52,7 @@ const MainPage = ({history}) => {
                                 <button onClick={() => {
                                     setContext({userType: AUTH_TYPE_JOB_SEEKER});
                                     history.push('/register')
-                                }} className="btn btn-mainpage border" type="button">
+                                }} className="btn btn-mainpage border " type="button">
                                     Search for a job
                                     <ArrowForwardIosIcon className="arrow-icon"
                                                          style={{fontSize: 30}}>
